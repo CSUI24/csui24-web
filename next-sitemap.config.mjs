@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 
 /** @type {import('next-sitemap').IConfig} */
 const config = {
-  siteUrl: `https://${process.env.NEXT_PUBLIC_DOMAIN}`,
+  siteUrl: `${process.env.NEXT_PUBLIC_BASE_URL}`,
   generateRobotsTxt: true,
   generateIndexSitemap: false,
   additionalPaths: async () => {
