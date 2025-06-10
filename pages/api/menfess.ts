@@ -121,7 +121,14 @@ export default async function handler(
         data: null,
       });
     }
-
+    if (!process.env.X_API_KEY || process.env.PRODUCTION === "false") {
+      return res.status(403).json({
+        success: false,
+        message:
+          "Currently sending menfess is not allowed",
+        data: null,
+      });
+    }
     try {
       const newMenfess = await prisma.menfess.create({
         data: {
