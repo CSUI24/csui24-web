@@ -56,6 +56,10 @@ export default async function handler(
       });
     }
     const filter = [
+      "ade azurat",
+      "kontol",
+      "memek",
+      "pantek",
       "slot gacor",
       "gacor maxwin",
       "maxwin",
