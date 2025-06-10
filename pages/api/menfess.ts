@@ -30,6 +30,7 @@ export default async function handler(
       orderBy: {
         createdAt: "desc",
       },
+      take: 1,
     });
     return res.status(200).json({
       success: true,
@@ -124,8 +125,7 @@ export default async function handler(
     if (!process.env.X_API_KEY || process.env.PRODUCTION === "false") {
       return res.status(403).json({
         success: false,
-        message:
-          "Currently sending menfess is not allowed",
+        message: "Currently sending menfess is not allowed",
         data: null,
       });
     }
