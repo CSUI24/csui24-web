@@ -30,7 +30,7 @@ export default async function handler(
       orderBy: {
         createdAt: "desc",
       },
-      take: 100,
+      take: process.env.LIMIT_MENFESS ? parseInt(process.env.LIMIT_MENFESS) : undefined,
     });
     return res.status(200).json({
       success: true,
