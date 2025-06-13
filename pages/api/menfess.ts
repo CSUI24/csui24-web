@@ -30,7 +30,7 @@ export default async function handler(
       orderBy: {
         createdAt: "desc",
       },
-      take: 1,
+      take: 100,
     });
     return res.status(200).json({
       success: true,
@@ -57,6 +57,9 @@ export default async function handler(
       });
     }
     const filter = [
+      "memek",
+      "kntl",
+      "ddp2",
       "ade azurat",
       "kontol",
       "memek",
@@ -122,7 +125,7 @@ export default async function handler(
         data: null,
       });
     }
-    if (!process.env.X_API_KEY || process.env.PRODUCTION === "false") {
+    if (process.env.SENDING_MENFESS === "false") {
       return res.status(403).json({
         success: false,
         message: "Currently sending menfess is not allowed",
