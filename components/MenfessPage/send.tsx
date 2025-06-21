@@ -8,6 +8,7 @@ import { briefFamsData } from "@/modules/fams-data";
 import { useMemo } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
+import { detectHate } from "@/lib/detectHate";
 
 const SendMenfess = () => {
   const [to, setTo] = useState("");
@@ -27,6 +28,7 @@ const SendMenfess = () => {
       toast.error("Please fill all fields");
       return;
     }
+
     const menfess = {
       to: to,
       from: from,
@@ -39,6 +41,23 @@ const SendMenfess = () => {
     }
     console.log(to, from, message);
     const loader = toast.loading("Sending menfess...");
+
+    const status = await detectHate(message);
+    console.log(status);
+
+    if (status === "ERROR") {
+      toast.error("LLM Error", {
+        id: loader,
+      });
+    }
+
+    if (status === "HATEFUL") {
+      toast.error("Message is indicated to be hateful speech", {
+        id: loader,
+      });
+      return;
+    }
+
     const res = await fetch("/api/menfess", {
       method: "POST",
       headers: {
@@ -48,9 +67,12 @@ const SendMenfess = () => {
     });
     const data = await res.json();
     if (data.success) {
-      toast.success("Menfess sent successfully", {
-        id: loader,
-      });
+      if (status === "ERROR") {
+      } else {
+        toast.success("Menfess sent successfully", {
+          id: loader,
+        });
+      }
       setTo("");
       setFrom("");
       setMessage("");
