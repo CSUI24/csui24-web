@@ -3,6 +3,7 @@ import { PrismaClient } from "@/lib/generated/prisma";
 import { TwitterApi } from "twitter-api-v2";
 import { briefFamsData } from "@/modules/fams-data";
 import { globalRateLimit } from "@/lib/rateLimiter";
+import { detectHate } from "@/lib/detectHate";
 
 const prisma = new PrismaClient();
 
@@ -30,7 +31,9 @@ export default async function handler(
       orderBy: {
         createdAt: "desc",
       },
-      take: process.env.LIMIT_MENFESS ? parseInt(process.env.LIMIT_MENFESS) : undefined,
+      take: process.env.LIMIT_MENFESS
+        ? parseInt(process.env.LIMIT_MENFESS)
+        : undefined,
     });
     return res.status(200).json({
       success: true,
@@ -132,6 +135,25 @@ export default async function handler(
         data: null,
       });
     }
+
+    const status = await detectHate(message);
+
+    if (status === "ERROR") {
+      return res.status(200).json({
+        success: true,
+        message: "LLM Error",
+        data: null,
+      });
+    }
+
+    if (status === "HATEFUL") {
+      return res.status(403).json({
+        success: false,
+        message: "Message is indicated to be hateful speech",
+        data: null,
+      });
+    }
+
     try {
       const newMenfess = await prisma.menfess.create({
         data: {
