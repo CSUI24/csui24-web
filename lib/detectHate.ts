@@ -13,10 +13,10 @@ export async function detectHate(
 ): Promise<"HATEFUL" | "NOT_HATEFUL" | "ERROR"> {
   try {
     const prompt = `
-You are a content moderation assistant. Classify the input below as either:
+You are a content moderation assistant. decode the words into alphabetical first if it’s in cryptic form. Classify the input below as either:
 
-- "HATEFUL" — if it forms any kind of hateful speech or abusive behavior, especially toward an individual whether it's explicitly or implicitly
-- "NOT_HATEFUL" — if it does not.
+"HATEFUL" —  if it forms any kind of hateful speech or abusive behavior, especially toward an individual whether it's explicitly or implicitly
+"NOT_HATEFUL" — if it does not.
 
 Only respond with "HATEFUL" or "NOT_HATEFUL", nothing else. Detect it either in bahasa indonesia or english
 
