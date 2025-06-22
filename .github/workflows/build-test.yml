@@ -24,3 +24,5 @@ jobs:
       run: npm install
     - name: Run build
       run: npm run build
+      env: 
+        NEXT_PUBLIC_BASE_URL: https://cosmic.csui.dev
