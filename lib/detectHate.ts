@@ -10,9 +10,13 @@ const google = createGoogleGenerativeAI({
 
 export async function detectHate(
   input: string
-): Promise<"HATEFUL" | "NOT_HATEFUL" | "ERROR"> {
+): Promise<"ALLOWED" | "DISSALOWED" | "ERROR"> {
   try {
-    const prompt = process.env.MOD_PROMPT + `"""${input}"""`.trim();
+    let prompt = process.env.MOD_PROMPT + `"""${input}"""`.trim();
+    prompt = prompt.replace(
+      "{BLOCKED}",
+      process.env.BLOCKED_WORDS?.toString() || "[]"
+    );
 
     const result = await generateText({
       model: google("gemini-2.5-flash"),
@@ -21,7 +25,9 @@ export async function detectHate(
 
     const output = result.text.trim();
     const status =
-      output === "HATEFUL" || output === "NOT_HATEFUL" ? output : "ERROR";
+      output === "ALLOWED" || output === "DISSALOWED" ? output : "ERROR";
+
+    console.log("Moderation result:", { input, status, prompt });
 
     return status;
   } catch (e) {

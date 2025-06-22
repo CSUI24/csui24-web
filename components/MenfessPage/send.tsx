@@ -42,22 +42,6 @@ const SendMenfess = () => {
     console.log(to, from, message);
     const loader = toast.loading("Sending menfess...");
 
-    const status = await detectHate(message);
-    console.log(status);
-
-    if (status === "ERROR") {
-      toast.error("LLM Error", {
-        id: loader,
-      });
-    }
-
-    if (status === "HATEFUL") {
-      toast.error("Message is indicated to be hateful speech", {
-        id: loader,
-      });
-      return;
-    }
-
     const res = await fetch("/api/menfess", {
       method: "POST",
       headers: {
@@ -67,12 +51,9 @@ const SendMenfess = () => {
     });
     const data = await res.json();
     if (data.success) {
-      if (status === "ERROR") {
-      } else {
-        toast.success("Menfess sent successfully", {
-          id: loader,
-        });
-      }
+      toast.success("Menfess sent successfully", {
+        id: loader,
+      });
       setTo("");
       setFrom("");
       setMessage("");

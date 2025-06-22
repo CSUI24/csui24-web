@@ -62,8 +62,6 @@ export default async function handler(
     const filter = [
       "memek",
       "kntl",
-      "ddp2",
-      "ade azurat",
       "kontol",
       "memek",
       "pantek",
@@ -109,7 +107,8 @@ export default async function handler(
     if (containsProhibitedWord) {
       return res.status(400).json({
         success: false,
-        message: "Input contains prohibited words",
+        message:
+          "Your message has been flagged as inappropriate and cannot be sent.",
         data: null,
       });
     }
@@ -136,20 +135,13 @@ export default async function handler(
       });
     }
 
-    const status = await detectHate(message);
+    const status = await detectHate(to + " " + from + " " + message);
 
-    if (status === "ERROR") {
-      return res.status(200).json({
-        success: true,
-        message: "LLM Error",
-        data: null,
-      });
-    }
-
-    if (status === "HATEFUL") {
+    if (status === "DISSALOWED") {
       return res.status(403).json({
         success: false,
-        message: "Message is indicated to be hateful speech",
+        message:
+          "Your message has been flagged as inappropriate and cannot be sent.",
         data: null,
       });
     }
@@ -166,7 +158,12 @@ export default async function handler(
       try {
         if (!process.env.X_API_KEY || process.env.PRODUCTION === "false") {
           throw new Error(
-            "You are not allowed to send tweet from this environment"
+            "Twitter API keys are not set or not in production mode"
+          );
+        }
+        if (status === "ERROR") {
+          throw new Error(
+            "LLM failed to moderate the content, so menfess will not be posted on Twitter"
           );
         }
         const twitterClient = new TwitterApi({
@@ -201,7 +198,10 @@ export default async function handler(
 
       return res.status(200).json({
         success: true,
-        message: "Menfess created successfully",
+        message:
+          status === "ERROR"
+            ? "Menfess sent successfully, but LLM failed to moderate the content"
+            : "Menfess sent successfully",
         data: null,
       });
     } catch {
