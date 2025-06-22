@@ -8,7 +8,6 @@ import { briefFamsData } from "@/modules/fams-data";
 import { useMemo } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
-import { detectHate } from "@/lib/detectHate";
 
 const SendMenfess = () => {
   const [to, setTo] = useState("");
