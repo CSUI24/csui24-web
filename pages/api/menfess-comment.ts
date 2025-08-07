@@ -3,6 +3,7 @@ import { PrismaClient } from "@/lib/generated/prisma";
 import { globalRateLimit } from "@/lib/rateLimiter";
 
 const prisma = new PrismaClient();
+const rateLimit = globalRateLimit();
 
 export default async function handler(
   req: NextApiRequest,
@@ -55,7 +56,7 @@ export default async function handler(
       });
     }
   } else if (req.method === "POST") {
-    if (!globalRateLimit(req, res)) return;
+    if (!rateLimit(req, res)) return;
     const { menfessId, content, author } = req.body;
     if (content.length > 200) {
       return res.status(400).json({

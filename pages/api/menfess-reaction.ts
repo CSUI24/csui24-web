@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@/lib/generated/prisma'
 import { globalRateLimit } from '@/lib/rateLimiter'
 
+const rateLimit = globalRateLimit()
+
 const enabledReactions = (process.env.NEXT_PUBLIC_ENABLED_REACTIONS ?? '')
   .split(',')
   .map(r => r.trim())
@@ -11,7 +13,7 @@ const prisma = new PrismaClient()
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    if (!globalRateLimit(req, res)) return
+    if (!rateLimit(req, res)) return
     const { menfessId, type, action } : {menfessId: string, type: string, action: 'add'|'remove'} = req.body
 
     if (!menfessId || !type) {
