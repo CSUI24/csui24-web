@@ -51,7 +51,8 @@ export function createRateLimiter(options: {
 
 // Rate limit to use globally
 // 30 Requests per 5 Minutes
-export const globalRateLimit = createRateLimiter({
-  maxRequests: 30,
-  windowMs: 5*60*1000
-});
+export const globalRateLimit = (maxRequests: number = 30) =>
+  createRateLimiter({
+    maxRequests,
+    windowMs: 5 * 60 * 1000,
+  });

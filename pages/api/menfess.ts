@@ -41,7 +41,8 @@ export default async function handler(
       data,
     });
   } else if (req.method === "POST") {
-    if (!globalRateLimit(req, res)) return;
+    const limit = globalRateLimit(1);
+    if (!limit(req, res)) return;
     const { to, from, message } = req.body;
 
     if (!to || !from || !message) {
