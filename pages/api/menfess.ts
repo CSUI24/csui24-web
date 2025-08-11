@@ -5,6 +5,7 @@ import { briefFamsData } from "@/modules/fams-data";
 import { globalRateLimit } from "@/lib/rateLimiter";
 import { detectHate } from "@/lib/detectHate";
 
+const limit = globalRateLimit(1);
 const prisma = new PrismaClient();
 
 export default async function handler(
@@ -41,7 +42,6 @@ export default async function handler(
       data,
     });
   } else if (req.method === "POST") {
-    const limit = globalRateLimit(1);
     if (!limit(req, res)) return;
     const { to, from, message } = req.body;
 
@@ -136,7 +136,7 @@ export default async function handler(
       });
     }
 
-    const status = await detectHate(to + " " + from + " " + message);
+    const status = await detectHate("to: " + to + " from: " + from + " message: " + message);
 
     if (status === "DISSALOWED") {
       return res.status(403).json({
