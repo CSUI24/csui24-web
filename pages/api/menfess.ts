@@ -136,17 +136,6 @@ export default async function handler(
       });
     }
 
-    const status = await detectHate("to: " + to + " from: " + from + " message: " + message);
-
-    if (status === "DISSALOWED") {
-      return res.status(403).json({
-        success: false,
-        message:
-          "Your message has been flagged as inappropriate and cannot be sent.",
-        data: null,
-      });
-    }
-
     try {
       const newMenfess = await prisma.menfess.create({
         data: {
