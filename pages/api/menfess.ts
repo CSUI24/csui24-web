@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@/lib/generated/prisma";
-import { TwitterApi } from "twitter-api-v2";
 import { briefFamsData } from "@/modules/fams-data";
 import { globalRateLimit } from "@/lib/rateLimiter";
 import { detectHate } from "@/lib/detectHate";
@@ -10,7 +9,7 @@ const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method === "GET") {
     const data = await prisma.menfess.findMany({
@@ -102,7 +101,7 @@ export default async function handler(
       "(.)io",
     ];
     const containsProhibitedWord = filter.some((word) =>
-      [to, from, message].some((field) => field.toLowerCase().includes(word))
+      [to, from, message].some((field) => field.toLowerCase().includes(word)),
     );
 
     if (containsProhibitedWord) {
@@ -136,7 +135,9 @@ export default async function handler(
       });
     }
 
-    const status = await detectHate("to: " + to + " from: " + from + " message: " + message);
+    const status = await detectHate(
+      "to: " + to + " from: " + from + " message: " + message,
+    );
 
     if (status === "DISSALOWED") {
       return res.status(403).json({
@@ -159,33 +160,33 @@ export default async function handler(
       try {
         if (!process.env.X_API_KEY || process.env.PRODUCTION === "false") {
           throw new Error(
-            "Twitter API keys are not set or not in production mode"
+            "Twitter API keys are not set or not in production mode",
           );
         }
         if (status === "ERROR") {
           throw new Error(
-            "LLM failed to moderate the content, so menfess will not be posted on Twitter"
+            "LLM failed to moderate the content, so menfess will not be posted on Twitter",
           );
         }
-        const twitterClient = new TwitterApi({
-          appKey: process.env.X_API_KEY!,
-          appSecret: process.env.X_API_KEY_SECRET!,
-          accessToken: process.env.X_ACCESS_TOKEN!,
-          accessSecret: process.env.X_ACCESS_TOKEN_SECRET!,
-        });
-        const fromUser =
-          briefFamsData.find((fam) => fam.id === from.replace("fams/", ""))?.[
-            "full-name"
-          ] || "";
-        const toUser =
-          briefFamsData.find((fam) => fam.id === to.replace("fams/", ""))?.[
-            "full-name"
-          ] || "";
-        const FromMessage = fromUser ? fromUser + " CSUI24" : from;
-        const ToMessage = toUser ? toUser + " CSUI24" : to;
-        const tweet = await twitterClient.v2.tweet(
-          `From : ${FromMessage}\nTo : ${ToMessage}\n\n${message}`
-        );
+        // const twitterClient = new TwitterApi({
+        //   appKey: process.env.X_API_KEY!,
+        //   appSecret: process.env.X_API_KEY_SECRET!,
+        //   accessToken: process.env.X_ACCESS_TOKEN!,
+        //   accessSecret: process.env.X_ACCESS_TOKEN_SECRET!,
+        // });
+        // const fromUser =
+        //   briefFamsData.find((fam) => fam.id === from.replace("fams/", ""))?.[
+        //     "full-name"
+        //   ] || "";
+        // const toUser =
+        //   briefFamsData.find((fam) => fam.id === to.replace("fams/", ""))?.[
+        //     "full-name"
+        //   ] || "";
+        // const FromMessage = fromUser ? fromUser + " CSUI24" : from;
+        // const ToMessage = toUser ? toUser + " CSUI24" : to;
+        // const tweet = await twitterClient.v2.tweet(
+        //   `From : ${FromMessage}\nTo : ${ToMessage}\n\n${message}`,
+        // );
         console.log("Tweet sent successfully:", tweet);
         await prisma.menfess.update({
           where: { id: newMenfess.id },
