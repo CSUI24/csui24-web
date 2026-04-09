@@ -59,47 +59,9 @@ export default async function handler(
         data: null,
       });
     }
-    const filter = [
-      "memek",
-      "kntl",
-      "kontol",
-      "memek",
-      "pantek",
-      "slot gacor",
-      "gacor maxwin",
-      "maxwin",
-      "jud1",
-      "sl0t",
-      "s1tus",
-      "g4cor",
-      "situs terpercaya",
-      "situs slot",
-      "situs slot gacor",
-      "situs slot gacor terpercaya",
-      "situs slot gacor maxwin",
-      "situs slot gacor maxwin terpercaya",
-      "judi slot",
-      "judi online",
-      "judi slot",
-      "judi slot online",
-      "judi slot gacor",
-      "judi slot gacor terpercaya",
-      "judi slot gacor maxwin",
-      "judi slot gacor maxwin terpercaya",
-      "situs judi",
-      "situs judi online",
-      "situs judi slot",
-      "situs judi slot online",
-      "situs judi slot gacor",
-      "situs judi slot gacor terpercaya",
-      "situs judi slot gacor maxwin",
-      "situs judi slot gacor maxwin terpercaya",
-      "(.)com",
-      "(.)net",
-      "(.)org",
-      "(.)id",
-      "(.)io",
-    ];
+    const filter = (process.env.BLOCKED_WORDS || "")
+      .split(",")
+      .map((word) => word.trim().toLowerCase());
     const containsProhibitedWord = filter.some((word) =>
       [to, from, message].some((field) => field.toLowerCase().includes(word)),
     );
@@ -168,25 +130,29 @@ export default async function handler(
             "LLM failed to moderate the content, so menfess will not be posted on Twitter",
           );
         }
-        // const twitterClient = new TwitterApi({
-        //   appKey: process.env.X_API_KEY!,
-        //   appSecret: process.env.X_API_KEY_SECRET!,
-        //   accessToken: process.env.X_ACCESS_TOKEN!,
-        //   accessSecret: process.env.X_ACCESS_TOKEN_SECRET!,
-        // });
-        // const fromUser =
-        //   briefFamsData.find((fam) => fam.id === from.replace("fams/", ""))?.[
-        //     "full-name"
-        //   ] || "";
-        // const toUser =
-        //   briefFamsData.find((fam) => fam.id === to.replace("fams/", ""))?.[
-        //     "full-name"
-        //   ] || "";
-        // const FromMessage = fromUser ? fromUser + " CSUI24" : from;
-        // const ToMessage = toUser ? toUser + " CSUI24" : to;
-        // const tweet = await twitterClient.v2.tweet(
-        //   `From : ${FromMessage}\nTo : ${ToMessage}\n\n${message}`,
-        // );
+        const fromUser =
+          briefFamsData.find((fam) => fam.id === from.replace("fams/", ""))?.[
+            "full-name"
+          ] || "";
+        const toUser =
+          briefFamsData.find((fam) => fam.id === to.replace("fams/", ""))?.[
+            "full-name"
+          ] || "";
+        const FromMessage = fromUser ? fromUser + " CSUI24" : from;
+        const ToMessage = toUser ? toUser + " CSUI24" : to;
+        const tweet = await fetch(
+          process.env.TWITTER_SERVICE_URL + "/api/v1/tweets",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${process.env.ADMIN_API_KEY}`,
+            },
+            body: JSON.stringify({
+              message: `From : ${FromMessage}\nTo : ${ToMessage}\n\n${message}`,
+            }),
+          },
+        ).then((res) => res.json());
+
         console.log("Tweet sent successfully:", tweet);
         await prisma.menfess.update({
           where: { id: newMenfess.id },
@@ -230,7 +196,7 @@ export default async function handler(
     const token = authHeader.split(" ")[1];
 
     // Verify the token (replace with your actual token validation logic)
-    if (token !== process.env.ADMIN_PASSWORD) {
+    if (token !== process.env.ADMIN_API_KEY) {
       return res.status(403).json({
         success: false,
         message: "Forbidden: Invalid authorization token",

@@ -16,14 +16,25 @@ datasource db {
 }
 
 model Menfess {
-  id        String            @id @default(uuid())
-  to        String
-  from      String
-  message   String
-  isPosted  Boolean           @default(false)
-  createdAt DateTime          @default(now())
-  reactions Reaction[]
-  comments  Comment[]
+  id          String     @id @default(uuid())
+  to          String
+  from        String
+  message     String
+  tweetId     String?    @unique
+  fingerprint String?
+  isPosted    Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  reactions   Reaction[]
+  comments    Comment[]
+
+  @@index([fingerprint])
+}
+
+model BannedFingerprint {
+  id          String   @id @default(cuid())
+  fingerprint String   @unique
+  reason      String?
+  createdAt   DateTime @default(now())
 }
 
 model Reaction {
