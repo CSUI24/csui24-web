@@ -2,11 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@/lib/generated/prisma";
 import { briefFamsData } from "@/modules/fams-data";
 import { globalRateLimit } from "@/lib/rateLimiter";
-import { detectHate } from "@/lib/detectHate";
 
 const limit = globalRateLimit(1);
 const prisma = new PrismaClient();
-const BANNED_MESSAGE = "u have been banned u idiot";
+const BANNED_MESSAGE = "MAMPUS LU GUA BAN AJGG BUAHAHHAHAHHA";
 
 const normalizeFingerprint = (value: unknown) => {
   if (typeof value !== "string") {
@@ -195,19 +194,6 @@ export default async function handler(
       });
     }
 
-    const status = await detectHate(
-      "to: " + to + " from: " + from + " message: " + message,
-    );
-
-    if (status === "DISSALOWED") {
-      return res.status(403).json({
-        success: false,
-        message:
-          "Your message has been flagged as inappropriate and cannot be sent.",
-        data: null,
-      });
-    }
-
     try {
       const newMenfess = await prisma.menfess.create({
         data: {
@@ -219,15 +205,8 @@ export default async function handler(
       });
 
       try {
-        if (!process.env.X_API_KEY || process.env.PRODUCTION === "false") {
-          throw new Error(
-            "Twitter API keys are not set or not in production mode",
-          );
-        }
-        if (status === "ERROR") {
-          throw new Error(
-            "LLM failed to moderate the content, so menfess will not be posted on Twitter",
-          );
+        if (process.env.PRODUCTION === "false") {
+          throw new Error("Skipping tweet in non-production environment");
         }
         const fromUser =
           briefFamsData.find((fam) => fam.id === from.replace("fams/", ""))?.[
@@ -248,10 +227,11 @@ export default async function handler(
               Authorization: `Bearer ${process.env.ADMIN_API_KEY}`,
             },
             body: JSON.stringify({
-              message: `From : ${FromMessage}\nTo : ${ToMessage}\n\n${message}`,
+              tweet_text: `From : ${FromMessage}\nTo : ${ToMessage}\n\n${message}`,
             }),
           },
         ).then((res) => res.json());
+        console.log("Twitter service response:", tweet);
         const tweetId = getTweetIdFromResponse(tweet);
 
         if (!tweetId) {
@@ -272,10 +252,7 @@ export default async function handler(
 
       return res.status(200).json({
         success: true,
-        message:
-          status === "ERROR"
-            ? "Menfess sent successfully, but LLM failed to moderate the content"
-            : "Menfess sent successfully",
+        message: "Menfess sent successfully",
         data: null,
       });
     } catch {
