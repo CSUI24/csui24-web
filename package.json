@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^1.2.19",
+    "@fingerprintjs/fingerprintjs": "^5.2.0",
     "@prisma/client": "^6.8.1",
     "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.14",

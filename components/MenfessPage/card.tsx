@@ -4,6 +4,7 @@ import {
   CalendarDays,
   MessageCircleMore,
   Trash2,
+  Ban,
 } from "lucide-react";
 import formatRelativeTime from "@/lib/formatRelativeTime";
 import Link from "next/link";
@@ -48,7 +49,9 @@ const MenfessCard = ({
       if (!resJSON.success) {
         toast.error("Failed to delete menfess");
       }
-      toast.success("Menfess deleted successfully, refresh your page to see the changes");
+      toast.success(
+        "Menfess deleted successfully, refresh your page to see the changes",
+      );
     } catch (error) {
       toast.dismiss(loadingToast);
       toast.error("Failed to delete menfess");
@@ -56,13 +59,61 @@ const MenfessCard = ({
     }
   };
 
+  const handleBan = async () => {
+    const confirmed = window.confirm(
+      "Ban this user fingerprint from sending future menfess?",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const loadingToast = toast.loading("Banning user...");
+
+    try {
+      const res = await fetch("/api/menfess-ban", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokenAdmin}`,
+        },
+        body: JSON.stringify({
+          id: menfess.id,
+        }),
+      });
+
+      const resJSON = await res.json();
+
+      if (!res.ok || !resJSON.success) {
+        throw new Error(resJSON.message || "Failed to ban user");
+      }
+
+      toast.success("User banned successfully", {
+        id: loadingToast,
+      });
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to ban user",
+        {
+          id: loadingToast,
+        },
+      );
+      console.error("Error banning user:", error);
+    }
+  };
+
   return (
     <div className="w-full h-96 rounded-xl bg-[#03045e] flex flex-col bg-opacity-30 border border-[#717174] overflow-hidden">
       <div className="relative h-fit p-6 max-sm:p-3 flex flex-col gap-2">
         {tokenAdmin && (
-          <button onClick={handleDelete} className="absolute top-6 right-6">
-            <Trash2 size={25} />
-          </button>
+          <div className="absolute top-6 right-6 flex items-center gap-2">
+            <button onClick={handleBan} title="Ban sender fingerprint">
+              <Ban size={22} />
+            </button>
+            <button onClick={handleDelete} title="Delete menfess">
+              <Trash2 size={25} />
+            </button>
+          </div>
         )}
         <div className="w-full flex flex-col max-sm:gap-2 gap-4 text-white">
           <div className="w-full flex gap-3 items-center">

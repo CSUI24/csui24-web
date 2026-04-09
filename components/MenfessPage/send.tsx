@@ -22,7 +22,12 @@ const getVisitorId = async () => {
     );
   }
 
-  return visitorIdPromise;
+  try {
+    return await visitorIdPromise;
+  } catch (error) {
+    visitorIdPromise = null;
+    throw error;
+  }
 };
 
 const SendMenfess = () => {
