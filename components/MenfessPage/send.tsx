@@ -4,9 +4,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
-import { briefFamsData } from "@/modules/fams-data";
-import { useMemo } from "react";
-import Image from "next/image";
 import { toast } from "sonner";
 
 let visitorIdPromise: Promise<string> | null = null;
@@ -32,17 +29,8 @@ const getVisitorId = async () => {
 
 const SendMenfess = () => {
   const [to, setTo] = useState("");
-  const [paciliansTo, setPaciliansTo] = useState("");
-  const [suggestionsTo, setSuggestionsTo] = useState(false);
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const filteredTo = useMemo(() => {
-    return briefFamsData.filter((entry) => {
-      const name = entry["full-name"].toLowerCase();
-      return name.includes(to.toLowerCase());
-    });
-  }, [to]);
-
   const [from, setFrom] = useState("");
 
   const handleSend = async () => {
@@ -51,7 +39,6 @@ const SendMenfess = () => {
       return;
     }
 
-    const resolvedTo = paciliansTo ? `fams/${paciliansTo}` : to;
     const loader = toast.loading("Sending menfess...");
 
     setIsSubmitting(true);
@@ -70,7 +57,7 @@ const SendMenfess = () => {
     }
 
     const menfess = {
-      to: resolvedTo,
+      to,
       from,
       message,
       fingerprint,
@@ -91,7 +78,6 @@ const SendMenfess = () => {
           id: loader,
         });
         setTo("");
-        setPaciliansTo("");
         setFrom("");
         setMessage("");
       } else {
@@ -141,44 +127,9 @@ const SendMenfess = () => {
               placeholder="Who’s this for?"
               onChange={(e) => {
                 setTo(e.target.value);
-                setPaciliansTo("");
               }}
               value={to}
-              onFocus={() => {
-                setSuggestionsTo(true);
-              }}
-              onBlur={() => {
-                setTimeout(() => {
-                  setSuggestionsTo(false);
-                }, 200);
-              }}
             />
-            <div
-              className={`${suggestionsTo ? "" : "hidden"} absolute w-full h-fit max-h-48 bg-white rounded-b-lg overflow-y-auto overflow-x-hidden flex flex-col gap-1`}
-            >
-              {filteredTo.map((entry) => {
-                return (
-                  <div
-                    className="p-2 text-black hover:translate-x-2 transition-all flex items-center gap-2 cursor-pointer rounded-b-lg"
-                    key={entry.id}
-                    onClick={() => {
-                      setPaciliansTo(entry.id);
-                      setTo(entry.id);
-                      filteredTo.length = 0;
-                    }}
-                  >
-                    <Image
-                      src={"/" + entry["image-filename"]}
-                      alt={entry["full-name"]}
-                      width={16}
-                      height={16}
-                      className="rounded-full"
-                    />
-                    <p className="text-sm font-sfReg">{entry["full-name"]}</p>
-                  </div>
-                );
-              })}
-            </div>
           </div>
         </div>
         {/* End To */}
