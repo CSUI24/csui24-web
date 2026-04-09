@@ -6,6 +6,7 @@ import { globalRateLimit } from "@/lib/rateLimiter";
 const limit = globalRateLimit(1);
 const prisma = new PrismaClient();
 const BANNED_MESSAGE = "MAMPUS LU GUA BAN AJGG BUAHAHHAHAHHA";
+const MENFESS_COOLDOWN_MS = 5 * 60 * 1000;
 
 const normalizeFingerprint = (value: unknown) => {
   if (typeof value !== "string") {
@@ -53,6 +54,22 @@ const getTweetIdFromResponse = (payload: unknown) => {
   return typeof rawTweetId === "string" && rawTweetId.length > 0
     ? rawTweetId
     : null;
+};
+
+const formatCooldown = (remainingMs: number) => {
+  const totalSeconds = Math.max(1, Math.ceil(remainingMs / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  if (minutes === 0) {
+    return `${seconds} detik`;
+  }
+
+  if (seconds === 0) {
+    return `${minutes} menit`;
+  }
+
+  return `${minutes} menit ${seconds} detik`;
 };
 
 const deleteTweetIfExists = async (tweetId: string) => {
@@ -192,6 +209,36 @@ export default async function handler(
         message: BANNED_MESSAGE,
         data: null,
       });
+    }
+
+    const recentMenfess = await prisma.menfess.findFirst({
+      where: {
+        fingerprint,
+        createdAt: {
+          gte: new Date(Date.now() - MENFESS_COOLDOWN_MS),
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      select: {
+        createdAt: true,
+      },
+    });
+
+    if (recentMenfess) {
+      const elapsedMs = Date.now() - recentMenfess.createdAt.getTime();
+      const remainingMs = MENFESS_COOLDOWN_MS - elapsedMs;
+
+      if (remainingMs > 0) {
+        res.setHeader("Retry-After", Math.ceil(remainingMs / 1000));
+
+        return res.status(429).json({
+          success: false,
+          message: `Tunggu ${formatCooldown(remainingMs)} sebelum kirim menfess lagi.`,
+          data: null,
+        });
+      }
     }
 
     try {
