@@ -9,10 +9,28 @@ import { useMemo } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
 
+let visitorIdPromise: Promise<string> | null = null;
+
+const getVisitorId = async () => {
+  if (!visitorIdPromise) {
+    visitorIdPromise = import("@fingerprintjs/fingerprintjs").then(
+      async ({ default: FingerprintJS }) => {
+        const fp = await FingerprintJS.load();
+        const result = await fp.get();
+        return result.visitorId;
+      },
+    );
+  }
+
+  return visitorIdPromise;
+};
+
 const SendMenfess = () => {
   const [to, setTo] = useState("");
   const [paciliansTo, setPaciliansTo] = useState("");
   const [suggestionsTo, setSuggestionsTo] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const filteredTo = useMemo(() => {
     return briefFamsData.filter((entry) => {
       const name = entry["full-name"].toLowerCase();
@@ -28,42 +46,64 @@ const SendMenfess = () => {
       return;
     }
 
-    const menfess = {
-      to: to,
-      from: from,
-      message: message,
-    };
-    if (paciliansTo) {
-      setTo("fams/" + paciliansTo);
-      setPaciliansTo("");
-      menfess.to = "fams/" + paciliansTo;
-    }
-    console.log(to, from, message);
+    const resolvedTo = paciliansTo ? `fams/${paciliansTo}` : to;
     const loader = toast.loading("Sending menfess...");
 
-    const res = await fetch("/api/menfess", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(menfess),
-    });
-    const data = await res.json();
-    if (data.success) {
-      toast.success("Menfess sent successfully", {
+    setIsSubmitting(true);
+
+    let fingerprint: string;
+
+    try {
+      fingerprint = await getVisitorId();
+    } catch (error) {
+      console.error("Failed to get visitor fingerprint:", error);
+      toast.error("Failed to identify your browser", {
         id: loader,
       });
-      setTo("");
-      setFrom("");
-      setMessage("");
-    } else {
-      toast.error(data.message, {
+      setIsSubmitting(false);
+      return;
+    }
+
+    const menfess = {
+      to: resolvedTo,
+      from,
+      message,
+      fingerprint,
+    };
+
+    try {
+      const res = await fetch("/api/menfess", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(menfess),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        toast.success("Menfess sent successfully", {
+          id: loader,
+        });
+        setTo("");
+        setPaciliansTo("");
+        setFrom("");
+        setMessage("");
+      } else {
+        toast.error(data.message, {
+          id: loader,
+        });
+      }
+    } catch (error) {
+      console.error("Error sending menfess:", error);
+      toast.error("Failed to send menfess", {
         id: loader,
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const [message, setMessage] = useState("");
   return (
     <div className="w-full p-10 max-lg:p-8 flex flex-col gap-4 max-sm:p-6 bg-[#03045e] border border-[#717174] bg-opacity-30 rounded-2xl text-white transition-all">
       <h1 className="text-white font-sfPro font-[400] opacity-80 text-base sm:text-lg md:text-xl lg:text-2xl">
@@ -149,6 +189,7 @@ const SendMenfess = () => {
       </div>
       <Button
         onClick={handleSend}
+        disabled={isSubmitting}
         className="w-fit px-6 self-end border bg-slate-400"
         variant={"secondary"}
         data-umami-event="submit-menfess"

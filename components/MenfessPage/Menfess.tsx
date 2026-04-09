@@ -116,8 +116,8 @@ const Menfess = ({ menfess }: { menfess: MenfessType[] }) => {
             </HoverBorderGradient>
           </div>
           <p className="text-center text-slate-400 text-sm font-semibold">
-            We don&apos;t store your data. The submitted menfess may have been
-            sent by someone else. Your privacy is fully protected.
+            Menfess stays anonymous publicly. We only keep an anonymous browser
+            fingerprint for moderation, abuse prevention, and banning.
           </p>
         </div>
       )}

@@ -6,6 +6,80 @@ import { detectHate } from "@/lib/detectHate";
 
 const limit = globalRateLimit(1);
 const prisma = new PrismaClient();
+const BANNED_MESSAGE = "u have been banned u idiot";
+
+const normalizeFingerprint = (value: unknown) => {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+};
+
+const getAdminToken = (req: NextApiRequest) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return null;
+  }
+
+  return authHeader.split(" ")[1] ?? null;
+};
+
+const getTweetIdFromResponse = (payload: unknown) => {
+  if (!payload || typeof payload !== "object") {
+    return null;
+  }
+
+  const tweet = payload as {
+    tweet_id?: unknown;
+    data?: {
+      id?: unknown;
+      create_tweet?: {
+        tweet_results?: {
+          result?: {
+            rest_id?: unknown;
+          };
+        };
+      };
+    };
+  };
+
+  const rawTweetId =
+    tweet.tweet_id ??
+    tweet.data?.id ??
+    tweet.data?.create_tweet?.tweet_results?.result?.rest_id;
+
+  return typeof rawTweetId === "string" && rawTweetId.length > 0
+    ? rawTweetId
+    : null;
+};
+
+const deleteTweetIfExists = async (tweetId: string) => {
+  const serviceUrl = process.env.TWITTER_SERVICE_URL;
+  const adminApiKey = process.env.ADMIN_API_KEY;
+
+  if (!serviceUrl || !adminApiKey) {
+    throw new Error("Twitter service configuration is incomplete");
+  }
+
+  const response = await fetch(`${serviceUrl}/api/v1/tweets/${tweetId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${adminApiKey}`,
+    },
+  });
+
+  if (response.ok || response.status === 404) {
+    return;
+  }
+
+  const errorText = await response.text();
+  throw new Error(
+    `Failed to delete tweet ${tweetId}: ${response.status} ${errorText}`,
+  );
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -42,7 +116,8 @@ export default async function handler(
     });
   } else if (req.method === "POST") {
     if (!limit(req, res)) return;
-    const { to, from, message } = req.body;
+    const { to, from, message, fingerprint: rawFingerprint } = req.body ?? {};
+    const fingerprint = normalizeFingerprint(rawFingerprint);
 
     if (!to || !from || !message) {
       return res.status(400).json({
@@ -51,6 +126,15 @@ export default async function handler(
         data: null,
       });
     }
+
+    if (!fingerprint) {
+      return res.status(400).json({
+        success: false,
+        message: "Fingerprint is required",
+        data: null,
+      });
+    }
+
     console.log(message.length);
     if (to.length > 60 || from.length > 60 || message.length > 280) {
       return res.status(400).json({
@@ -97,6 +181,20 @@ export default async function handler(
       });
     }
 
+    const bannedFingerprint = await prisma.bannedFingerprint.findUnique({
+      where: {
+        fingerprint,
+      },
+    });
+
+    if (bannedFingerprint) {
+      return res.status(403).json({
+        success: false,
+        message: BANNED_MESSAGE,
+        data: null,
+      });
+    }
+
     const status = await detectHate(
       "to: " + to + " from: " + from + " message: " + message,
     );
@@ -116,6 +214,7 @@ export default async function handler(
           to,
           from,
           message,
+          fingerprint,
         },
       });
 
@@ -145,6 +244,7 @@ export default async function handler(
           {
             method: "POST",
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${process.env.ADMIN_API_KEY}`,
             },
             body: JSON.stringify({
@@ -152,12 +252,18 @@ export default async function handler(
             }),
           },
         ).then((res) => res.json());
+        const tweetId = getTweetIdFromResponse(tweet);
+
+        if (!tweetId) {
+          throw new Error("Tweet service did not return a tweet_id");
+        }
 
         console.log("Tweet sent successfully:", tweet);
         await prisma.menfess.update({
           where: { id: newMenfess.id },
           data: {
             isPosted: true,
+            tweetId,
           },
         });
       } catch (e) {
@@ -180,11 +286,9 @@ export default async function handler(
       });
     }
   } else if (req.method === "DELETE") {
-    // Get the authorization header
-    const authHeader = req.headers.authorization;
+    const token = getAdminToken(req);
 
-    // Check if authorization header exists and starts with "Bearer "
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!token) {
       return res.status(401).json({
         success: false,
         message: "Unauthorized: Missing or invalid token",
@@ -192,10 +296,6 @@ export default async function handler(
       });
     }
 
-    // Extract the token
-    const token = authHeader.split(" ")[1];
-
-    // Verify the token (replace with your actual token validation logic)
     if (token !== process.env.ADMIN_API_KEY) {
       return res.status(403).json({
         success: false,
@@ -203,7 +303,8 @@ export default async function handler(
         data: null,
       });
     }
-    const { id } = req.body;
+    const { id } = req.body ?? {};
+
     if (!id) {
       return res.status(400).json({
         success: false,
@@ -211,20 +312,46 @@ export default async function handler(
         data: null,
       });
     }
+
     try {
-      await prisma.comment.deleteMany({
+      const menfess = await prisma.menfess.findUnique({
         where: {
-          menfessId: id,
+          id,
+        },
+        select: {
+          id: true,
+          tweetId: true,
         },
       });
-      await prisma.reaction.deleteMany({
-        where: { menfessId: id },
-      });
-      await prisma.menfess.delete({
-        where: {
-          id: id,
-        },
-      });
+
+      if (!menfess) {
+        return res.status(404).json({
+          success: false,
+          message: "Menfess not found",
+          data: null,
+        });
+      }
+
+      if (menfess.tweetId) {
+        await deleteTweetIfExists(menfess.tweetId);
+      }
+
+      await prisma.$transaction([
+        prisma.comment.deleteMany({
+          where: {
+            menfessId: id,
+          },
+        }),
+        prisma.reaction.deleteMany({
+          where: { menfessId: id },
+        }),
+        prisma.menfess.delete({
+          where: {
+            id,
+          },
+        }),
+      ]);
+
       return res.status(200).json({
         success: true,
         message: "Menfess deleted successfully",
@@ -234,7 +361,8 @@ export default async function handler(
       console.log(e);
       return res.status(500).json({
         success: false,
-        message: "Internal server error",
+        message:
+          e instanceof Error ? e.message : "Failed to delete the menfess",
         data: null,
       });
     }
