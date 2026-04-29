@@ -1198,6 +1198,7 @@ export namespace Prisma {
     message: string | null
     tweetId: string | null
     fingerprint: string | null
+    isBlocked: boolean | null
     isPosted: boolean | null
     createdAt: Date | null
   }
@@ -1209,6 +1210,7 @@ export namespace Prisma {
     message: string | null
     tweetId: string | null
     fingerprint: string | null
+    isBlocked: boolean | null
     isPosted: boolean | null
     createdAt: Date | null
   }
@@ -1220,6 +1222,7 @@ export namespace Prisma {
     message: number
     tweetId: number
     fingerprint: number
+    isBlocked: number
     isPosted: number
     createdAt: number
     _all: number
@@ -1233,6 +1236,7 @@ export namespace Prisma {
     message?: true
     tweetId?: true
     fingerprint?: true
+    isBlocked?: true
     isPosted?: true
     createdAt?: true
   }
@@ -1244,6 +1248,7 @@ export namespace Prisma {
     message?: true
     tweetId?: true
     fingerprint?: true
+    isBlocked?: true
     isPosted?: true
     createdAt?: true
   }
@@ -1255,6 +1260,7 @@ export namespace Prisma {
     message?: true
     tweetId?: true
     fingerprint?: true
+    isBlocked?: true
     isPosted?: true
     createdAt?: true
     _all?: true
@@ -1339,6 +1345,7 @@ export namespace Prisma {
     message: string
     tweetId: string | null
     fingerprint: string | null
+    isBlocked: boolean
     isPosted: boolean
     createdAt: Date
     _count: MenfessCountAggregateOutputType | null
@@ -1367,6 +1374,7 @@ export namespace Prisma {
     message?: boolean
     tweetId?: boolean
     fingerprint?: boolean
+    isBlocked?: boolean
     isPosted?: boolean
     createdAt?: boolean
     reactions?: boolean | Menfess$reactionsArgs<ExtArgs>
@@ -1381,6 +1389,7 @@ export namespace Prisma {
     message?: boolean
     tweetId?: boolean
     fingerprint?: boolean
+    isBlocked?: boolean
     isPosted?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["menfess"]>
@@ -1392,6 +1401,7 @@ export namespace Prisma {
     message?: boolean
     tweetId?: boolean
     fingerprint?: boolean
+    isBlocked?: boolean
     isPosted?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["menfess"]>
@@ -1403,11 +1413,12 @@ export namespace Prisma {
     message?: boolean
     tweetId?: boolean
     fingerprint?: boolean
+    isBlocked?: boolean
     isPosted?: boolean
     createdAt?: boolean
   }
 
-  export type MenfessOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "to" | "from" | "message" | "tweetId" | "fingerprint" | "isPosted" | "createdAt", ExtArgs["result"]["menfess"]>
+  export type MenfessOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "to" | "from" | "message" | "tweetId" | "fingerprint" | "isBlocked" | "isPosted" | "createdAt", ExtArgs["result"]["menfess"]>
   export type MenfessInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     reactions?: boolean | Menfess$reactionsArgs<ExtArgs>
     comments?: boolean | Menfess$commentsArgs<ExtArgs>
@@ -1429,6 +1440,7 @@ export namespace Prisma {
       message: string
       tweetId: string | null
       fingerprint: string | null
+      isBlocked: boolean
       isPosted: boolean
       createdAt: Date
     }, ExtArgs["result"]["menfess"]>
@@ -1862,6 +1874,7 @@ export namespace Prisma {
     readonly message: FieldRef<"Menfess", 'String'>
     readonly tweetId: FieldRef<"Menfess", 'String'>
     readonly fingerprint: FieldRef<"Menfess", 'String'>
+    readonly isBlocked: FieldRef<"Menfess", 'Boolean'>
     readonly isPosted: FieldRef<"Menfess", 'Boolean'>
     readonly createdAt: FieldRef<"Menfess", 'DateTime'>
   }
@@ -5458,6 +5471,7 @@ export namespace Prisma {
     message: 'message',
     tweetId: 'tweetId',
     fingerprint: 'fingerprint',
+    isBlocked: 'isBlocked',
     isPosted: 'isPosted',
     createdAt: 'createdAt'
   };
@@ -5601,6 +5615,7 @@ export namespace Prisma {
     message?: StringFilter<"Menfess"> | string
     tweetId?: StringNullableFilter<"Menfess"> | string | null
     fingerprint?: StringNullableFilter<"Menfess"> | string | null
+    isBlocked?: BoolFilter<"Menfess"> | boolean
     isPosted?: BoolFilter<"Menfess"> | boolean
     createdAt?: DateTimeFilter<"Menfess"> | Date | string
     reactions?: ReactionListRelationFilter
@@ -5614,6 +5629,7 @@ export namespace Prisma {
     message?: SortOrder
     tweetId?: SortOrderInput | SortOrder
     fingerprint?: SortOrderInput | SortOrder
+    isBlocked?: SortOrder
     isPosted?: SortOrder
     createdAt?: SortOrder
     reactions?: ReactionOrderByRelationAggregateInput
@@ -5630,6 +5646,7 @@ export namespace Prisma {
     from?: StringFilter<"Menfess"> | string
     message?: StringFilter<"Menfess"> | string
     fingerprint?: StringNullableFilter<"Menfess"> | string | null
+    isBlocked?: BoolFilter<"Menfess"> | boolean
     isPosted?: BoolFilter<"Menfess"> | boolean
     createdAt?: DateTimeFilter<"Menfess"> | Date | string
     reactions?: ReactionListRelationFilter
@@ -5643,6 +5660,7 @@ export namespace Prisma {
     message?: SortOrder
     tweetId?: SortOrderInput | SortOrder
     fingerprint?: SortOrderInput | SortOrder
+    isBlocked?: SortOrder
     isPosted?: SortOrder
     createdAt?: SortOrder
     _count?: MenfessCountOrderByAggregateInput
@@ -5660,6 +5678,7 @@ export namespace Prisma {
     message?: StringWithAggregatesFilter<"Menfess"> | string
     tweetId?: StringNullableWithAggregatesFilter<"Menfess"> | string | null
     fingerprint?: StringNullableWithAggregatesFilter<"Menfess"> | string | null
+    isBlocked?: BoolWithAggregatesFilter<"Menfess"> | boolean
     isPosted?: BoolWithAggregatesFilter<"Menfess"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Menfess"> | Date | string
   }
@@ -5826,6 +5845,7 @@ export namespace Prisma {
     message: string
     tweetId?: string | null
     fingerprint?: string | null
+    isBlocked?: boolean
     isPosted?: boolean
     createdAt?: Date | string
     reactions?: ReactionCreateNestedManyWithoutMenfessInput
@@ -5839,6 +5859,7 @@ export namespace Prisma {
     message: string
     tweetId?: string | null
     fingerprint?: string | null
+    isBlocked?: boolean
     isPosted?: boolean
     createdAt?: Date | string
     reactions?: ReactionUncheckedCreateNestedManyWithoutMenfessInput
@@ -5852,6 +5873,7 @@ export namespace Prisma {
     message?: StringFieldUpdateOperationsInput | string
     tweetId?: NullableStringFieldUpdateOperationsInput | string | null
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
     isPosted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reactions?: ReactionUpdateManyWithoutMenfessNestedInput
@@ -5865,6 +5887,7 @@ export namespace Prisma {
     message?: StringFieldUpdateOperationsInput | string
     tweetId?: NullableStringFieldUpdateOperationsInput | string | null
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
     isPosted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reactions?: ReactionUncheckedUpdateManyWithoutMenfessNestedInput
@@ -5878,6 +5901,7 @@ export namespace Prisma {
     message: string
     tweetId?: string | null
     fingerprint?: string | null
+    isBlocked?: boolean
     isPosted?: boolean
     createdAt?: Date | string
   }
@@ -5889,6 +5913,7 @@ export namespace Prisma {
     message?: StringFieldUpdateOperationsInput | string
     tweetId?: NullableStringFieldUpdateOperationsInput | string | null
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
     isPosted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -5900,6 +5925,7 @@ export namespace Prisma {
     message?: StringFieldUpdateOperationsInput | string
     tweetId?: NullableStringFieldUpdateOperationsInput | string | null
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
     isPosted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6134,6 +6160,7 @@ export namespace Prisma {
     message?: SortOrder
     tweetId?: SortOrder
     fingerprint?: SortOrder
+    isBlocked?: SortOrder
     isPosted?: SortOrder
     createdAt?: SortOrder
   }
@@ -6145,6 +6172,7 @@ export namespace Prisma {
     message?: SortOrder
     tweetId?: SortOrder
     fingerprint?: SortOrder
+    isBlocked?: SortOrder
     isPosted?: SortOrder
     createdAt?: SortOrder
   }
@@ -6156,6 +6184,7 @@ export namespace Prisma {
     message?: SortOrder
     tweetId?: SortOrder
     fingerprint?: SortOrder
+    isBlocked?: SortOrder
     isPosted?: SortOrder
     createdAt?: SortOrder
   }
@@ -6720,6 +6749,7 @@ export namespace Prisma {
     message: string
     tweetId?: string | null
     fingerprint?: string | null
+    isBlocked?: boolean
     isPosted?: boolean
     createdAt?: Date | string
     comments?: CommentCreateNestedManyWithoutMenfessInput
@@ -6732,6 +6762,7 @@ export namespace Prisma {
     message: string
     tweetId?: string | null
     fingerprint?: string | null
+    isBlocked?: boolean
     isPosted?: boolean
     createdAt?: Date | string
     comments?: CommentUncheckedCreateNestedManyWithoutMenfessInput
@@ -6760,6 +6791,7 @@ export namespace Prisma {
     message?: StringFieldUpdateOperationsInput | string
     tweetId?: NullableStringFieldUpdateOperationsInput | string | null
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
     isPosted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: CommentUpdateManyWithoutMenfessNestedInput
@@ -6772,6 +6804,7 @@ export namespace Prisma {
     message?: StringFieldUpdateOperationsInput | string
     tweetId?: NullableStringFieldUpdateOperationsInput | string | null
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
     isPosted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: CommentUncheckedUpdateManyWithoutMenfessNestedInput
@@ -6784,6 +6817,7 @@ export namespace Prisma {
     message: string
     tweetId?: string | null
     fingerprint?: string | null
+    isBlocked?: boolean
     isPosted?: boolean
     createdAt?: Date | string
     reactions?: ReactionCreateNestedManyWithoutMenfessInput
@@ -6796,6 +6830,7 @@ export namespace Prisma {
     message: string
     tweetId?: string | null
     fingerprint?: string | null
+    isBlocked?: boolean
     isPosted?: boolean
     createdAt?: Date | string
     reactions?: ReactionUncheckedCreateNestedManyWithoutMenfessInput
@@ -6824,6 +6859,7 @@ export namespace Prisma {
     message?: StringFieldUpdateOperationsInput | string
     tweetId?: NullableStringFieldUpdateOperationsInput | string | null
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
     isPosted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reactions?: ReactionUpdateManyWithoutMenfessNestedInput
@@ -6836,6 +6872,7 @@ export namespace Prisma {
     message?: StringFieldUpdateOperationsInput | string
     tweetId?: NullableStringFieldUpdateOperationsInput | string | null
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
     isPosted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reactions?: ReactionUncheckedUpdateManyWithoutMenfessNestedInput

@@ -103,6 +103,9 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     const data = await prisma.menfess.findMany({
+      where: {
+        isBlocked: false,
+      },
       select: {
         id: true,
         to: true,
@@ -152,10 +155,10 @@ export default async function handler(
     }
 
     console.log(message.length);
-    if (to.length > 60 || from.length > 60 || message.length > 280) {
+    if (to.length + from.length + message.length > 280) {
       return res.status(400).json({
         success: false,
-        message: "Input exceeds maximum length",
+        message: "Total characters (from + to + message) must not exceed 280",
         data: null,
       });
     }
@@ -203,13 +206,7 @@ export default async function handler(
       },
     });
 
-    if (bannedFingerprint) {
-      return res.status(403).json({
-        success: false,
-        message: BANNED_MESSAGE,
-        data: null,
-      });
-    }
+    const isBlocked = !!bannedFingerprint;
 
     const recentMenfess = await prisma.menfess.findFirst({
       where: {
@@ -248,8 +245,17 @@ export default async function handler(
           from,
           message,
           fingerprint,
+          isBlocked,
         },
       });
+
+      if (isBlocked) {
+        return res.status(403).json({
+          success: false,
+          message: BANNED_MESSAGE,
+          data: null,
+        });
+      }
 
       try {
         if (process.env.PRODUCTION === "false") {

@@ -135,7 +135,12 @@ const SendMenfess = () => {
         {/* End To */}
       </div>
       <div className="flex flex-col gap-1 w-full">
-        <p className="text-xs text-slate-400">Message</p>
+        <div className="flex justify-between items-center">
+          <p className="text-xs text-slate-400">Message</p>
+          <p className={`text-xs ${from.length + to.length + message.length > 280 ? "text-red-400" : "text-slate-500"}`}>
+            {from.length + to.length + message.length}/280
+          </p>
+        </div>
         <Textarea
           className="bg-transparent border-[#717174]"
           placeholder="Type your message here."

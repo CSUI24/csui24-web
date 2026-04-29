@@ -22,6 +22,7 @@ model Menfess {
   message     String
   tweetId     String?    @unique
   fingerprint String?
+  isBlocked   Boolean    @default(false)
   isPosted    Boolean    @default(false)
   createdAt   DateTime   @default(now())
   reactions   Reaction[]
