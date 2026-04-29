@@ -115,10 +115,6 @@ const Menfess = ({ menfess }: { menfess: MenfessType[] }) => {
               <span>Create your menfess!</span>
             </HoverBorderGradient>
           </div>
-          <p className="text-center text-slate-400 text-sm font-semibold">
-            Menfess stays anonymous publicly. We only keep an anonymous browser
-            fingerprint for moderation, abuse prevention, and banning.
-          </p>
         </div>
       )}
 
