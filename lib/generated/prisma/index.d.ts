@@ -1200,6 +1200,12 @@ export namespace Prisma {
     fingerprint: string | null
     isBlocked: boolean | null
     isPosted: boolean | null
+    resourceUserId: string | null
+    resourceUsername: string | null
+    resourceName: string | null
+    resourceEmail: string | null
+    resourceNpm: string | null
+    resourceOrganizationalCode: string | null
     createdAt: Date | null
   }
 
@@ -1212,6 +1218,12 @@ export namespace Prisma {
     fingerprint: string | null
     isBlocked: boolean | null
     isPosted: boolean | null
+    resourceUserId: string | null
+    resourceUsername: string | null
+    resourceName: string | null
+    resourceEmail: string | null
+    resourceNpm: string | null
+    resourceOrganizationalCode: string | null
     createdAt: Date | null
   }
 
@@ -1224,6 +1236,12 @@ export namespace Prisma {
     fingerprint: number
     isBlocked: number
     isPosted: number
+    resourceUserId: number
+    resourceUsername: number
+    resourceName: number
+    resourceEmail: number
+    resourceNpm: number
+    resourceOrganizationalCode: number
     createdAt: number
     _all: number
   }
@@ -1238,6 +1256,12 @@ export namespace Prisma {
     fingerprint?: true
     isBlocked?: true
     isPosted?: true
+    resourceUserId?: true
+    resourceUsername?: true
+    resourceName?: true
+    resourceEmail?: true
+    resourceNpm?: true
+    resourceOrganizationalCode?: true
     createdAt?: true
   }
 
@@ -1250,6 +1274,12 @@ export namespace Prisma {
     fingerprint?: true
     isBlocked?: true
     isPosted?: true
+    resourceUserId?: true
+    resourceUsername?: true
+    resourceName?: true
+    resourceEmail?: true
+    resourceNpm?: true
+    resourceOrganizationalCode?: true
     createdAt?: true
   }
 
@@ -1262,6 +1292,12 @@ export namespace Prisma {
     fingerprint?: true
     isBlocked?: true
     isPosted?: true
+    resourceUserId?: true
+    resourceUsername?: true
+    resourceName?: true
+    resourceEmail?: true
+    resourceNpm?: true
+    resourceOrganizationalCode?: true
     createdAt?: true
     _all?: true
   }
@@ -1347,6 +1383,12 @@ export namespace Prisma {
     fingerprint: string | null
     isBlocked: boolean
     isPosted: boolean
+    resourceUserId: string | null
+    resourceUsername: string | null
+    resourceName: string | null
+    resourceEmail: string | null
+    resourceNpm: string | null
+    resourceOrganizationalCode: string | null
     createdAt: Date
     _count: MenfessCountAggregateOutputType | null
     _min: MenfessMinAggregateOutputType | null
@@ -1376,6 +1418,12 @@ export namespace Prisma {
     fingerprint?: boolean
     isBlocked?: boolean
     isPosted?: boolean
+    resourceUserId?: boolean
+    resourceUsername?: boolean
+    resourceName?: boolean
+    resourceEmail?: boolean
+    resourceNpm?: boolean
+    resourceOrganizationalCode?: boolean
     createdAt?: boolean
     reactions?: boolean | Menfess$reactionsArgs<ExtArgs>
     comments?: boolean | Menfess$commentsArgs<ExtArgs>
@@ -1391,6 +1439,12 @@ export namespace Prisma {
     fingerprint?: boolean
     isBlocked?: boolean
     isPosted?: boolean
+    resourceUserId?: boolean
+    resourceUsername?: boolean
+    resourceName?: boolean
+    resourceEmail?: boolean
+    resourceNpm?: boolean
+    resourceOrganizationalCode?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["menfess"]>
 
@@ -1403,6 +1457,12 @@ export namespace Prisma {
     fingerprint?: boolean
     isBlocked?: boolean
     isPosted?: boolean
+    resourceUserId?: boolean
+    resourceUsername?: boolean
+    resourceName?: boolean
+    resourceEmail?: boolean
+    resourceNpm?: boolean
+    resourceOrganizationalCode?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["menfess"]>
 
@@ -1415,10 +1475,16 @@ export namespace Prisma {
     fingerprint?: boolean
     isBlocked?: boolean
     isPosted?: boolean
+    resourceUserId?: boolean
+    resourceUsername?: boolean
+    resourceName?: boolean
+    resourceEmail?: boolean
+    resourceNpm?: boolean
+    resourceOrganizationalCode?: boolean
     createdAt?: boolean
   }
 
-  export type MenfessOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "to" | "from" | "message" | "tweetId" | "fingerprint" | "isBlocked" | "isPosted" | "createdAt", ExtArgs["result"]["menfess"]>
+  export type MenfessOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "to" | "from" | "message" | "tweetId" | "fingerprint" | "isBlocked" | "isPosted" | "resourceUserId" | "resourceUsername" | "resourceName" | "resourceEmail" | "resourceNpm" | "resourceOrganizationalCode" | "createdAt", ExtArgs["result"]["menfess"]>
   export type MenfessInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     reactions?: boolean | Menfess$reactionsArgs<ExtArgs>
     comments?: boolean | Menfess$commentsArgs<ExtArgs>
@@ -1442,6 +1508,12 @@ export namespace Prisma {
       fingerprint: string | null
       isBlocked: boolean
       isPosted: boolean
+      resourceUserId: string | null
+      resourceUsername: string | null
+      resourceName: string | null
+      resourceEmail: string | null
+      resourceNpm: string | null
+      resourceOrganizationalCode: string | null
       createdAt: Date
     }, ExtArgs["result"]["menfess"]>
     composites: {}
@@ -1876,6 +1948,12 @@ export namespace Prisma {
     readonly fingerprint: FieldRef<"Menfess", 'String'>
     readonly isBlocked: FieldRef<"Menfess", 'Boolean'>
     readonly isPosted: FieldRef<"Menfess", 'Boolean'>
+    readonly resourceUserId: FieldRef<"Menfess", 'String'>
+    readonly resourceUsername: FieldRef<"Menfess", 'String'>
+    readonly resourceName: FieldRef<"Menfess", 'String'>
+    readonly resourceEmail: FieldRef<"Menfess", 'String'>
+    readonly resourceNpm: FieldRef<"Menfess", 'String'>
+    readonly resourceOrganizationalCode: FieldRef<"Menfess", 'String'>
     readonly createdAt: FieldRef<"Menfess", 'DateTime'>
   }
     
@@ -5473,6 +5551,12 @@ export namespace Prisma {
     fingerprint: 'fingerprint',
     isBlocked: 'isBlocked',
     isPosted: 'isPosted',
+    resourceUserId: 'resourceUserId',
+    resourceUsername: 'resourceUsername',
+    resourceName: 'resourceName',
+    resourceEmail: 'resourceEmail',
+    resourceNpm: 'resourceNpm',
+    resourceOrganizationalCode: 'resourceOrganizationalCode',
     createdAt: 'createdAt'
   };
 
@@ -5617,6 +5701,12 @@ export namespace Prisma {
     fingerprint?: StringNullableFilter<"Menfess"> | string | null
     isBlocked?: BoolFilter<"Menfess"> | boolean
     isPosted?: BoolFilter<"Menfess"> | boolean
+    resourceUserId?: StringNullableFilter<"Menfess"> | string | null
+    resourceUsername?: StringNullableFilter<"Menfess"> | string | null
+    resourceName?: StringNullableFilter<"Menfess"> | string | null
+    resourceEmail?: StringNullableFilter<"Menfess"> | string | null
+    resourceNpm?: StringNullableFilter<"Menfess"> | string | null
+    resourceOrganizationalCode?: StringNullableFilter<"Menfess"> | string | null
     createdAt?: DateTimeFilter<"Menfess"> | Date | string
     reactions?: ReactionListRelationFilter
     comments?: CommentListRelationFilter
@@ -5631,6 +5721,12 @@ export namespace Prisma {
     fingerprint?: SortOrderInput | SortOrder
     isBlocked?: SortOrder
     isPosted?: SortOrder
+    resourceUserId?: SortOrderInput | SortOrder
+    resourceUsername?: SortOrderInput | SortOrder
+    resourceName?: SortOrderInput | SortOrder
+    resourceEmail?: SortOrderInput | SortOrder
+    resourceNpm?: SortOrderInput | SortOrder
+    resourceOrganizationalCode?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     reactions?: ReactionOrderByRelationAggregateInput
     comments?: CommentOrderByRelationAggregateInput
@@ -5648,6 +5744,12 @@ export namespace Prisma {
     fingerprint?: StringNullableFilter<"Menfess"> | string | null
     isBlocked?: BoolFilter<"Menfess"> | boolean
     isPosted?: BoolFilter<"Menfess"> | boolean
+    resourceUserId?: StringNullableFilter<"Menfess"> | string | null
+    resourceUsername?: StringNullableFilter<"Menfess"> | string | null
+    resourceName?: StringNullableFilter<"Menfess"> | string | null
+    resourceEmail?: StringNullableFilter<"Menfess"> | string | null
+    resourceNpm?: StringNullableFilter<"Menfess"> | string | null
+    resourceOrganizationalCode?: StringNullableFilter<"Menfess"> | string | null
     createdAt?: DateTimeFilter<"Menfess"> | Date | string
     reactions?: ReactionListRelationFilter
     comments?: CommentListRelationFilter
@@ -5662,6 +5764,12 @@ export namespace Prisma {
     fingerprint?: SortOrderInput | SortOrder
     isBlocked?: SortOrder
     isPosted?: SortOrder
+    resourceUserId?: SortOrderInput | SortOrder
+    resourceUsername?: SortOrderInput | SortOrder
+    resourceName?: SortOrderInput | SortOrder
+    resourceEmail?: SortOrderInput | SortOrder
+    resourceNpm?: SortOrderInput | SortOrder
+    resourceOrganizationalCode?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: MenfessCountOrderByAggregateInput
     _max?: MenfessMaxOrderByAggregateInput
@@ -5680,6 +5788,12 @@ export namespace Prisma {
     fingerprint?: StringNullableWithAggregatesFilter<"Menfess"> | string | null
     isBlocked?: BoolWithAggregatesFilter<"Menfess"> | boolean
     isPosted?: BoolWithAggregatesFilter<"Menfess"> | boolean
+    resourceUserId?: StringNullableWithAggregatesFilter<"Menfess"> | string | null
+    resourceUsername?: StringNullableWithAggregatesFilter<"Menfess"> | string | null
+    resourceName?: StringNullableWithAggregatesFilter<"Menfess"> | string | null
+    resourceEmail?: StringNullableWithAggregatesFilter<"Menfess"> | string | null
+    resourceNpm?: StringNullableWithAggregatesFilter<"Menfess"> | string | null
+    resourceOrganizationalCode?: StringNullableWithAggregatesFilter<"Menfess"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Menfess"> | Date | string
   }
 
@@ -5847,6 +5961,12 @@ export namespace Prisma {
     fingerprint?: string | null
     isBlocked?: boolean
     isPosted?: boolean
+    resourceUserId?: string | null
+    resourceUsername?: string | null
+    resourceName?: string | null
+    resourceEmail?: string | null
+    resourceNpm?: string | null
+    resourceOrganizationalCode?: string | null
     createdAt?: Date | string
     reactions?: ReactionCreateNestedManyWithoutMenfessInput
     comments?: CommentCreateNestedManyWithoutMenfessInput
@@ -5861,6 +5981,12 @@ export namespace Prisma {
     fingerprint?: string | null
     isBlocked?: boolean
     isPosted?: boolean
+    resourceUserId?: string | null
+    resourceUsername?: string | null
+    resourceName?: string | null
+    resourceEmail?: string | null
+    resourceNpm?: string | null
+    resourceOrganizationalCode?: string | null
     createdAt?: Date | string
     reactions?: ReactionUncheckedCreateNestedManyWithoutMenfessInput
     comments?: CommentUncheckedCreateNestedManyWithoutMenfessInput
@@ -5875,6 +6001,12 @@ export namespace Prisma {
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     isBlocked?: BoolFieldUpdateOperationsInput | boolean
     isPosted?: BoolFieldUpdateOperationsInput | boolean
+    resourceUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceName?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceNpm?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceOrganizationalCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reactions?: ReactionUpdateManyWithoutMenfessNestedInput
     comments?: CommentUpdateManyWithoutMenfessNestedInput
@@ -5889,6 +6021,12 @@ export namespace Prisma {
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     isBlocked?: BoolFieldUpdateOperationsInput | boolean
     isPosted?: BoolFieldUpdateOperationsInput | boolean
+    resourceUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceName?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceNpm?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceOrganizationalCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reactions?: ReactionUncheckedUpdateManyWithoutMenfessNestedInput
     comments?: CommentUncheckedUpdateManyWithoutMenfessNestedInput
@@ -5903,6 +6041,12 @@ export namespace Prisma {
     fingerprint?: string | null
     isBlocked?: boolean
     isPosted?: boolean
+    resourceUserId?: string | null
+    resourceUsername?: string | null
+    resourceName?: string | null
+    resourceEmail?: string | null
+    resourceNpm?: string | null
+    resourceOrganizationalCode?: string | null
     createdAt?: Date | string
   }
 
@@ -5915,6 +6059,12 @@ export namespace Prisma {
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     isBlocked?: BoolFieldUpdateOperationsInput | boolean
     isPosted?: BoolFieldUpdateOperationsInput | boolean
+    resourceUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceName?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceNpm?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceOrganizationalCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -5927,6 +6077,12 @@ export namespace Prisma {
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     isBlocked?: BoolFieldUpdateOperationsInput | boolean
     isPosted?: BoolFieldUpdateOperationsInput | boolean
+    resourceUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceName?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceNpm?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceOrganizationalCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6162,6 +6318,12 @@ export namespace Prisma {
     fingerprint?: SortOrder
     isBlocked?: SortOrder
     isPosted?: SortOrder
+    resourceUserId?: SortOrder
+    resourceUsername?: SortOrder
+    resourceName?: SortOrder
+    resourceEmail?: SortOrder
+    resourceNpm?: SortOrder
+    resourceOrganizationalCode?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -6174,6 +6336,12 @@ export namespace Prisma {
     fingerprint?: SortOrder
     isBlocked?: SortOrder
     isPosted?: SortOrder
+    resourceUserId?: SortOrder
+    resourceUsername?: SortOrder
+    resourceName?: SortOrder
+    resourceEmail?: SortOrder
+    resourceNpm?: SortOrder
+    resourceOrganizationalCode?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -6186,6 +6354,12 @@ export namespace Prisma {
     fingerprint?: SortOrder
     isBlocked?: SortOrder
     isPosted?: SortOrder
+    resourceUserId?: SortOrder
+    resourceUsername?: SortOrder
+    resourceName?: SortOrder
+    resourceEmail?: SortOrder
+    resourceNpm?: SortOrder
+    resourceOrganizationalCode?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -6751,6 +6925,12 @@ export namespace Prisma {
     fingerprint?: string | null
     isBlocked?: boolean
     isPosted?: boolean
+    resourceUserId?: string | null
+    resourceUsername?: string | null
+    resourceName?: string | null
+    resourceEmail?: string | null
+    resourceNpm?: string | null
+    resourceOrganizationalCode?: string | null
     createdAt?: Date | string
     comments?: CommentCreateNestedManyWithoutMenfessInput
   }
@@ -6764,6 +6944,12 @@ export namespace Prisma {
     fingerprint?: string | null
     isBlocked?: boolean
     isPosted?: boolean
+    resourceUserId?: string | null
+    resourceUsername?: string | null
+    resourceName?: string | null
+    resourceEmail?: string | null
+    resourceNpm?: string | null
+    resourceOrganizationalCode?: string | null
     createdAt?: Date | string
     comments?: CommentUncheckedCreateNestedManyWithoutMenfessInput
   }
@@ -6793,6 +6979,12 @@ export namespace Prisma {
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     isBlocked?: BoolFieldUpdateOperationsInput | boolean
     isPosted?: BoolFieldUpdateOperationsInput | boolean
+    resourceUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceName?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceNpm?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceOrganizationalCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: CommentUpdateManyWithoutMenfessNestedInput
   }
@@ -6806,6 +6998,12 @@ export namespace Prisma {
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     isBlocked?: BoolFieldUpdateOperationsInput | boolean
     isPosted?: BoolFieldUpdateOperationsInput | boolean
+    resourceUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceName?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceNpm?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceOrganizationalCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     comments?: CommentUncheckedUpdateManyWithoutMenfessNestedInput
   }
@@ -6819,6 +7017,12 @@ export namespace Prisma {
     fingerprint?: string | null
     isBlocked?: boolean
     isPosted?: boolean
+    resourceUserId?: string | null
+    resourceUsername?: string | null
+    resourceName?: string | null
+    resourceEmail?: string | null
+    resourceNpm?: string | null
+    resourceOrganizationalCode?: string | null
     createdAt?: Date | string
     reactions?: ReactionCreateNestedManyWithoutMenfessInput
   }
@@ -6832,6 +7036,12 @@ export namespace Prisma {
     fingerprint?: string | null
     isBlocked?: boolean
     isPosted?: boolean
+    resourceUserId?: string | null
+    resourceUsername?: string | null
+    resourceName?: string | null
+    resourceEmail?: string | null
+    resourceNpm?: string | null
+    resourceOrganizationalCode?: string | null
     createdAt?: Date | string
     reactions?: ReactionUncheckedCreateNestedManyWithoutMenfessInput
   }
@@ -6861,6 +7071,12 @@ export namespace Prisma {
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     isBlocked?: BoolFieldUpdateOperationsInput | boolean
     isPosted?: BoolFieldUpdateOperationsInput | boolean
+    resourceUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceName?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceNpm?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceOrganizationalCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reactions?: ReactionUpdateManyWithoutMenfessNestedInput
   }
@@ -6874,6 +7090,12 @@ export namespace Prisma {
     fingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     isBlocked?: BoolFieldUpdateOperationsInput | boolean
     isPosted?: BoolFieldUpdateOperationsInput | boolean
+    resourceUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceName?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceNpm?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceOrganizationalCode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reactions?: ReactionUncheckedUpdateManyWithoutMenfessNestedInput
   }

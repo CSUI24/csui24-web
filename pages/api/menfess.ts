@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@/lib/generated/prisma";
 import { briefFamsData } from "@/modules/fams-data";
 import { globalRateLimit } from "@/lib/rateLimiter";
+import { getResourceSessionLookup } from "@/lib/resourceSession";
 
 const limit = globalRateLimit(1);
 const prisma = new PrismaClient();
@@ -239,6 +240,14 @@ export default async function handler(
     }
 
     try {
+      const resourceSession = await getResourceSessionLookup(req);
+      const resourceUser = resourceSession.user;
+      console.info("Menfess resource session lookup", {
+        status: resourceSession.status,
+        hasSessionCookie: resourceSession.hasSessionCookie,
+        resourceStatus: resourceSession.resourceStatus,
+        hasResourceUser: Boolean(resourceUser),
+      });
       const newMenfess = await prisma.menfess.create({
         data: {
           to,
@@ -246,6 +255,12 @@ export default async function handler(
           message,
           fingerprint,
           isBlocked,
+          resourceUserId: resourceUser?.id,
+          resourceUsername: resourceUser?.username,
+          resourceName: resourceUser?.name,
+          resourceEmail: resourceUser?.email,
+          resourceNpm: resourceUser?.npm,
+          resourceOrganizationalCode: resourceUser?.organizationalCode,
         },
       });
 

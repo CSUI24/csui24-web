@@ -5,8 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../lib/generated/prisma"
   binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
@@ -16,19 +16,26 @@ datasource db {
 }
 
 model Menfess {
-  id          String     @id @default(uuid())
-  to          String
-  from        String
-  message     String
-  tweetId     String?    @unique
-  fingerprint String?
-  isBlocked   Boolean    @default(false)
-  isPosted    Boolean    @default(false)
-  createdAt   DateTime   @default(now())
-  reactions   Reaction[]
-  comments    Comment[]
+  id                         String     @id @default(uuid())
+  to                         String
+  from                       String
+  message                    String
+  tweetId                    String?    @unique
+  fingerprint                String?
+  isBlocked                  Boolean    @default(false)
+  isPosted                   Boolean    @default(false)
+  resourceUserId             String?
+  resourceUsername           String?
+  resourceName               String?
+  resourceEmail              String?
+  resourceNpm                String?
+  resourceOrganizationalCode String?
+  createdAt                  DateTime   @default(now())
+  reactions                  Reaction[]
+  comments                   Comment[]
 
   @@index([fingerprint])
+  @@index([resourceUserId])
 }
 
 model BannedFingerprint {
@@ -49,12 +56,12 @@ model Reaction {
 }
 
 model Comment {
-  id         String   @id @default(cuid())
-  menfessId  String
-  menfess    Menfess  @relation(fields: [menfessId], references: [id])
-  author     String   @default("SipalingPenyamar")
-  content    String
-  createdAt  DateTime @default(now())
+  id        String   @id @default(cuid())
+  menfessId String
+  menfess   Menfess  @relation(fields: [menfessId], references: [id])
+  author    String   @default("SipalingPenyamar")
+  content   String
+  createdAt DateTime @default(now())
 
   @@index([menfessId])
 }
