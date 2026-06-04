@@ -1,6 +1,11 @@
 import { Metadata } from "next";
 import Menfess from "@/components/MenfessPage/Menfess";
 import { MenfessType } from "@/components/MenfessPage/types";
+import { PrismaClient } from "@/lib/generated/prisma";
+
+const prisma = new PrismaClient();
+
+export const revalidate = 10;
 
 export const metadata: Metadata = {
   title: "Menfess | CSUI24",
@@ -41,15 +46,38 @@ export const metadata: Metadata = {
 };
 
 const MenfessPage = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/menfess`, {
-    next: { revalidate: 10 }, // Revalidate every 10 seconds
+  const data = await prisma.menfess.findMany({
+    where: {
+      isBlocked: false,
+    },
+    select: {
+      id: true,
+      to: true,
+      from: true,
+      message: true,
+      createdAt: true,
+      reactions: {
+        select: { type: true, count: true },
+      },
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: process.env.LIMIT_MENFESS
+      ? parseInt(process.env.LIMIT_MENFESS)
+      : undefined,
   });
-  const resJson: {
-    success: boolean;
-    message: string;
-    data: MenfessType[];
-  } = await res.json();
 
-  return <Menfess menfess={resJson.data} />;
+  const menfess: MenfessType[] = data.map((item) => ({
+    ...item,
+    createdAt: item.createdAt.toISOString(),
+  }));
+
+  return <Menfess menfess={menfess} />;
 };
 export default MenfessPage;
