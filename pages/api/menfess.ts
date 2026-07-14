@@ -7,7 +7,7 @@ import { getResourceSessionLookup } from "@/lib/resourceSession";
 const limit = globalRateLimit(1);
 const prisma = new PrismaClient();
 const BANNED_MESSAGE = "MAMPUS LU GUA BAN AJGG BUAHAHHAHAHHA";
-const MENFESS_COOLDOWN_MS = 5 * 60 * 1000;
+const MENFESS_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
 const normalizeFingerprint = (value: unknown) => {
   if (typeof value !== "string") {
