@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 env:
-  VERCEL_ORG_ID: ${{ secrets.ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.PROJECT_PROD_ID }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
   deploy-production:
@@ -18,11 +19,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Enable pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@9 --activate
-          pnpm --version
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
