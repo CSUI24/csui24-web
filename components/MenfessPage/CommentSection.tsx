@@ -117,7 +117,7 @@ const CommentSection = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#03045e]/30 h-96 flex flex-col rounded-3xl border border-[#717174] text-white">
+      <DialogContent className="bg-[#03045e] h-96 flex flex-col rounded-3xl bg-opacity-30 border border-[#717174] text-white">
         <div className="w-full h-full flex flex-col gap-4 overflow-y-auto">
           {/* From and To */}
           <div className="w-full flex flex-col max-sm:gap-2 gap-4 text-white">
@@ -212,7 +212,7 @@ const CommentSection = ({
           <div className="min-h-[0.5px] w-full bg-[#D9D9D9]"></div> {/* Line */}
           {/* Message */}
           <div className="w-full h-36 min-h-36 text-white font-sans flex items-center justify-center px-6 overflow-y-auto max-h-full">
-            <p className="text-center wrap-break-word w-full h-full">{message}</p>
+            <p className="text-center break-words w-full h-full">{message}</p>
           </div>
           {/* Message */}
           {/* Bottom */}

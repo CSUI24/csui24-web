@@ -58,7 +58,7 @@ const SwitchingCard = () => {
             <div
               key={index}
               onClick={() => handleClick(index)}
-              className={`${isMediumScreen || isSmallScreen ? "" : "cursor-pointer"} rounded-[35px] p-[2px] bg-linear-to-br from-gray-200 via-gray-400 to-gray-600 transition-all duration-500 ease-in-out overflow-hidden ${
+              className={`${isMediumScreen || isSmallScreen ? "" : "cursor-pointer"} rounded-[35px] p-[2px] bg-gradient-to-br from-gray-200 via-gray-400 to-gray-600 transition-all duration-500 ease-in-out overflow-hidden ${
                 isSmallScreen
                   ? "max-w-[350px]"
                   : isMediumScreen

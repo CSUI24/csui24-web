@@ -103,7 +103,7 @@ const MenfessCard = ({
   };
 
   return (
-    <div className="w-full h-96 rounded-xl bg-[#03045e]/30 flex flex-col border border-[#717174] overflow-hidden">
+    <div className="w-full h-96 rounded-xl bg-[#03045e] flex flex-col bg-opacity-30 border border-[#717174] overflow-hidden">
       <div className="relative h-fit p-6 max-sm:p-3 flex flex-col gap-2">
         {tokenAdmin && (
           <div className="absolute top-6 right-6 flex items-center gap-2">
@@ -174,7 +174,7 @@ const MenfessCard = ({
         <div className="h-[0.5px] w-full bg-[#D9D9D9]"></div>
       </div>
       <div className="w-full h-full text-white font-sans flex items-center justify-center px-6 overflow-y-auto max-h-full">
-        <p className="text-center wrap-break-word w-full h-full">{message}</p>
+        <p className="text-center break-words w-full h-full">{message}</p>
       </div>
       <div className="w-full flex flex-col items-center gap-2 p-6 max-sm:p-3">
         <div className="w-full flex justify-between">
