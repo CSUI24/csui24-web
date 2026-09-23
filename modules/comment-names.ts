@@ -1,5 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
-const name = [
+export const commentNames = [
   "roket bocor",
   "cendol geming",
   "ninja ngantuk",
@@ -871,18 +870,3 @@ const name = [
   "ikan tua",
   "roket malam",
 ];
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method === "GET") {
-    const randomIndex = Math.floor(Math.random() * name.length);
-    const randomName = name[randomIndex];
-    return res.status(200).json({
-      success: true,
-      message: "Name fetched successfully",
-      data: randomName,
-    });
-  }
-}

@@ -1,10 +1,9 @@
 import { LRUCache } from 'lru-cache'
-import type { NextApiRequest, NextApiResponse } from 'next'
 
-function getIP(req: NextApiRequest): string {
+function getIP(request: Request): string {
   return (
-    req.headers['x-forwarded-for']?.toString().split(',')[0]?.trim() ||
-    req.socket.remoteAddress ||
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
     ''
   )
 }
@@ -16,8 +15,8 @@ function getIP(req: NextApiRequest): string {
  * @param options.maxRequests - Maximum number of allowed requests per IP in the time window.
  * @param options.maxEntries - Maximum number of unique IPs to track in the cache (optional). Default = 1000
  * 
- * @returns A middleware function that returns `true` if the request is allowed,
- *          or sends a 429 response and returns `false` if the limit is exceeded.
+ * @returns A middleware function that returns a 429 response when the request
+ *          is over the limit, or `null` when the request is allowed.
  */
 export function createRateLimiter(options: {
   windowMs: number
@@ -31,21 +30,20 @@ export function createRateLimiter(options: {
     max: maxEntries,
   })
 
-  return function rateLimitMiddleware(req: NextApiRequest, res: NextApiResponse): boolean {
-    const ip = getIP(req)
+  return function rateLimitMiddleware(request: Request): Response | null {
+    const ip = getIP(request)
     const record = cache.get(ip) || { count: 0 }
 
     if (record.count >= maxRequests) {
-      res.status(429).json({
+      return Response.json({
         success: false,
         message: 'Too many requests. Please try again later.',
         data: null,
-      })
-      return false
+      }, { status: 429 })
     }
 
     cache.set(ip, { count: record.count + 1 })
-    return true
+    return null
   }
 }
 

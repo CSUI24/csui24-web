@@ -1,20 +1,31 @@
 import { famsData } from "@/modules/fams-data";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import ProfilePage from "@/components/ProfilePage";
 
-// Server-side: generate metadata using local data
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const fam = famsData.find((p) => p.id === params.id);
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
+
+export function generateStaticParams() {
+  return famsData.map(({ id }) => ({ id }));
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const fam = famsData.find((p) => p.id === id);
 
   if (!fam) {
     return {
-      title: 'Post Not Found',
-      description: 'The requested post could not be found.',
+      title: "Profile Not Found",
+      description: "The requested profile could not be found.",
     };
   }
 
-  const metaTitle = `${fam['displayed-name']}'${fam['displayed-name'].toLowerCase().endsWith('s')? '' : 's'} Profile`;
-  const metaImage = `${process.env.NEXT_PUBLIC_BASE_URL}/${fam['image-filename']}`
+  const metaTitle = `${fam["displayed-name"]}'${fam["displayed-name"].toLowerCase().endsWith("s") ? "" : "s"} Profile`;
+  const metaImage = `${process.env.NEXT_PUBLIC_BASE_URL}/${fam["image-filename"]}`;
 
   return {
     title: metaTitle,
@@ -23,7 +34,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
       title: metaTitle,
       description: fam.description,
       url: `${process.env.NEXT_PUBLIC_BASE_URL}/fams/${fam.id}`,
-      type: 'article',
+      type: "article",
       images: [
         {
           url: metaImage || `${process.env.NEXT_PUBLIC_BASE_URL}/customBanner.png`,
@@ -34,7 +45,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
       ],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: metaTitle,
       description: fam.description,
       images: [metaImage || `${process.env.NEXT_PUBLIC_BASE_URL}/customBanner.png`],
@@ -43,9 +54,9 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 }
 
 
-export default function Page({ params }: { params: {id: string} }) {
-  const id = params.id;
-  const personIndex = famsData.findIndex((data) => data.id == id);
+export default async function Page({ params }: PageProps) {
+  const { id } = await params;
+  const personIndex = famsData.findIndex((data) => data.id === id);
   const person = famsData[personIndex];
   const prevID =
     personIndex > 0

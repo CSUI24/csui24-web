@@ -1,5 +1,3 @@
-import type { NextApiRequest } from "next";
-
 export interface ResourceSessionUser {
   id: string;
   username: string;
@@ -32,17 +30,29 @@ const RESOURCE_SESSION_COOKIE =
   process.env.RESOURCE_CSUI_SESSION_COOKIE?.trim() || "session";
 const SESSION_LOOKUP_TIMEOUT_MS = 1500;
 
+function getCookieValue(cookieHeader: string | null, name: string) {
+  const cookie = cookieHeader
+    ?.split(";")
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(`${name}=`));
+
+  return cookie?.slice(name.length + 1) || null;
+}
+
 export async function getResourceSessionUser(
-  req: NextApiRequest,
+  request: Request,
 ): Promise<ResourceSessionUser | null> {
-  const lookup = await getResourceSessionLookup(req);
+  const lookup = await getResourceSessionLookup(request);
   return lookup.user;
 }
 
 export async function getResourceSessionLookup(
-  req: NextApiRequest,
+  request: Request,
 ): Promise<ResourceSessionLookup> {
-  const sessionToken = req.cookies[RESOURCE_SESSION_COOKIE];
+  const sessionToken = getCookieValue(
+    request.headers.get("cookie"),
+    RESOURCE_SESSION_COOKIE,
+  );
 
   if (!sessionToken) {
     return {

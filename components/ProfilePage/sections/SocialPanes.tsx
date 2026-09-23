@@ -1,9 +1,8 @@
 "use client";
 import { useMemo, useState } from "react";
 import { FamsDataType } from "@/modules/fams-data";
-import { Linkedin } from "lucide-react";
 import { RiTwitterXLine } from "react-icons/ri";
-import { FaInstagram } from "react-icons/fa";
+import { FaInstagram, FaLinkedin } from "react-icons/fa";
 import { BsLine } from "react-icons/bs";
 
 export const SocialPaneDesktop = ({ person }: { person: FamsDataType }) => {
@@ -56,7 +55,7 @@ export const SocialPaneDesktop = ({ person }: { person: FamsDataType }) => {
             onMouseEnter={() => setHoveredIndex(1)}
             onClick={() => setHoveredIndex(1)}
           >
-            <Linkedin className="size-8 lg:size-9" />
+            <FaLinkedin className="size-8 lg:size-9" />
           </a>
         )}
         {person["line-id"] !== null && person["line-id"] !== "-" && (
@@ -133,7 +132,7 @@ export const SocialPaneMobile = ({ person }: { person: FamsDataType }) => {
           className="flex px-2 sm:px-3 py-1 text-black bg-[#D9D9D9] rounded-full items-center gap-x-1 sm:gap-x-2 relative"
           href={linkedInUrl}
         >
-          <Linkedin className="size-4 sm:size-5" />
+          <FaLinkedin className="size-4 sm:size-5" />
           <h5 className="font-sfReg font-normal text-xs sm:text-sm">
             {person["linkedin-id"]}
           </h5>

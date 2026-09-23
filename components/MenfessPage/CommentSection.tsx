@@ -14,7 +14,7 @@ import { ReactionBar } from "./reactionBar";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import formatRelativeTime from "@/lib/formatRelativeTime";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -38,7 +38,14 @@ const CommentSection = ({
   const { comments } = _count;
   const toIsFam = to.startsWith("fams/");
   const fromIsFam = from.startsWith("fams/");
-  const [Name, setName] = useState("SipalingAnonym");
+  const name = useSyncExternalStore(
+    (onChange) => {
+      window.addEventListener("storage", onChange);
+      return () => window.removeEventListener("storage", onChange);
+    },
+    () => window.localStorage.getItem("CommentName") ?? "SipalingAnonym",
+    () => "SipalingAnonym",
+  );
   const [Data, setData] = useState<CommentType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -69,10 +76,6 @@ const CommentSection = ({
       setIsLoading(false);
     };
 
-    const storedName = localStorage.getItem("CommentName");
-    if (storedName) {
-      setName(storedName);
-    }
     fetchData();
   }, [open, menfess.id]);
 
@@ -90,7 +93,7 @@ const CommentSection = ({
       body: JSON.stringify({
         menfessId: menfess.id,
         content: InputComment,
-        author: Name,
+        author: name,
       }),
     });
     const resJSON: {
@@ -240,7 +243,7 @@ const CommentSection = ({
                 return (
                   <div
                     key={index}
-                    className={`flex mx-1 gap-[22px] ${comment.author === Name ? "flex-row-reverse" : ""}`}
+                    className={`flex mx-1 gap-[22px] ${comment.author === name ? "flex-row-reverse" : ""}`}
                   >
                     <MessageSquareText className="mt-2" size={20} />
                     <div className="bg-blue-800/20 w-fit rounded-lg p-4">
@@ -269,7 +272,7 @@ const CommentSection = ({
               <Input
                 className="bg-transparent w-full border-[#717174]"
                 type="text"
-                placeholder={`Comment as ${Name}.....`}
+                  placeholder={`Comment as ${name}.....`}
                 value={InputComment}
                 onChange={(e) => setInputComment(e.target.value)}
               />

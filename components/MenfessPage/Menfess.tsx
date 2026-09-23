@@ -1,6 +1,6 @@
 "use client";
 import SendMenfess from "./send";
-import { useState, useEffect } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import MenfessCard from "./card";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import { MenfessType } from "./types";
@@ -21,7 +21,14 @@ const Menfess = ({ menfess }: { menfess: MenfessType[] }) => {
       comments: 0,
     },
   });
-  const [isAdmin, setIsAdmin] = useState("");
+  const isAdmin = useSyncExternalStore(
+    (onChange) => {
+      window.addEventListener("storage", onChange);
+      return () => window.removeEventListener("storage", onChange);
+    },
+    () => window.localStorage.getItem("admin_key") ?? "",
+    () => "",
+  );
 
   // Pagination settings
   const cardsPerPage = 10;
@@ -77,10 +84,6 @@ const Menfess = ({ menfess }: { menfess: MenfessType[] }) => {
     };
     if (!localStorage.getItem("CommentName")) {
       fetchData();
-    }
-    const admin = localStorage.getItem("admin_key");
-    if (admin) {
-      setIsAdmin(admin);
     }
   }, []);
 

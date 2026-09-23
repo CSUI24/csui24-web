@@ -1,11 +1,9 @@
 import { Metadata } from "next";
 import Menfess from "@/components/MenfessPage/Menfess";
 import { MenfessType } from "@/components/MenfessPage/types";
-import { PrismaClient } from "@/lib/generated/prisma";
+import { prisma } from "@/lib/prisma";
 
-const prisma = new PrismaClient();
-
-export const revalidate = 10;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Menfess | CSUI24",

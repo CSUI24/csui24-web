@@ -31,6 +31,9 @@ const PalanquinDark = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL || "https://cosmic.csui.dev",
+  ),
   title: "CSUI24: The Cosmic Connection",
   description:
     "Welcome to CSUI24 - the creative hub for the Cosmic generation at Fasilkom UI. Connect, innovate, and celebrate your unique journey at Fakultas Ilmu Komputer, Universitas Indonesia.",
