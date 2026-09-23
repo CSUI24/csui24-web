@@ -114,46 +114,62 @@ const SendMenfess = ({
   };
 
   return (
-    <div className="w-full p-10 max-lg:p-8 flex flex-col gap-4 max-sm:p-6 bg-[#03045e] border border-[#717174] bg-opacity-30 rounded-2xl text-white transition-all">
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-1">
-          <h1 className="text-white font-sfPro font-[400] opacity-80 text-base sm:text-lg md:text-xl lg:text-2xl">
-            Send Menfess
-          </h1>
-          <Tooltip
-            delayDuration={100}
-            open={tooltipOpen}
-            onOpenChange={setTooltipOpen}
-          >
-            <TooltipTrigger asChild>
-              <button
-                type="button"
-                aria-label={
-                  mode === "guest"
-                    ? "About guest menfess"
-                    : "About UI SSO menfess"
-                }
-                onClick={() => setTooltipOpen(true)}
-                className="inline-flex size-11 shrink-0 items-center justify-center rounded-full text-slate-400 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-95"
-              >
-                <Info size={17} aria-hidden="true" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent
-              side="bottom"
-              sideOffset={8}
-              className="w-56 max-w-[calc(100vw-3rem)] rounded-xl border-[#717174] bg-[#101432] px-3 py-2 text-left font-sfPro text-xs font-normal leading-5 text-slate-100 shadow-xl motion-reduce:animate-none sm:w-64"
+    <div
+      className={`w-full p-10 max-lg:p-8 flex flex-col gap-4 max-sm:p-6 bg-[#03045e] border bg-opacity-30 rounded-2xl text-white ${
+        mode === "guest" ? "border-amber-200/35" : "border-indigo-200/35"
+      }`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex items-center gap-1">
+            <h2 className="font-sfPro font-medium leading-tight text-slate-100 text-base sm:text-lg md:text-xl lg:text-2xl">
+              {mode === "guest" ? "Send as guest" : "Send with UI SSO"}
+            </h2>
+            <Tooltip
+              delayDuration={100}
+              open={tooltipOpen}
+              onOpenChange={setTooltipOpen}
             >
-              {mode === "guest"
-                ? "Your menfess waits for admin approval. Encryption for stored data is planned."
-                : "Your menfess is posted immediately. Your SSO identity isn't shown publicly. Encryption for stored data is planned."}
-            </TooltipContent>
-          </Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  aria-label={
+                    mode === "guest"
+                      ? "About guest menfess"
+                      : "About UI SSO menfess"
+                  }
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setTooltipOpen(true);
+                  }}
+                  className="inline-flex size-11 shrink-0 items-center justify-center rounded-full text-slate-400 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-95"
+                >
+                  <Info size={17} aria-hidden="true" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent
+                side="bottom"
+                sideOffset={8}
+                className="w-56 max-w-[calc(100vw-3rem)] rounded-xl border-[#717174] bg-[#101432] px-3 py-2 text-left font-sfPro text-xs font-normal leading-5 text-slate-100 shadow-xl motion-reduce:animate-none sm:w-64"
+              >
+                {mode === "guest"
+                  ? "Guest menfess appear after admin approval."
+                  : "Your UI identity stays private and protected."}
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <p className="mt-1 flex items-center gap-2 font-sfPro text-xs text-slate-300 sm:text-sm">
+            <span
+              aria-hidden="true"
+              className={`size-1.5 shrink-0 rounded-full ${mode === "guest" ? "bg-amber-200" : "bg-indigo-200"}`}
+            />
+            {mode === "guest" ? "Needs admin approval" : "Posts immediately"}
+          </p>
         </div>
         <button
           type="button"
           onClick={onClose}
-          className="rounded-lg px-2 py-1 font-sfPro text-sm text-slate-400 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          className="inline-flex min-h-11 shrink-0 items-center rounded-lg px-2 font-sfPro text-sm text-slate-400 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
         >
           Cancel
         </button>

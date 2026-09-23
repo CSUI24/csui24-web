@@ -1,6 +1,6 @@
 "use client";
 import SendMenfess from "./send";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import MenfessCard from "./card";
 import { MenfessType } from "./types";
@@ -24,6 +24,8 @@ const Menfess = ({
   const router = useRouter();
   const [sendMode, setSendMode] = useState<"guest" | "sso" | null>(null);
   const [openTooltip, setOpenTooltip] = useState(false);
+  const [accountTooltipOpen, setAccountTooltipOpen] = useState(false);
+  const accountTooltipWasOpen = useRef(false);
   const [ssoError, setSsoError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [showCommentSection, setShowCommentSection] = useState(false);
@@ -139,21 +141,6 @@ const Menfess = ({
         </div>
       )}
 
-      {ssoUser && (
-        <p className="text-center font-sfPro text-sm text-slate-400">
-          Signed in as <span className="text-slate-200">{ssoUser.name}</span>
-          <span aria-hidden="true" className="mx-2">
-            ·
-          </span>
-          <a
-            href="/auth/sso/logout"
-            className="underline-offset-4 transition-colors hover:text-white focus-visible:underline"
-          >
-            Sign out
-          </a>
-        </p>
-      )}
-
       {sendMode ? (
         <SendMenfess
           key={sendMode}
@@ -201,7 +188,10 @@ const Menfess = ({
               <TooltipTrigger asChild>
                 <button
                   type="button"
-                  onClick={() => setSendMode("guest")}
+                  onClick={() => {
+                    setOpenTooltip(false);
+                    setSendMode("guest");
+                  }}
                   className="inline-flex min-h-11 items-center rounded-lg px-2 font-sfPro text-sm text-slate-300 underline decoration-slate-500 underline-offset-4 transition-[color,transform] duration-150 ease-out hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
                 >
                   Send as guest
@@ -212,9 +202,7 @@ const Menfess = ({
                 sideOffset={8}
                 className="w-56 max-w-[calc(100vw-3rem)] rounded-xl border-[#717174] bg-[#101432] px-3 py-2 text-left font-sfPro text-xs font-normal leading-5 text-slate-100 shadow-xl motion-reduce:animate-none sm:w-64"
               >
-                SSO menfess are posted immediately; guest menfess wait for admin
-                approval. Your SSO identity isn&apos;t shown publicly. Encryption
-                for stored data is planned.
+                Guest menfess need admin approval.
               </TooltipContent>
             </Tooltip>
           </div>
@@ -223,18 +211,80 @@ const Menfess = ({
 
       {!ssoUser ? null : (
         <>
-          <div className="grid grid-cols-2 max-lg:grid-cols-1 gap-10">
-            {currentCards.map((menfess) => (
-              <MenfessCard
-                onCommentClick={(e) => {
-                  setSelectedMenfess(e);
-                  setShowCommentSection(true);
-                }}
-                key={menfess.id}
-                menfess={menfess}
-                tokenAdmin={isAdmin}
-              />
-            ))}
+          <div className="space-y-5">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+              <h2 className="font-PalanquinDark text-xl text-slate-100">
+                Recent menfess
+              </h2>
+              <div className="flex min-w-0 items-center gap-1 font-sfPro text-sm text-slate-300">
+                <Tooltip
+                  delayDuration={150}
+                  open={accountTooltipOpen}
+                  onOpenChange={setAccountTooltipOpen}
+                >
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      aria-label={`Signed in with UI SSO as ${ssoUser.name}. Privacy information`}
+                      onPointerDownCapture={() => {
+                        accountTooltipWasOpen.current = accountTooltipOpen;
+                      }}
+                      onKeyDownCapture={() => {
+                        accountTooltipWasOpen.current = accountTooltipOpen;
+                      }}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        setAccountTooltipOpen(!accountTooltipWasOpen.current);
+                      }}
+                      className="inline-flex min-h-11 min-w-0 items-center gap-1.5 rounded-lg px-1.5 transition-colors duration-150 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    >
+                      {/* <span className="shrink-0 text-slate-400">UI SSO</span> */}
+                      {/* <span aria-hidden="true" className="text-slate-500">
+                        ·
+                      </span> */}
+                      <span className="max-w-28 truncate text-slate-100 sm:max-w-40">
+                        {ssoUser.name}
+                      </span>
+                      <Info
+                        size={14}
+                        aria-hidden="true"
+                        className="shrink-0 text-slate-400"
+                      />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="bottom"
+                    sideOffset={8}
+                    className="w-56 max-w-[calc(100vw-3rem)] rounded-xl border-[#717174] bg-[#101432] px-3 py-2 text-left font-sfPro text-xs font-normal leading-5 text-slate-100 shadow-xl motion-reduce:animate-none sm:w-64"
+                  >
+                    Your SSO details stay private and protected.
+                  </TooltipContent>
+                </Tooltip>
+                <span
+                  aria-hidden="true"
+                  className="mx-1 h-4 w-px shrink-0 bg-white/20"
+                />
+                <a
+                  href="/auth/sso/logout"
+                  className="inline-flex min-h-11 shrink-0 items-center rounded-lg px-2 text-slate-300 transition-colors duration-150 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                >
+                  Sign out
+                </a>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 max-lg:grid-cols-1 gap-10">
+              {currentCards.map((menfess) => (
+                <MenfessCard
+                  onCommentClick={(e) => {
+                    setSelectedMenfess(e);
+                    setShowCommentSection(true);
+                  }}
+                  key={menfess.id}
+                  menfess={menfess}
+                  tokenAdmin={isAdmin}
+                />
+              ))}
+            </div>
           </div>
 
           {/* Pagination Component */}
