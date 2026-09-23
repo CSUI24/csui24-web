@@ -9,6 +9,7 @@ import { requireAdmin } from "@/lib/api/auth";
 import { menfessIdSchema, menfessInputSchema } from "@/lib/api/schemas";
 import { isApiError } from "@/lib/api/errors";
 import { globalRateLimit } from "@/lib/rateLimiter";
+import { getSsoSessionUser } from "@/lib/sso-session";
 import {
   BANNED_MESSAGE,
   createMenfess,
@@ -23,7 +24,11 @@ export const dynamic = "force-dynamic";
 
 const rateLimit = globalRateLimit(1);
 
-export async function GET() {
+export async function GET(request: Request) {
+  if (!getSsoSessionUser(request)) {
+    return failure("Login with UI SSO to view menfess", 401);
+  }
+
   try {
     const data = await listPublicMenfess();
     return success("Menfess fetched successfully", data);
@@ -39,7 +44,7 @@ export async function POST(request: Request) {
   }
 
   const payload = await parseJson(request, menfessInputSchema);
-  if (!payload?.to || !payload.from || !payload.message) {
+  if (!payload?.to || !payload.from || !payload.message || !payload.mode) {
     return failure("All fields are required", 400);
   }
 
@@ -53,13 +58,19 @@ export async function POST(request: Request) {
       from: payload.from,
       message: payload.message,
       fingerprint: payload.fingerprint,
+      mode: payload.mode,
     });
 
     if (result.blocked) {
       return failure(BANNED_MESSAGE, 403);
     }
 
-    return success("Menfess sent successfully", null);
+    return success(
+      result.pendingReview
+        ? "Menfess submitted for admin review"
+        : "Menfess sent successfully",
+      null,
+    );
   } catch (error) {
     if (error instanceof MenfessCooldownError) {
       return failure(

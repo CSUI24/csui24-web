@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 // import { SpeedInsights } from "@vercel/speed-insights/next"
-// import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react";
 
 import "./globals.css";
 import Navbar from "./components/Navbar";
@@ -85,7 +86,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {process.env.NODE_ENV === 'production' && (
+        {process.env.NODE_ENV === "production" && (
           <script
             defer
             src="https://umamir.nimby.fun/script.js"
@@ -97,9 +98,13 @@ export default function RootLayout({
         className={`${monumentExt.variable} ${sfPro.variable}  ${sfReg.variable} ${UncialAntiqua.variable} ${PalanquinDark.variable}`}
       >
         <Navbar />
-        <main className="overflow-hidden">{children}</main>
+        <main className="overflow-hidden">
+          <TooltipProvider>{children}</TooltipProvider>
+        </main>
+        <Analytics mode="production" />
         <Footer />
         <Toaster />
+        {/* <TooltipProvider /> */}
         {/* <SpeedInsights/>
         <Analytics mode="production"/> */}
       </body>

@@ -28,12 +28,24 @@ model Menfess {
   resourceEmail              String?
   resourceNpm                String?
   resourceOrganizationalCode String?
+  ssoUsername                String?
+  ssoName                    String?
+  ssoNpm                     String?
+  ssoOrganizationalCode      String?
+  approvalStatus             MenfessApprovalStatus @default(APPROVED)
   createdAt                  DateTime   @default(now())
   reactions                  Reaction[]
   comments                   Comment[]
 
   @@index([fingerprint])
   @@index([resourceUserId])
+  @@index([approvalStatus, createdAt])
+}
+
+enum MenfessApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model BannedFingerprint {

@@ -770,6 +770,11 @@ export const MenfessScalarFieldEnum = {
   resourceEmail: 'resourceEmail',
   resourceNpm: 'resourceNpm',
   resourceOrganizationalCode: 'resourceOrganizationalCode',
+  ssoUsername: 'ssoUsername',
+  ssoName: 'ssoName',
+  ssoNpm: 'ssoNpm',
+  ssoOrganizationalCode: 'ssoOrganizationalCode',
+  approvalStatus: 'approvalStatus',
   createdAt: 'createdAt'
 } as const
 
@@ -855,6 +860,18 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+
+
+/**
+ * Reference to a field of type 'MenfessApprovalStatus'
+ */
+export type EnumMenfessApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MenfessApprovalStatus'>
+
+
+/**
+ * Reference to a field of type 'MenfessApprovalStatus[]'
+ */
+export type ListEnumMenfessApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MenfessApprovalStatus[]'>
     
 
 
@@ -1116,4 +1133,3 @@ export type PrismaAction =
  * `PrismaClient` proxy available in interactive transactions.
  */
 export type TransactionClient = Omit<DefaultPrismaClient, runtime.ITXClientDenyList>
-

@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import Menfess from "@/components/MenfessPage/Menfess";
 import { MenfessType } from "@/components/MenfessPage/types";
 import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
+import { readSsoSessionToken, SSO_SESSION_COOKIE } from "@/lib/sso-session";
 
 export const dynamic = "force-dynamic";
 
@@ -44,38 +46,45 @@ export const metadata: Metadata = {
 };
 
 const MenfessPage = async () => {
-  const data = await prisma.menfess.findMany({
-    where: {
-      isBlocked: false,
-    },
-    select: {
-      id: true,
-      to: true,
-      from: true,
-      message: true,
-      createdAt: true,
-      reactions: {
-        select: { type: true, count: true },
-      },
-      _count: {
-        select: {
-          comments: true,
+  const cookieStore = await cookies();
+  const ssoUser = readSsoSessionToken(
+    cookieStore.get(SSO_SESSION_COOKIE)?.value,
+  );
+  const data = ssoUser
+    ? await prisma.menfess.findMany({
+        where: {
+          isBlocked: false,
+          approvalStatus: "APPROVED",
         },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    take: process.env.LIMIT_MENFESS
-      ? parseInt(process.env.LIMIT_MENFESS)
-      : undefined,
-  });
+        select: {
+          id: true,
+          to: true,
+          from: true,
+          message: true,
+          createdAt: true,
+          reactions: {
+            select: { type: true, count: true },
+          },
+          _count: {
+            select: {
+              comments: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: process.env.LIMIT_MENFESS
+          ? parseInt(process.env.LIMIT_MENFESS)
+          : undefined,
+      })
+    : [];
 
   const menfess: MenfessType[] = data.map((item) => ({
     ...item,
     createdAt: item.createdAt.toISOString(),
   }));
 
-  return <Menfess menfess={menfess} />;
+  return <Menfess menfess={menfess} ssoUser={ssoUser} />;
 };
 export default MenfessPage;

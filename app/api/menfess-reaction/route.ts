@@ -1,4 +1,4 @@
-import { json, methodNotAllowed, parseJson } from "@/lib/api";
+import { failure, json, methodNotAllowed, parseJson } from "@/lib/api";
 import { reactionSchema } from "@/lib/api/schemas";
 import { globalRateLimit } from "@/lib/rateLimiter";
 import {
@@ -6,6 +6,7 @@ import {
   listReactions,
   updateReaction,
 } from "@/lib/server/menfess-reactions";
+import { getSsoSessionUser } from "@/lib/sso-session";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,6 +14,10 @@ export const dynamic = "force-dynamic";
 const rateLimit = globalRateLimit();
 
 export async function POST(request: Request) {
+  if (!getSsoSessionUser(request)) {
+    return failure("Login with UI SSO to react to menfess", 401);
+  }
+
   const rateLimitResponse = rateLimit(request);
   if (rateLimitResponse) {
     return rateLimitResponse;
@@ -37,6 +42,10 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
+  if (!getSsoSessionUser(request)) {
+    return failure("Login with UI SSO to view menfess", 401);
+  }
+
   const menfessId = new URL(request.url).searchParams.get("menfessId")?.trim();
   if (!menfessId) {
     return json({ error: "Missing menfessId" }, { status: 400 });

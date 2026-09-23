@@ -9,6 +9,7 @@ import { commentCreateSchema } from "@/lib/api/schemas";
 import { isApiError } from "@/lib/api/errors";
 import { globalRateLimit } from "@/lib/rateLimiter";
 import { createComment, listComments } from "@/lib/server/menfess-comments";
+import { getSsoSessionUser } from "@/lib/sso-session";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,6 +17,10 @@ export const dynamic = "force-dynamic";
 const rateLimit = globalRateLimit();
 
 export async function GET(request: Request) {
+  if (!getSsoSessionUser(request)) {
+    return failure("Login with UI SSO to view menfess", 401);
+  }
+
   const id = new URL(request.url).searchParams.get("id")?.trim();
   if (!id) {
     return failure("Missing menfess ID", 400);
@@ -30,6 +35,10 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  if (!getSsoSessionUser(request)) {
+    return failure("Login with UI SSO to comment", 401);
+  }
+
   const rateLimitResponse = rateLimit(request);
   if (rateLimitResponse) {
     return rateLimitResponse;

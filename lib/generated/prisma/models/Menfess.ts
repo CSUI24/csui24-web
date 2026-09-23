@@ -39,6 +39,11 @@ export type MenfessMinAggregateOutputType = {
   resourceEmail: string | null
   resourceNpm: string | null
   resourceOrganizationalCode: string | null
+  ssoUsername: string | null
+  ssoName: string | null
+  ssoNpm: string | null
+  ssoOrganizationalCode: string | null
+  approvalStatus: $Enums.MenfessApprovalStatus | null
   createdAt: Date | null
 }
 
@@ -57,6 +62,11 @@ export type MenfessMaxAggregateOutputType = {
   resourceEmail: string | null
   resourceNpm: string | null
   resourceOrganizationalCode: string | null
+  ssoUsername: string | null
+  ssoName: string | null
+  ssoNpm: string | null
+  ssoOrganizationalCode: string | null
+  approvalStatus: $Enums.MenfessApprovalStatus | null
   createdAt: Date | null
 }
 
@@ -75,6 +85,11 @@ export type MenfessCountAggregateOutputType = {
   resourceEmail: number
   resourceNpm: number
   resourceOrganizationalCode: number
+  ssoUsername: number
+  ssoName: number
+  ssoNpm: number
+  ssoOrganizationalCode: number
+  approvalStatus: number
   createdAt: number
   _all: number
 }
@@ -95,6 +110,11 @@ export type MenfessMinAggregateInputType = {
   resourceEmail?: true
   resourceNpm?: true
   resourceOrganizationalCode?: true
+  ssoUsername?: true
+  ssoName?: true
+  ssoNpm?: true
+  ssoOrganizationalCode?: true
+  approvalStatus?: true
   createdAt?: true
 }
 
@@ -113,6 +133,11 @@ export type MenfessMaxAggregateInputType = {
   resourceEmail?: true
   resourceNpm?: true
   resourceOrganizationalCode?: true
+  ssoUsername?: true
+  ssoName?: true
+  ssoNpm?: true
+  ssoOrganizationalCode?: true
+  approvalStatus?: true
   createdAt?: true
 }
 
@@ -131,6 +156,11 @@ export type MenfessCountAggregateInputType = {
   resourceEmail?: true
   resourceNpm?: true
   resourceOrganizationalCode?: true
+  ssoUsername?: true
+  ssoName?: true
+  ssoNpm?: true
+  ssoOrganizationalCode?: true
+  approvalStatus?: true
   createdAt?: true
   _all?: true
 }
@@ -222,6 +252,11 @@ export type MenfessGroupByOutputType = {
   resourceEmail: string | null
   resourceNpm: string | null
   resourceOrganizationalCode: string | null
+  ssoUsername: string | null
+  ssoName: string | null
+  ssoNpm: string | null
+  ssoOrganizationalCode: string | null
+  approvalStatus: $Enums.MenfessApprovalStatus
   createdAt: Date
   _count: MenfessCountAggregateOutputType | null
   _min: MenfessMinAggregateOutputType | null
@@ -261,6 +296,11 @@ export type MenfessWhereInput = {
   resourceEmail?: Prisma.StringNullableFilter<"Menfess"> | string | null
   resourceNpm?: Prisma.StringNullableFilter<"Menfess"> | string | null
   resourceOrganizationalCode?: Prisma.StringNullableFilter<"Menfess"> | string | null
+  ssoUsername?: Prisma.StringNullableFilter<"Menfess"> | string | null
+  ssoName?: Prisma.StringNullableFilter<"Menfess"> | string | null
+  ssoNpm?: Prisma.StringNullableFilter<"Menfess"> | string | null
+  ssoOrganizationalCode?: Prisma.StringNullableFilter<"Menfess"> | string | null
+  approvalStatus?: Prisma.EnumMenfessApprovalStatusFilter<"Menfess"> | $Enums.MenfessApprovalStatus
   createdAt?: Prisma.DateTimeFilter<"Menfess"> | Date | string
   reactions?: Prisma.ReactionListRelationFilter
   comments?: Prisma.CommentListRelationFilter
@@ -281,6 +321,11 @@ export type MenfessOrderByWithRelationInput = {
   resourceEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   resourceNpm?: Prisma.SortOrderInput | Prisma.SortOrder
   resourceOrganizationalCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  ssoUsername?: Prisma.SortOrderInput | Prisma.SortOrder
+  ssoName?: Prisma.SortOrderInput | Prisma.SortOrder
+  ssoNpm?: Prisma.SortOrderInput | Prisma.SortOrder
+  ssoOrganizationalCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvalStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   reactions?: Prisma.ReactionOrderByRelationAggregateInput
   comments?: Prisma.CommentOrderByRelationAggregateInput
@@ -304,6 +349,11 @@ export type MenfessWhereUniqueInput = Prisma.AtLeast<{
   resourceEmail?: Prisma.StringNullableFilter<"Menfess"> | string | null
   resourceNpm?: Prisma.StringNullableFilter<"Menfess"> | string | null
   resourceOrganizationalCode?: Prisma.StringNullableFilter<"Menfess"> | string | null
+  ssoUsername?: Prisma.StringNullableFilter<"Menfess"> | string | null
+  ssoName?: Prisma.StringNullableFilter<"Menfess"> | string | null
+  ssoNpm?: Prisma.StringNullableFilter<"Menfess"> | string | null
+  ssoOrganizationalCode?: Prisma.StringNullableFilter<"Menfess"> | string | null
+  approvalStatus?: Prisma.EnumMenfessApprovalStatusFilter<"Menfess"> | $Enums.MenfessApprovalStatus
   createdAt?: Prisma.DateTimeFilter<"Menfess"> | Date | string
   reactions?: Prisma.ReactionListRelationFilter
   comments?: Prisma.CommentListRelationFilter
@@ -324,6 +374,11 @@ export type MenfessOrderByWithAggregationInput = {
   resourceEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   resourceNpm?: Prisma.SortOrderInput | Prisma.SortOrder
   resourceOrganizationalCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  ssoUsername?: Prisma.SortOrderInput | Prisma.SortOrder
+  ssoName?: Prisma.SortOrderInput | Prisma.SortOrder
+  ssoNpm?: Prisma.SortOrderInput | Prisma.SortOrder
+  ssoOrganizationalCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvalStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.MenfessCountOrderByAggregateInput
   _max?: Prisma.MenfessMaxOrderByAggregateInput
@@ -348,6 +403,11 @@ export type MenfessScalarWhereWithAggregatesInput = {
   resourceEmail?: Prisma.StringNullableWithAggregatesFilter<"Menfess"> | string | null
   resourceNpm?: Prisma.StringNullableWithAggregatesFilter<"Menfess"> | string | null
   resourceOrganizationalCode?: Prisma.StringNullableWithAggregatesFilter<"Menfess"> | string | null
+  ssoUsername?: Prisma.StringNullableWithAggregatesFilter<"Menfess"> | string | null
+  ssoName?: Prisma.StringNullableWithAggregatesFilter<"Menfess"> | string | null
+  ssoNpm?: Prisma.StringNullableWithAggregatesFilter<"Menfess"> | string | null
+  ssoOrganizationalCode?: Prisma.StringNullableWithAggregatesFilter<"Menfess"> | string | null
+  approvalStatus?: Prisma.EnumMenfessApprovalStatusWithAggregatesFilter<"Menfess"> | $Enums.MenfessApprovalStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Menfess"> | Date | string
 }
 
@@ -366,6 +426,11 @@ export type MenfessCreateInput = {
   resourceEmail?: string | null
   resourceNpm?: string | null
   resourceOrganizationalCode?: string | null
+  ssoUsername?: string | null
+  ssoName?: string | null
+  ssoNpm?: string | null
+  ssoOrganizationalCode?: string | null
+  approvalStatus?: $Enums.MenfessApprovalStatus
   createdAt?: Date | string
   reactions?: Prisma.ReactionCreateNestedManyWithoutMenfessInput
   comments?: Prisma.CommentCreateNestedManyWithoutMenfessInput
@@ -386,6 +451,11 @@ export type MenfessUncheckedCreateInput = {
   resourceEmail?: string | null
   resourceNpm?: string | null
   resourceOrganizationalCode?: string | null
+  ssoUsername?: string | null
+  ssoName?: string | null
+  ssoNpm?: string | null
+  ssoOrganizationalCode?: string | null
+  approvalStatus?: $Enums.MenfessApprovalStatus
   createdAt?: Date | string
   reactions?: Prisma.ReactionUncheckedCreateNestedManyWithoutMenfessInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutMenfessInput
@@ -406,6 +476,11 @@ export type MenfessUpdateInput = {
   resourceEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceNpm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceOrganizationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoNpm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoOrganizationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalStatus?: Prisma.EnumMenfessApprovalStatusFieldUpdateOperationsInput | $Enums.MenfessApprovalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reactions?: Prisma.ReactionUpdateManyWithoutMenfessNestedInput
   comments?: Prisma.CommentUpdateManyWithoutMenfessNestedInput
@@ -426,6 +501,11 @@ export type MenfessUncheckedUpdateInput = {
   resourceEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceNpm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceOrganizationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoNpm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoOrganizationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalStatus?: Prisma.EnumMenfessApprovalStatusFieldUpdateOperationsInput | $Enums.MenfessApprovalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reactions?: Prisma.ReactionUncheckedUpdateManyWithoutMenfessNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutMenfessNestedInput
@@ -446,6 +526,11 @@ export type MenfessCreateManyInput = {
   resourceEmail?: string | null
   resourceNpm?: string | null
   resourceOrganizationalCode?: string | null
+  ssoUsername?: string | null
+  ssoName?: string | null
+  ssoNpm?: string | null
+  ssoOrganizationalCode?: string | null
+  approvalStatus?: $Enums.MenfessApprovalStatus
   createdAt?: Date | string
 }
 
@@ -464,6 +549,11 @@ export type MenfessUpdateManyMutationInput = {
   resourceEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceNpm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceOrganizationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoNpm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoOrganizationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalStatus?: Prisma.EnumMenfessApprovalStatusFieldUpdateOperationsInput | $Enums.MenfessApprovalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -482,6 +572,11 @@ export type MenfessUncheckedUpdateManyInput = {
   resourceEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceNpm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceOrganizationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoNpm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoOrganizationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalStatus?: Prisma.EnumMenfessApprovalStatusFieldUpdateOperationsInput | $Enums.MenfessApprovalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -500,6 +595,11 @@ export type MenfessCountOrderByAggregateInput = {
   resourceEmail?: Prisma.SortOrder
   resourceNpm?: Prisma.SortOrder
   resourceOrganizationalCode?: Prisma.SortOrder
+  ssoUsername?: Prisma.SortOrder
+  ssoName?: Prisma.SortOrder
+  ssoNpm?: Prisma.SortOrder
+  ssoOrganizationalCode?: Prisma.SortOrder
+  approvalStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -518,6 +618,11 @@ export type MenfessMaxOrderByAggregateInput = {
   resourceEmail?: Prisma.SortOrder
   resourceNpm?: Prisma.SortOrder
   resourceOrganizationalCode?: Prisma.SortOrder
+  ssoUsername?: Prisma.SortOrder
+  ssoName?: Prisma.SortOrder
+  ssoNpm?: Prisma.SortOrder
+  ssoOrganizationalCode?: Prisma.SortOrder
+  approvalStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -536,6 +641,11 @@ export type MenfessMinOrderByAggregateInput = {
   resourceEmail?: Prisma.SortOrder
   resourceNpm?: Prisma.SortOrder
   resourceOrganizationalCode?: Prisma.SortOrder
+  ssoUsername?: Prisma.SortOrder
+  ssoName?: Prisma.SortOrder
+  ssoNpm?: Prisma.SortOrder
+  ssoOrganizationalCode?: Prisma.SortOrder
+  approvalStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -554,6 +664,10 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type EnumMenfessApprovalStatusFieldUpdateOperationsInput = {
+  set?: $Enums.MenfessApprovalStatus
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -603,6 +717,11 @@ export type MenfessCreateWithoutReactionsInput = {
   resourceEmail?: string | null
   resourceNpm?: string | null
   resourceOrganizationalCode?: string | null
+  ssoUsername?: string | null
+  ssoName?: string | null
+  ssoNpm?: string | null
+  ssoOrganizationalCode?: string | null
+  approvalStatus?: $Enums.MenfessApprovalStatus
   createdAt?: Date | string
   comments?: Prisma.CommentCreateNestedManyWithoutMenfessInput
 }
@@ -622,6 +741,11 @@ export type MenfessUncheckedCreateWithoutReactionsInput = {
   resourceEmail?: string | null
   resourceNpm?: string | null
   resourceOrganizationalCode?: string | null
+  ssoUsername?: string | null
+  ssoName?: string | null
+  ssoNpm?: string | null
+  ssoOrganizationalCode?: string | null
+  approvalStatus?: $Enums.MenfessApprovalStatus
   createdAt?: Date | string
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutMenfessInput
 }
@@ -657,6 +781,11 @@ export type MenfessUpdateWithoutReactionsInput = {
   resourceEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceNpm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceOrganizationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoNpm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoOrganizationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalStatus?: Prisma.EnumMenfessApprovalStatusFieldUpdateOperationsInput | $Enums.MenfessApprovalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   comments?: Prisma.CommentUpdateManyWithoutMenfessNestedInput
 }
@@ -676,6 +805,11 @@ export type MenfessUncheckedUpdateWithoutReactionsInput = {
   resourceEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceNpm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceOrganizationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoNpm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoOrganizationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalStatus?: Prisma.EnumMenfessApprovalStatusFieldUpdateOperationsInput | $Enums.MenfessApprovalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   comments?: Prisma.CommentUncheckedUpdateManyWithoutMenfessNestedInput
 }
@@ -695,6 +829,11 @@ export type MenfessCreateWithoutCommentsInput = {
   resourceEmail?: string | null
   resourceNpm?: string | null
   resourceOrganizationalCode?: string | null
+  ssoUsername?: string | null
+  ssoName?: string | null
+  ssoNpm?: string | null
+  ssoOrganizationalCode?: string | null
+  approvalStatus?: $Enums.MenfessApprovalStatus
   createdAt?: Date | string
   reactions?: Prisma.ReactionCreateNestedManyWithoutMenfessInput
 }
@@ -714,6 +853,11 @@ export type MenfessUncheckedCreateWithoutCommentsInput = {
   resourceEmail?: string | null
   resourceNpm?: string | null
   resourceOrganizationalCode?: string | null
+  ssoUsername?: string | null
+  ssoName?: string | null
+  ssoNpm?: string | null
+  ssoOrganizationalCode?: string | null
+  approvalStatus?: $Enums.MenfessApprovalStatus
   createdAt?: Date | string
   reactions?: Prisma.ReactionUncheckedCreateNestedManyWithoutMenfessInput
 }
@@ -749,6 +893,11 @@ export type MenfessUpdateWithoutCommentsInput = {
   resourceEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceNpm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceOrganizationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoNpm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoOrganizationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalStatus?: Prisma.EnumMenfessApprovalStatusFieldUpdateOperationsInput | $Enums.MenfessApprovalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reactions?: Prisma.ReactionUpdateManyWithoutMenfessNestedInput
 }
@@ -768,6 +917,11 @@ export type MenfessUncheckedUpdateWithoutCommentsInput = {
   resourceEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceNpm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resourceOrganizationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoNpm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ssoOrganizationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalStatus?: Prisma.EnumMenfessApprovalStatusFieldUpdateOperationsInput | $Enums.MenfessApprovalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reactions?: Prisma.ReactionUncheckedUpdateManyWithoutMenfessNestedInput
 }
@@ -827,6 +981,11 @@ export type MenfessSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   resourceEmail?: boolean
   resourceNpm?: boolean
   resourceOrganizationalCode?: boolean
+  ssoUsername?: boolean
+  ssoName?: boolean
+  ssoNpm?: boolean
+  ssoOrganizationalCode?: boolean
+  approvalStatus?: boolean
   createdAt?: boolean
   reactions?: boolean | Prisma.Menfess$reactionsArgs<ExtArgs>
   comments?: boolean | Prisma.Menfess$commentsArgs<ExtArgs>
@@ -848,6 +1007,11 @@ export type MenfessSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   resourceEmail?: boolean
   resourceNpm?: boolean
   resourceOrganizationalCode?: boolean
+  ssoUsername?: boolean
+  ssoName?: boolean
+  ssoNpm?: boolean
+  ssoOrganizationalCode?: boolean
+  approvalStatus?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["menfess"]>
 
@@ -866,6 +1030,11 @@ export type MenfessSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   resourceEmail?: boolean
   resourceNpm?: boolean
   resourceOrganizationalCode?: boolean
+  ssoUsername?: boolean
+  ssoName?: boolean
+  ssoNpm?: boolean
+  ssoOrganizationalCode?: boolean
+  approvalStatus?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["menfess"]>
 
@@ -884,10 +1053,15 @@ export type MenfessSelectScalar = {
   resourceEmail?: boolean
   resourceNpm?: boolean
   resourceOrganizationalCode?: boolean
+  ssoUsername?: boolean
+  ssoName?: boolean
+  ssoNpm?: boolean
+  ssoOrganizationalCode?: boolean
+  approvalStatus?: boolean
   createdAt?: boolean
 }
 
-export type MenfessOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "to" | "from" | "message" | "tweetId" | "fingerprint" | "isBlocked" | "isPosted" | "resourceUserId" | "resourceUsername" | "resourceName" | "resourceEmail" | "resourceNpm" | "resourceOrganizationalCode" | "createdAt", ExtArgs["result"]["menfess"]>
+export type MenfessOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "to" | "from" | "message" | "tweetId" | "fingerprint" | "isBlocked" | "isPosted" | "resourceUserId" | "resourceUsername" | "resourceName" | "resourceEmail" | "resourceNpm" | "resourceOrganizationalCode" | "ssoUsername" | "ssoName" | "ssoNpm" | "ssoOrganizationalCode" | "approvalStatus" | "createdAt", ExtArgs["result"]["menfess"]>
 export type MenfessInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   reactions?: boolean | Prisma.Menfess$reactionsArgs<ExtArgs>
   comments?: boolean | Prisma.Menfess$commentsArgs<ExtArgs>
@@ -917,6 +1091,11 @@ export type $MenfessPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     resourceEmail: string | null
     resourceNpm: string | null
     resourceOrganizationalCode: string | null
+    ssoUsername: string | null
+    ssoName: string | null
+    ssoNpm: string | null
+    ssoOrganizationalCode: string | null
+    approvalStatus: $Enums.MenfessApprovalStatus
     createdAt: Date
   }, ExtArgs["result"]["menfess"]>
   composites: {}
@@ -1357,6 +1536,11 @@ export interface MenfessFieldRefs {
   readonly resourceEmail: Prisma.FieldRef<"Menfess", 'String'>
   readonly resourceNpm: Prisma.FieldRef<"Menfess", 'String'>
   readonly resourceOrganizationalCode: Prisma.FieldRef<"Menfess", 'String'>
+  readonly ssoUsername: Prisma.FieldRef<"Menfess", 'String'>
+  readonly ssoName: Prisma.FieldRef<"Menfess", 'String'>
+  readonly ssoNpm: Prisma.FieldRef<"Menfess", 'String'>
+  readonly ssoOrganizationalCode: Prisma.FieldRef<"Menfess", 'String'>
+  readonly approvalStatus: Prisma.FieldRef<"Menfess", 'MenfessApprovalStatus'>
   readonly createdAt: Prisma.FieldRef<"Menfess", 'DateTime'>
 }
     

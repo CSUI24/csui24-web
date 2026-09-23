@@ -3,7 +3,7 @@ import { ApiError } from "@/lib/api/errors";
 import type { MenfessCreateInput } from "@/lib/api/schemas";
 import { parsePositiveInt } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
-import { getResourceSessionLookup } from "@/lib/resourceSession";
+import { getSsoSessionUser } from "@/lib/sso-session";
 
 export const BANNED_MESSAGE = "MAMPUS LU GUA BAN AJGG BUAHAHHAHAHHA";
 export const MENFESS_COOLDOWN_MS = 24 * 60 * 60 * 1000;
@@ -154,7 +154,7 @@ async function publishTweet(input: MenfessCreateInput, menfessId: string) {
 
 export async function listPublicMenfess() {
   return prisma.menfess.findMany({
-    where: { isBlocked: false },
+    where: { isBlocked: false, approvalStatus: "APPROVED" },
     select: {
       id: true,
       to: true,
@@ -178,6 +178,11 @@ export async function createMenfess(
   input: MenfessCreateInput,
 ) {
   assertSendable(input);
+
+  const ssoUser = input.mode === "sso" ? getSsoSessionUser(request) : null;
+  if (input.mode === "sso" && !ssoUser) {
+    throw new ApiError(401, "Login with UI SSO before sending this menfess");
+  }
 
   const bannedFingerprint = await prisma.bannedFingerprint.findUnique({
     where: { fingerprint: input.fingerprint },
@@ -203,15 +208,6 @@ export async function createMenfess(
     }
   }
 
-  const resourceSession = await getResourceSessionLookup(request);
-  const resourceUser = resourceSession.user;
-  console.info("Menfess resource session lookup", {
-    status: resourceSession.status,
-    hasSessionCookie: resourceSession.hasSessionCookie,
-    resourceStatus: resourceSession.resourceStatus,
-    hasResourceUser: Boolean(resourceUser),
-  });
-
   const menfess = await prisma.menfess.create({
     data: {
       to: input.to,
@@ -219,12 +215,11 @@ export async function createMenfess(
       message: input.message,
       fingerprint: input.fingerprint,
       isBlocked: Boolean(bannedFingerprint),
-      resourceUserId: resourceUser?.id,
-      resourceUsername: resourceUser?.username,
-      resourceName: resourceUser?.name,
-      resourceEmail: resourceUser?.email,
-      resourceNpm: resourceUser?.npm,
-      resourceOrganizationalCode: resourceUser?.organizationalCode,
+      approvalStatus: input.mode === "guest" ? "PENDING" : "APPROVED",
+      ssoUsername: ssoUser?.username,
+      ssoName: ssoUser?.name,
+      ssoNpm: ssoUser?.npm,
+      ssoOrganizationalCode: ssoUser?.organizationalCode,
     },
   });
 
@@ -232,8 +227,12 @@ export async function createMenfess(
     return { blocked: true };
   }
 
+  if (input.mode === "guest") {
+    return { blocked: false, pendingReview: true };
+  }
+
   await publishTweet(input, menfess.id);
-  return { blocked: false };
+  return { blocked: false, pendingReview: false };
 }
 
 async function deleteTweetIfExists(tweetId: string) {

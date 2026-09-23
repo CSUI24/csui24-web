@@ -9,7 +9,11 @@ export function listUnpostedMenfess() {
       message: true,
       createdAt: true,
     },
-    where: { isPosted: false },
+    where: {
+      isPosted: false,
+      isBlocked: false,
+      approvalStatus: "APPROVED",
+    },
     orderBy: { createdAt: "desc" },
   });
 }

@@ -3,8 +3,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Send } from "lucide-react";
+import { Info, Send } from "lucide-react";
 import { toast } from "sonner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 let visitorIdPromise: Promise<string> | null = null;
 
@@ -27,10 +32,19 @@ const getVisitorId = async () => {
   }
 };
 
-const SendMenfess = () => {
+const SendMenfess = ({
+  mode,
+  onSubmitted,
+  onClose,
+}: {
+  mode: "guest" | "sso";
+  onSubmitted?: () => void;
+  onClose: () => void;
+}) => {
   const [to, setTo] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [tooltipOpen, setTooltipOpen] = useState(false);
   const [from, setFrom] = useState("");
 
   const handleSend = async () => {
@@ -39,7 +53,9 @@ const SendMenfess = () => {
       return;
     }
 
-    const loader = toast.loading("Sending menfess...");
+    const loader = toast.loading(
+      mode === "guest" ? "Submitting..." : "Sending menfess...",
+    );
 
     setIsSubmitting(true);
 
@@ -61,6 +77,7 @@ const SendMenfess = () => {
       from,
       message,
       fingerprint,
+      mode,
     };
 
     try {
@@ -74,12 +91,13 @@ const SendMenfess = () => {
       const data = await res.json();
 
       if (data.success) {
-        toast.success("Menfess sent successfully", {
+        toast.success(mode === "guest" ? "Sent for review" : "Menfess sent", {
           id: loader,
         });
         setTo("");
         setFrom("");
         setMessage("");
+        onSubmitted?.();
       } else {
         toast.error(data.message, {
           id: loader,
@@ -97,9 +115,49 @@ const SendMenfess = () => {
 
   return (
     <div className="w-full p-10 max-lg:p-8 flex flex-col gap-4 max-sm:p-6 bg-[#03045e] border border-[#717174] bg-opacity-30 rounded-2xl text-white transition-all">
-      <h1 className="text-white font-sfPro font-[400] opacity-80 text-base sm:text-lg md:text-xl lg:text-2xl">
-        Send Menfess
-      </h1>
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-1">
+          <h1 className="text-white font-sfPro font-[400] opacity-80 text-base sm:text-lg md:text-xl lg:text-2xl">
+            Send Menfess
+          </h1>
+          <Tooltip
+            delayDuration={100}
+            open={tooltipOpen}
+            onOpenChange={setTooltipOpen}
+          >
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                aria-label={
+                  mode === "guest"
+                    ? "About guest menfess"
+                    : "About UI SSO menfess"
+                }
+                onClick={() => setTooltipOpen(true)}
+                className="inline-flex size-11 shrink-0 items-center justify-center rounded-full text-slate-400 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-95"
+              >
+                <Info size={17} aria-hidden="true" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="bottom"
+              sideOffset={8}
+              className="w-56 max-w-[calc(100vw-3rem)] rounded-xl border-[#717174] bg-[#101432] px-3 py-2 text-left font-sfPro text-xs font-normal leading-5 text-slate-100 shadow-xl motion-reduce:animate-none sm:w-64"
+            >
+              {mode === "guest"
+                ? "Your menfess waits for admin approval. Encryption for stored data is planned."
+                : "Your menfess is posted immediately. Your SSO identity isn't shown publicly. Encryption for stored data is planned."}
+            </TooltipContent>
+          </Tooltip>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-lg px-2 py-1 font-sfPro text-sm text-slate-400 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        >
+          Cancel
+        </button>
+      </div>
       <div className="flex max-sm:flex-col gap-4">
         {/* From */}
         <div className="flex flex-col gap-1 w-full">
@@ -137,7 +195,9 @@ const SendMenfess = () => {
       <div className="flex flex-col gap-1 w-full">
         <div className="flex justify-between items-center">
           <p className="text-xs text-slate-400">Message</p>
-          <p className={`text-xs ${from.length + to.length + message.length > 280 ? "text-red-400" : "text-slate-500"}`}>
+          <p
+            className={`text-xs ${from.length + to.length + message.length > 280 ? "text-red-400" : "text-slate-500"}`}
+          >
             {from.length + to.length + message.length}/280
           </p>
         </div>
@@ -156,7 +216,7 @@ const SendMenfess = () => {
         data-umami-event="submit-menfess"
       >
         <Send size={15} />
-        Send
+        {mode === "guest" ? "Submit for review" : "Send"}
       </Button>
     </div>
   );

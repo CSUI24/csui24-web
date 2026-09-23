@@ -8,6 +8,7 @@ export const menfessInputSchema = z.object({
   from: optionalText,
   message: optionalText,
   fingerprint: optionalText,
+  mode: z.enum(["guest", "sso"]).optional(),
 });
 
 export const menfessCreateSchema = z.object({
@@ -15,6 +16,7 @@ export const menfessCreateSchema = z.object({
   from: requiredText,
   message: requiredText,
   fingerprint: requiredText,
+  mode: z.enum(["guest", "sso"]),
 });
 
 export const menfessIdSchema = z.object({

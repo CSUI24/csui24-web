@@ -88,6 +88,11 @@ export const MenfessScalarFieldEnum = {
   resourceEmail: 'resourceEmail',
   resourceNpm: 'resourceNpm',
   resourceOrganizationalCode: 'resourceOrganizationalCode',
+  ssoUsername: 'ssoUsername',
+  ssoName: 'ssoName',
+  ssoNpm: 'ssoNpm',
+  ssoOrganizationalCode: 'ssoOrganizationalCode',
+  approvalStatus: 'approvalStatus',
   createdAt: 'createdAt'
 } as const
 

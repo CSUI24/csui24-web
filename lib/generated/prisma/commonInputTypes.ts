@@ -49,6 +49,13 @@ export type BoolFilter<$PrismaModel = never> = {
   not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
 }
 
+export type EnumMenfessApprovalStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.MenfessApprovalStatus | Prisma.EnumMenfessApprovalStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.MenfessApprovalStatus[] | Prisma.ListEnumMenfessApprovalStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MenfessApprovalStatus[] | Prisma.ListEnumMenfessApprovalStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMenfessApprovalStatusFilter<$PrismaModel> | $Enums.MenfessApprovalStatus
+}
+
 export type DateTimeFilter<$PrismaModel = never> = {
   equals?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>
   in?: Date[] | string[] | Prisma.ListDateTimeFieldRefInput<$PrismaModel>
@@ -107,6 +114,16 @@ export type BoolWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedBoolFilter<$PrismaModel>
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
+}
+
+export type EnumMenfessApprovalStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MenfessApprovalStatus | Prisma.EnumMenfessApprovalStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.MenfessApprovalStatus[] | Prisma.ListEnumMenfessApprovalStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MenfessApprovalStatus[] | Prisma.ListEnumMenfessApprovalStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMenfessApprovalStatusWithAggregatesFilter<$PrismaModel> | $Enums.MenfessApprovalStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMenfessApprovalStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMenfessApprovalStatusFilter<$PrismaModel>
 }
 
 export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -183,6 +200,13 @@ export type NestedBoolFilter<$PrismaModel = never> = {
   not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
 }
 
+export type NestedEnumMenfessApprovalStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.MenfessApprovalStatus | Prisma.EnumMenfessApprovalStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.MenfessApprovalStatus[] | Prisma.ListEnumMenfessApprovalStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MenfessApprovalStatus[] | Prisma.ListEnumMenfessApprovalStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMenfessApprovalStatusFilter<$PrismaModel> | $Enums.MenfessApprovalStatus
+}
+
 export type NestedDateTimeFilter<$PrismaModel = never> = {
   equals?: Date | string | Prisma.DateTimeFieldRefInput<$PrismaModel>
   in?: Date[] | string[] | Prisma.ListDateTimeFieldRefInput<$PrismaModel>
@@ -256,6 +280,16 @@ export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedBoolFilter<$PrismaModel>
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
+}
+
+export type NestedEnumMenfessApprovalStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MenfessApprovalStatus | Prisma.EnumMenfessApprovalStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.MenfessApprovalStatus[] | Prisma.ListEnumMenfessApprovalStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MenfessApprovalStatus[] | Prisma.ListEnumMenfessApprovalStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMenfessApprovalStatusWithAggregatesFilter<$PrismaModel> | $Enums.MenfessApprovalStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMenfessApprovalStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMenfessApprovalStatusFilter<$PrismaModel>
 }
 
 export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
