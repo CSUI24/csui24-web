@@ -2,6 +2,7 @@ This is a [Next.js](https://nextjs.org) App Router project for the CSUI24 commun
 
 ## Prerequisites
 
+
 - Node.js 20.9 or newer
 - pnpm 9.15 or newer
 
