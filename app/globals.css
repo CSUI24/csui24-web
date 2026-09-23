@@ -1,7 +1,15 @@
 @import "tailwindcss";
 @plugin "tailwindcss-animate";
 
-@custom-variant dark (&:where(.dark, .dark *));
+/* Match Tailwind v3's class-based dark-mode specificity. */
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Tailwind v4 compatibility for the visual defaults used by this project
+ * before the upgrade. Keep these in one place so future component changes do
+ * not need to repeat v3 compatibility classes.
+ */
+@custom-variant hover (&:hover);
 
 @theme inline {
   --color-background: var(--background);
@@ -55,6 +63,28 @@
 
 @utility font-PalanquinDark {
   font-family: var(--font-PalanquinDark), sans-serif;
+}
+
+@layer base {
+  /* Tailwind v3 used gray-200 as the default border color. */
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+
+  /* Restore v3 defaults where components do not provide an explicit color. */
+  input::placeholder,
+  textarea::placeholder {
+    color: #9ca3af;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
 }
 
 h1,
@@ -178,5 +208,7 @@ top */
 @layer base {
   :root {
     --radius: 0.5rem;
+    --default-ring-width: 3px;
+    --default-ring-color: var(--color-blue-500);
   }
 }

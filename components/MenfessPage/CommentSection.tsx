@@ -212,7 +212,7 @@ const CommentSection = ({
           <div className="min-h-[0.5px] w-full bg-[#D9D9D9]"></div> {/* Line */}
           {/* Message */}
           <div className="w-full h-36 min-h-36 text-white font-sans flex items-center justify-center px-6 overflow-y-auto max-h-full">
-            <p className="text-center break-words w-full h-full">{message}</p>
+            <p className="text-center wrap-break-word w-full h-full">{message}</p>
           </div>
           {/* Message */}
           {/* Bottom */}
