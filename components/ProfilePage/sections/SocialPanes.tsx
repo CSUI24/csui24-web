@@ -84,7 +84,7 @@ export const SocialPaneDesktop = ({ person }: { person: FamsDataType }) => {
         {socmedIDs.map((username, index) => {
           return (
             <div
-              className={`${index == hoveredIndex ? "opacity-100 visible" : "opacity-0 invisible"} transition-all duration-300 absolute top-0 left-0 px-4 py-1 rounded-full bg-[#FFFFFFCD] text-black w-fit shadow-[0_4.3px_4.3px_0px_rgba(0,0,0,0.25)_inset] border-[#6C6C6CA6] border-solid border-[1px]`}
+              className={`${index == hoveredIndex ? "opacity-100 visible" : "opacity-0 invisible"} transition-all duration-300 absolute top-0 left-0 px-4 py-1 rounded-full bg-[#FFFFFFCD] text-black w-fit shadow-[0_4.3px_4.3px_0px_rgba(0,0,0,0.25)_inset] border-[#6C6C6CA6] border-solid border`}
               key={"socmed-" + index}
             >
               {(index != 1 ? "@" : "") + username}

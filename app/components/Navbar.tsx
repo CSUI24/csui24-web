@@ -123,11 +123,11 @@ export default function Navbar({ className }: { className?: string }) {
     <div
       className={cn(
         "fixed top-14 inset-x-0 max-w-2xl mx-auto z-30 transition-all ease-in-out duration-500",
-        isNavbarVisible ? "translate-y-0" : "-translate-y-[500px] ",
+        isNavbarVisible ? "translate-y-0" : "translate-y-[-500px] ",
         className
       )}
     >
-      <nav className="relative rounded-full bg-[#1D1D1D] bg-opacity-75 hover:bg-opacity-50 sm:hover:bg-opacity-75 cursor-pointer sm:cursor-default transition-all duration-300 border-2 border-[#717174] backdrop-blur-sm shadow-input w-fit mx-auto px-8 py-3 sm:py-6">
+      <nav className="relative rounded-full bg-[#1D1D1D] bg-opacity-75 hover:bg-opacity-50 sm:hover:bg-opacity-75 cursor-pointer sm:cursor-default transition-all duration-300 border-2 border-[#717174] backdrop-blur-xs shadow-input w-fit mx-auto px-8 py-3 sm:py-6">
         {/* Mobile View */}
         <div className="block sm:hidden text-white">
           <div
@@ -141,7 +141,7 @@ export default function Navbar({ className }: { className?: string }) {
             {/* Dropdown Toggle Button */}
             <button
               ref={toggleButtonRef}
-              className="focus:outline-none"
+              className="focus:outline-hidden"
               aria-haspopup="true"
               aria-expanded={dropdownOpen}
             >
@@ -174,7 +174,7 @@ export default function Navbar({ className }: { className?: string }) {
           ref={dropdownRef}
           className={`absolute left-0 right-0 top-15 ${
             dropdownOpen ? "scale-100" : "scale-0"
-          } transition-all duration-300 mt-2 mx-auto w-fit rounded-2xl bg-[#1D1D1D] bg-opacity-75 border-2 border-[#717174] backdrop-blur-sm shadow-input py-5 px-4 gap-3 z-50`}
+          } transition-all duration-300 mt-2 mx-auto w-fit rounded-2xl bg-[#1D1D1D] bg-opacity-75 border-2 border-[#717174] backdrop-blur-xs shadow-input py-5 px-4 gap-3 z-50`}
         >
           <ul className="font-sfPro font-extrabold text-white space-y-2">
             {menuItems.map((item) => (

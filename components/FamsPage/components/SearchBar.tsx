@@ -64,7 +64,7 @@ export const SearchBar = ({
     >
       <input
         type="text"
-        className="flex-1 max-md:min-w-24 md:min-w-28 w-max bg-transparent outline-none max-md:text-xs font-sfReg text-[#B3B3B3]"
+        className="flex-1 max-md:min-w-24 md:min-w-28 w-max bg-transparent outline-hidden max-md:text-xs font-sfReg text-[#B3B3B3]"
         placeholder="Search by name"
         onChange={textInputOnChange}
         value={searchCriteria.name}

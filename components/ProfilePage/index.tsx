@@ -33,7 +33,7 @@ const ProfilePage = ({
           <Link href={`/fams/${prevID}`}>
             <ArrowLeft className="size-6 lg:size-7" />
           </Link>
-          <h3 className="text-lg lg:text-xl font-sfReg font-[600]">
+          <h3 className="text-lg lg:text-xl font-sfReg font-semibold">
             {person["nick-name"]}
           </h3>
           <Link href={`/fams/${nextID}`}>
@@ -45,14 +45,14 @@ const ProfilePage = ({
         <Link href={`/fams/${prevID}`}>
           <ChevronLeft className="size-10" />
         </Link>
-        <h3 className="text-xl font-sfReg font-[600]">{person["nick-name"]}</h3>
+        <h3 className="text-xl font-sfReg font-semibold">{person["nick-name"]}</h3>
         <Link href={`/fams/${nextID}`}>
           <ChevronRight className="size-10" />
         </Link>
       </nav>
-      <main className="w-full max-w-[72rem] mx-auto">
+      <main className="w-full max-w-6xl mx-auto">
         <div className="flex flex-row gap-[6%] items-center mb-12">
-          <div className="flex-[1.2] sm:flex-[1] max-w-[24rem]">
+          <div className="flex-[1.2] sm:flex-1 max-w-[24rem]">
             <div className="relative w-full aspect-square rounded-full overflow-hidden">
               <Image
                 src={`/${person["image-filename"]}`}
@@ -64,7 +64,7 @@ const ProfilePage = ({
               />
             </div>
           </div>
-          <div className="flex-[2]">
+          <div className="flex-2">
             <h2 className="font-sfReg font-normal text-lg sm:text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 lg:mb-4">
               {person.major}
             </h2>
@@ -79,7 +79,7 @@ const ProfilePage = ({
           </div>
         </div>
         <div className="flex flex-col md:flex-row md:gap-[6%]">
-          <div className="flex-[1] md:max-w-[24rem]">
+          <div className="flex-1 md:max-w-[24rem]">
             <h2 className="font-sfPro font-bold text-lg sm:text-xl lg:text-2xl mb-2 md:mb-3 lg:mb-4">
               Description
             </h2>
@@ -87,7 +87,7 @@ const ProfilePage = ({
               {person.description}
             </p>
           </div>
-          <div className="flex-[2]">
+          <div className="flex-2">
             <h2 className="font-sfPro font-bold text-lg sm:text-xl lg:text-2xl mb-2 md:mb-3 lg:mb-4">
               Message for CSUI {"'"}24
             </h2>

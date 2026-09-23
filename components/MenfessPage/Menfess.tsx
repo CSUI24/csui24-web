@@ -96,7 +96,7 @@ const Menfess = ({ menfess }: { menfess: MenfessType[] }) => {
       />
 
       <div>
-        <h1 className="text-white text-center font-monumentExt font-[400] opacity-80 text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
+        <h1 className="text-white text-center font-monumentExt font-normal opacity-80 text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
           Cosmic Menfess
         </h1>
         <p className="text-center text-slate-400 font-PalanquinDark text-base sm:text-lg md:text-xl lg:text-xl">

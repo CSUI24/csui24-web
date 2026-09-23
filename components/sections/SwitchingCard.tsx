@@ -58,7 +58,7 @@ const SwitchingCard = () => {
             <div
               key={index}
               onClick={() => handleClick(index)}
-              className={`${isMediumScreen || isSmallScreen ? "" : "cursor-pointer"} rounded-[35px] p-[2px] bg-gradient-to-br from-gray-200 via-gray-400 to-gray-600 transition-all duration-500 ease-in-out overflow-hidden ${
+              className={`${isMediumScreen || isSmallScreen ? "" : "cursor-pointer"} rounded-[35px] p-[2px] bg-linear-to-br from-gray-200 via-gray-400 to-gray-600 transition-all duration-500 ease-in-out overflow-hidden ${
                 isSmallScreen
                   ? "max-w-[350px]"
                   : isMediumScreen
@@ -90,7 +90,7 @@ const SwitchingCard = () => {
                   priority
                 />
                 <div
-                  className={`text-justify font-[400] ${isSmallScreen || isMediumScreen ? "text-[10px]" : "text-base"} text-white font-sfSemi transition-all duration-500 ease-in-out ${
+                  className={`text-justify font-normal ${isSmallScreen || isMediumScreen ? "text-[10px]" : "text-base"} text-white font-sfSemi transition-all duration-500 ease-in-out ${
                     isSmallScreen || isMediumScreen || activeCard === index
                       ? "opacity-100 w-[80%] max-md:w-[60%] max-sm:w-[70%]"
                       : "opacity-0 w-0"
@@ -99,7 +99,7 @@ const SwitchingCard = () => {
                   <ScrollArea
                     className={`transition-opacity font-sfReg py-2 px-3 lg:h-[300px] h-[200px] ${
                       isSmallScreen || isMediumScreen || activeCard === index
-                        ? "duration-[2000ms] opacity-100"
+                        ? "duration-2000 opacity-100"
                         : "duration-75 opacity-0"
                     } `}
                   >

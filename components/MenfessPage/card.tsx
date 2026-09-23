@@ -174,7 +174,7 @@ const MenfessCard = ({
         <div className="h-[0.5px] w-full bg-[#D9D9D9]"></div>
       </div>
       <div className="w-full h-full text-white font-sans flex items-center justify-center px-6 overflow-y-auto max-h-full">
-        <p className="text-center break-words w-full h-full">{message}</p>
+        <p className="text-center wrap-break-word w-full h-full">{message}</p>
       </div>
       <div className="w-full flex flex-col items-center gap-2 p-6 max-sm:p-3">
         <div className="w-full flex justify-between">

@@ -38,17 +38,17 @@ const CardsTeam = (props: CardsTeamProps) => {
                     alt="image"
                     width={162}
                     height={139}
-                    className="transform rotate-[-131.061deg] absolute left-1/2 -translate-x-1/2 z-[1] fill-[#17135B] scale-150"
+                    className="transform rotate-[-131.061deg] absolute left-1/2 -translate-x-1/2 z-1 fill-[#17135B] scale-150"
                 />
                 <Image
                     src="/elements/element2.svg"
                     alt="image"
                     width={153}
                     height={132}
-                    className="transform rotate-[164.592deg] absolute bottom-2 left-1/2 -translate-x-1/2 z-[1] fill-custom-fill scale-150"
+                    className="transform rotate-[164.592deg] absolute bottom-2 left-1/2 -translate-x-1/2 z-1 fill-custom-fill scale-150"
                 />
 
-                <div className="w-fit text-[#b3b3b3] text-center tracking-widest font-[400] font-UncialAntiqua flex flex-col gap-20 items-center z-[2] absolute top-[13px] left-1/2 -translate-x-1/2 opacity-70">
+                <div className="w-fit text-[#b3b3b3] text-center tracking-widest font-normal font-UncialAntiqua flex flex-col gap-20 items-center z-2 absolute top-[13px] left-1/2 -translate-x-1/2 opacity-70">
                     <p
                         className={`transition-opacity duration-500 group-hover:opacity-0 select-none ${isSmallScreen ? "leading-[30px]" : "leading-[37px]"}`}
                         style={{ fontSize: isSmallScreen ? props.fontNickname[1] : props.fontNickname[0] }}
@@ -68,18 +68,18 @@ const CardsTeam = (props: CardsTeamProps) => {
                     alt="image"
                     width={isSmallScreen ? 300 : 415}
                     height={isSmallScreen ? 355 : 495}
-                    className="z-[3] absolute bottom-[15%] left-1/2 -translate-x-1/2 transition-opacity duration-500 group-hover:opacity-0"
+                    className="z-3 absolute bottom-[15%] left-1/2 -translate-x-1/2 transition-opacity duration-500 group-hover:opacity-0"
                 />
                 <Image
                     src={props.image2}
                     alt="image"
                     width={isSmallScreen ? 300 : 415}
                     height={isSmallScreen ? 355 : 495}
-                    className="z-[3] absolute bottom-[15%] left-1/2 -translate-x-1/2 transition-opacity duration-500 opacity-0 group-hover:opacity-100"
+                    className="z-3 absolute bottom-[15%] left-1/2 -translate-x-1/2 transition-opacity duration-500 opacity-0 group-hover:opacity-100"
                 />
 
-                <div className="z-[4] w-[110px] max-md:w-[80px] h-[23px] max-md:h-[16px] bg-[#1E1B4C] absolute bottom-[12%] flex flex-col items-center filter drop-shadow-[0px_4px_4px_rgba(0,0,0,0.25)] opacity-95">
-                    <p className="w-max text-[#D9D9D9] text-[12px] max-md:text-[8px] font-[400] font-PalanquinDark absolute left-1/2 -translate-x-1/2">
+                <div className="z-4 w-[110px] max-md:w-[80px] h-[23px] max-md:h-[16px] bg-[#1E1B4C] absolute bottom-[12%] flex flex-col items-center filter drop-shadow-[0px_4px_4px_rgba(0,0,0,0.25)] opacity-95">
+                    <p className="w-max text-[#D9D9D9] text-[12px] max-md:text-[8px] font-normal font-PalanquinDark absolute left-1/2 -translate-x-1/2">
                         {props.fullname}
                     </p>
                     <Image
@@ -91,8 +91,8 @@ const CardsTeam = (props: CardsTeamProps) => {
                     />
                 </div>
 
-                <div className="z-[4] w-[62px] max-md:w-[45px] h-[23px] max-md:h-[16px] bg-[#1E1B4C] absolute right-0 bottom-[7%] flex flex-col items-center filter drop-shadow-[0px_4px_4px_rgba(0,0,0,0.25)] opacity-95">
-                    <p className="w-max text-[#D9D9D9] text-[12px] max-md:text-[8px] font-[400] font-PalanquinDark absolute left-1/2 -translate-x-1/2">
+                <div className="z-4 w-[62px] max-md:w-[45px] h-[23px] max-md:h-[16px] bg-[#1E1B4C] absolute right-0 bottom-[7%] flex flex-col items-center filter drop-shadow-[0px_4px_4px_rgba(0,0,0,0.25)] opacity-95">
+                    <p className="w-max text-[#D9D9D9] text-[12px] max-md:text-[8px] font-normal font-PalanquinDark absolute left-1/2 -translate-x-1/2">
                         {props.Divisi}
                     </p>
                     <Image

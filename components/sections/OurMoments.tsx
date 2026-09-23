@@ -84,13 +84,13 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
       className={`fixed inset-0 bg-black flex items-center justify-center p-4 z-50 transition-all duration-200 ease-out overflow-y-auto
         ${
           isShowing
-            ? "bg-opacity-65 backdrop-blur-sm"
+            ? "bg-opacity-65 backdrop-blur-xs"
             : "bg-opacity-0 backdrop-blur-none"
         }`}
       onClick={handleBackdropClick}
     >
       <div
-        className={`rounded-xl lg:rounded-2xl border-solid border-2 border-white backdrop-blur-sm w-full max-w-[512px] lg:max-w-[50vw] overflow-hidden flex flex-col
+        className={`rounded-xl lg:rounded-2xl border-solid border-2 border-white backdrop-blur-xs w-full max-w-[512px] lg:max-w-[50vw] overflow-hidden flex flex-col
           transition-all duration-200 ease-out
           ${isShowing ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
       >
@@ -201,7 +201,7 @@ const OurMoments = () => {
             {duplicatedSlides.map((slide, slideIndex) => (
               <div
                 key={slideIndex}
-                className={`w-[100vw] max-w-[717px] lg:max-w-[70vw] aspect-[16/9] grid grid-cols-3 grid-rows-2 gap-[1.5vw]`}
+                className={`w-screen max-w-[717px] lg:max-w-[70vw] aspect-video grid grid-cols-3 grid-rows-2 gap-[1.5vw]`}
               >
                 <WobbleCard
                   containerClassName="col-span-2 group rounded-[1.5vw]"

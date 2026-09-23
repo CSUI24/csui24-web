@@ -26,7 +26,7 @@ const DocumentationCarousel = ({
 
   return (
     <div
-      className={`flex ${normal ? "md:flex-row" : "md:flex-row-reverse"} flex-col-reverse items-stretch justify-center gap-8 my-28 lg:my-36 px-0 md:px-14 lg:px-20 max-w-[40rem] md:max-w-[84rem] mx-auto`}
+      className={`flex ${normal ? "md:flex-row" : "md:flex-row-reverse"} flex-col-reverse items-stretch justify-center gap-8 my-28 lg:my-36 px-0 md:px-14 lg:px-20 max-w-160 md:max-w-336 mx-auto`}
     >
       <div className="flex-[0.8] flex flex-col justify-center items-center font-sfPro text-white max-md:mx-8">
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-6 lg:mb-8">
@@ -50,7 +50,7 @@ const DocumentationCarousel = ({
           >
             <ChevronRight />
           </button>
-          <div className="w-full aspect-[5/4] bg-white p-[2%] pb-[10%]">
+          <div className="w-full aspect-5/4 bg-white p-[2%] pb-[10%]">
             <div className="size-full overflow-hidden" ref={carouselRef}>
               <div className="flex h-full">
                 {album.imageList.map((src, index) => {
