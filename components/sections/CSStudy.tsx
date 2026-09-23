@@ -4,7 +4,7 @@ const CSStudy = () => {
     <div className="text-center py-10">
       <h1 className="text-white text-4xl font-sfReg">CStudy</h1>
       <div className="py-28 flex justify-center px-12">
-        <div className="bg-[#5C5757] bg-opacity-60 flex flex-col  items-center justify-center rounded-2xl">
+      <div className="bg-[#5C5757]/60 flex flex-col  items-center justify-center rounded-2xl">
           <p className="text-white text-xl px-20 py-12 max-w-[45rem] text-center max-sm:text-sm max-sm:px-10 font-sfReg">
           Find your learning materials through our Notion created by Academic Team CSUI 2024!
           </p>

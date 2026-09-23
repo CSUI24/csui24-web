@@ -84,8 +84,8 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
       className={`fixed inset-0 bg-black flex items-center justify-center p-4 z-50 transition-all duration-200 ease-out overflow-y-auto
         ${
           isShowing
-            ? "bg-opacity-65 backdrop-blur-sm"
-            : "bg-opacity-0 backdrop-blur-none"
+            ? "bg-black/65 backdrop-blur-sm"
+            : "bg-black/0 backdrop-blur-none"
         }`}
       onClick={handleBackdropClick}
     >
@@ -143,7 +143,7 @@ const SlideContent = ({
     <div className="w-full h-full">
       <Image src={image} alt="Gallery image" fill className="object-cover" />
       <div
-        className="absolute inset-0 bg-black bg-opacity-40 hidden group-hover:flex justify-center items-center transition duration-300 cursor-pointer"
+        className="absolute inset-0 bg-black/40 hidden group-hover:flex justify-center items-center transition duration-300 cursor-pointer"
         onClick={onClick}
       >
         <h1 className="font-sfPro text-white text-lg sm:text-xl lg:text-3xl xl:text-4xl text-center">

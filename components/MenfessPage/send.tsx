@@ -96,7 +96,7 @@ const SendMenfess = () => {
   };
 
   return (
-    <div className="w-full p-10 max-lg:p-8 flex flex-col gap-4 max-sm:p-6 bg-[#03045e] border border-[#717174] bg-opacity-30 rounded-2xl text-white transition-all">
+    <div className="w-full p-10 max-lg:p-8 flex flex-col gap-4 max-sm:p-6 bg-[#03045e]/30 border border-[#717174] rounded-2xl text-white transition-all">
       <h1 className="text-white font-sfPro font-[400] opacity-80 text-base sm:text-lg md:text-xl lg:text-2xl">
         Send Menfess
       </h1>

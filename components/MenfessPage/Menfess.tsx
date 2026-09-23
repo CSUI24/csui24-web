@@ -141,7 +141,7 @@ const Menfess = ({ menfess }: { menfess: MenfessType[] }) => {
           <button
             onClick={goToPreviousPage}
             disabled={currentPage === 1}
-            className={`px-4 py-2 rounded-md bg-[#03045e] flex flex-col bg-opacity-30 border border-[#717174] ${
+            className={`px-4 py-2 rounded-md bg-[#03045e]/30 flex flex-col border border-[#717174] ${
               currentPage === 1
                 ? "bg-gray-800 text-gray-500 cursor-not-allowed"
                 : "bg-[#03045e] text-white hover:border-[#717174]"
@@ -164,7 +164,7 @@ const Menfess = ({ menfess }: { menfess: MenfessType[] }) => {
                     className={`w-8 h-8 rounded-md flex items-center justify-center border border-[#717174] ${
                       currentPage === 1
                         ? "bg-white text-black cursor-not-allowed"
-                        : "bg-[#03045e] text-white bg-opacity-30 hover:border-[#717174]"
+                        : "bg-[#03045e]/30 text-white hover:border-[#717174]"
                     } transition-colors duration-200`}
                   >
                     1
@@ -204,7 +204,7 @@ const Menfess = ({ menfess }: { menfess: MenfessType[] }) => {
                     className={`w-8 h-8 rounded-md flex items-center justify-center border border-[#717174] ${
                       currentPage === i
                         ? "bg-white text-black cursor-not-allowed"
-                        : "bg-[#03045e] text-white bg-opacity-30 hover:border-[#717174]"
+                        : "bg-[#03045e]/30 text-white hover:border-[#717174]"
                     } transition-colors duration-200`}
                   >
                     {i}
@@ -233,7 +233,7 @@ const Menfess = ({ menfess }: { menfess: MenfessType[] }) => {
                     className={`w-8 h-8 rounded-md flex items-center justify-center border border-[#717174] ${
                       currentPage === totalPages
                         ? "bg-white text-black cursor-not-allowed"
-                        : "bg-[#03045e] text-white bg-opacity-30 hover:border-[#717174]"
+                        : "bg-[#03045e]/30 text-white hover:border-[#717174]"
                     } transition-colors duration-200`}
                   >
                     {totalPages}
@@ -248,7 +248,7 @@ const Menfess = ({ menfess }: { menfess: MenfessType[] }) => {
           <button
             onClick={goToNextPage}
             disabled={currentPage === totalPages}
-            className={`px-4 py-2 rounded-md bg-[#03045e] flex flex-col bg-opacity-30 border border-[#717174] ${
+            className={`px-4 py-2 rounded-md bg-[#03045e]/30 flex flex-col border border-[#717174] ${
               currentPage === totalPages
                 ? "bg-gray-800 text-gray-500 cursor-not-allowed"
                 : "bg-[#03045e] text-white hover:border-[#717174]"

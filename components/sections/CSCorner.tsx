@@ -73,7 +73,7 @@ const StudentCounts = () => {
           <div className="flex justify-center items-center pt-20">
             <Link
               href={"/fams"}
-              className="bg-[#D9D9D9] px-12 py-4 rounded-xl text-black text-lg font-SfReg font-medium transition-all duration-500 hover:opacity-60"
+              className="bg-[#D9D9D9] px-12 py-4 rounded-xl text-black text-lg font-sfReg font-medium transition-all duration-500 hover:opacity-60"
             >
               See Detail
             </Link>

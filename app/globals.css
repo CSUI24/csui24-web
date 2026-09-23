@@ -1,5 +1,61 @@
 @import "tailwindcss";
-@config "../tailwind.config.mjs";
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-custom-fill: rgba(157, 49, 51, 0.31);
+
+  --font-sf-pro: var(--font-sfPro), sans-serif;
+  --font-sf-reg: var(--font-sfReg), sans-serif;
+  --font-monument-ext: var(--font-monumentExt), sans-serif;
+  --font-inter: "Inter", sans-serif;
+  --font-uncial-antiqua: var(--font-UncialAntiqua), sans-serif;
+  --font-palanquin-dark: var(--font-PalanquinDark), sans-serif;
+
+  --background-image-custom-gradient: linear-gradient(
+    135deg,
+    rgba(210, 212, 214, 0.7) 0%,
+    rgba(166, 165, 173, 0.7) 13%,
+    rgba(138, 137, 150, 0.4) 43%,
+    rgba(17, 10, 20, 0.3) 66%,
+    rgba(17, 10, 20, 0.45) 74%,
+    rgba(17, 10, 20, 0.8) 100%
+  );
+
+  --breakpoint-xs: 500px;
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+/* Keep the existing class names while using collision-free theme tokens for
+ * Next.js font variables (for example, --font-sfPro). */
+@utility font-sfPro {
+  font-family: var(--font-sfPro), sans-serif;
+}
+
+@utility font-sfReg {
+  font-family: var(--font-sfReg), sans-serif;
+}
+
+@utility font-sfSemi {
+  font-family: var(--font-sfPro), sans-serif;
+}
+
+@utility font-monumentExt {
+  font-family: var(--font-monumentExt), sans-serif;
+}
+
+@utility font-UncialAntiqua {
+  font-family: var(--font-UncialAntiqua), sans-serif;
+}
+
+@utility font-PalanquinDark {
+  font-family: var(--font-PalanquinDark), sans-serif;
+}
 
 h1,
 h2,

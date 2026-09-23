@@ -80,7 +80,7 @@ export const SocialPaneDesktop = ({ person }: { person: FamsDataType }) => {
           </a>
         )}
       </div>
-      <div className="relative font-sfReg font-regular text-base lg:text-lg h-10 w-full">
+      <div className="relative font-sfReg font-normal text-base lg:text-lg h-10 w-full">
         {socmedIDs.map((username, index) => {
           return (
             <div

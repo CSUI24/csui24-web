@@ -103,7 +103,7 @@ const MenfessCard = ({
   };
 
   return (
-    <div className="w-full h-96 rounded-xl bg-[#03045e] flex flex-col bg-opacity-30 border border-[#717174] overflow-hidden">
+    <div className="w-full h-96 rounded-xl bg-[#03045e]/30 flex flex-col border border-[#717174] overflow-hidden">
       <div className="relative h-fit p-6 max-sm:p-3 flex flex-col gap-2">
         {tokenAdmin && (
           <div className="absolute top-6 right-6 flex items-center gap-2">

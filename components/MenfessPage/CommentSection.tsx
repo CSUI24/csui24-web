@@ -117,7 +117,7 @@ const CommentSection = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#03045e] h-96 flex flex-col rounded-3xl bg-opacity-30 border border-[#717174] text-white">
+      <DialogContent className="bg-[#03045e]/30 h-96 flex flex-col rounded-3xl border border-[#717174] text-white">
         <div className="w-full h-full flex flex-col gap-4 overflow-y-auto">
           {/* From and To */}
           <div className="w-full flex flex-col max-sm:gap-2 gap-4 text-white">

@@ -127,7 +127,7 @@ export default function Navbar({ className }: { className?: string }) {
         className
       )}
     >
-      <nav className="relative rounded-full bg-[#1D1D1D] bg-opacity-75 hover:bg-opacity-50 sm:hover:bg-opacity-75 cursor-pointer sm:cursor-default transition-all duration-300 border-2 border-[#717174] backdrop-blur-sm shadow-input w-fit mx-auto px-8 py-3 sm:py-6">
+      <nav className="relative rounded-full bg-[#1D1D1D]/75 hover:bg-[#1D1D1D]/50 sm:hover:bg-[#1D1D1D]/75 cursor-pointer sm:cursor-default transition-all duration-300 border-2 border-[#717174] backdrop-blur-sm shadow-input w-fit mx-auto px-8 py-3 sm:py-6">
         {/* Mobile View */}
         <div className="block sm:hidden text-white">
           <div
@@ -174,7 +174,7 @@ export default function Navbar({ className }: { className?: string }) {
           ref={dropdownRef}
           className={`absolute left-0 right-0 top-15 ${
             dropdownOpen ? "scale-100" : "scale-0"
-          } transition-all duration-300 mt-2 mx-auto w-fit rounded-2xl bg-[#1D1D1D] bg-opacity-75 border-2 border-[#717174] backdrop-blur-sm shadow-input py-5 px-4 gap-3 z-50`}
+          } transition-all duration-300 mt-2 mx-auto w-fit rounded-2xl bg-[#1D1D1D]/75 border-2 border-[#717174] backdrop-blur-sm shadow-input py-5 px-4 gap-3 z-50`}
         >
           <ul className="font-sfPro font-extrabold text-white space-y-2">
             {menuItems.map((item) => (
