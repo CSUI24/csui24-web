@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export type ApiResponse<T> = {
   success: boolean;
   message: string;
@@ -8,20 +10,48 @@ export function json<T>(body: T, init?: ResponseInit) {
   return Response.json(body, init);
 }
 
-export function methodNotAllowed(methods: readonly string[]) {
+export function success<T>(message: string, data: T) {
+  return json({
+    success: true,
+    message,
+    data,
+  });
+}
+
+export function failure(
+  message: string,
+  status: number,
+  data: unknown = null,
+  headers?: HeadersInit,
+) {
   return json(
     {
       success: false,
-      message: "Method not allowed",
-      data: null,
+      message,
+      data,
     },
-    {
-      status: 405,
-      headers: {
-        Allow: methods.join(", "),
-      },
-    },
+    { status, headers },
   );
+}
+
+export function internalServerError(error: unknown, context: string) {
+  console.error(context, error);
+  return failure("Internal server error", 500);
+}
+
+export function methodNotAllowed(methods: readonly string[]) {
+  return failure("Method not allowed", 405, null, {
+    Allow: methods.join(", "),
+  });
+}
+
+export async function parseJson<TSchema extends z.ZodType>(
+  request: Request,
+  schema: TSchema,
+): Promise<z.infer<TSchema> | null> {
+  const body = await readJson<unknown>(request);
+  const result = schema.safeParse(body);
+  return result.success ? result.data : null;
 }
 
 export function getBearerToken(request: Request) {

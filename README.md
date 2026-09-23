@@ -26,6 +26,14 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 The project uses the App Router for pages and colocated Route Handlers under `app/api`. Prisma Client is generated during builds.
 
+## API structure
+
+- `app/api/**/route.ts` contains only HTTP concerns: parsing requests, status codes, and response formatting.
+- `lib/api/` contains shared schemas, authentication, and API errors.
+- `lib/server/` contains server-side business logic and Prisma queries.
+
+Keep database queries and business rules out of route handlers so they remain easy to test and maintain.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
