@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useRef, useState, type DragEvent } from "react";
 import { Button } from "@/components/ui/button";
-import { Clock3, ImagePlus, Send, X, Zap } from "lucide-react";
+import { Clock3, ImagePlus, Plus, Send, X, Zap } from "lucide-react";
 import { toast } from "sonner";
 import { getMenfessTextLength } from "@/lib/menfess-text";
 import {
@@ -70,6 +70,7 @@ const SendMenfess = ({
   const [from, setFrom] = useState("");
   const [attachments, setAttachments] = useState<ImageAttachment[]>([]);
   const [isDraggingFiles, setIsDraggingFiles] = useState(false);
+  const [isAttachmentMenuOpen, setIsAttachmentMenuOpen] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const attachmentsRef = useRef<ImageAttachment[]>([]);
   const characterCount = getMenfessTextLength(from, to, message);
@@ -313,28 +314,13 @@ const SendMenfess = ({
         </div>
         {/* End To */}
       </div>
-      <div className="flex flex-col gap-1 w-full">
-        <div className="flex justify-between items-center">
+      <div className="flex w-full flex-col gap-2">
+        <div className="flex items-center justify-between">
           <p className="text-xs text-slate-400">Message</p>
           <p
             className={`text-xs ${characterCount > 280 ? "text-red-400" : "text-slate-500"}`}
           >
             {characterCount}/280
-          </p>
-        </div>
-        <Textarea
-          className="bg-transparent border-[#717174]"
-          placeholder="Type your message here."
-          onChange={(e) => setMessage(e.target.value)}
-          value={message}
-          disabled={isSubmitting}
-        />
-      </div>
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between gap-3">
-          <p className="text-xs text-slate-300">Images</p>
-          <p className="text-xs text-slate-500">
-            Up to 4 · 1 MB each
           </p>
         </div>
         <input
@@ -346,6 +332,7 @@ const SendMenfess = ({
           onChange={(event) => {
             if (event.target.files) addImages(event.target.files);
             event.target.value = "";
+            setIsAttachmentMenuOpen(false);
           }}
           disabled={isSubmitting}
           aria-label="Choose images to attach"
@@ -353,11 +340,22 @@ const SendMenfess = ({
         <div
           onDragEnter={(event) => {
             event.preventDefault();
-            if (!isSubmitting) setIsDraggingFiles(true);
+            if (
+              !isSubmitting &&
+              Array.from(event.dataTransfer.types).includes("Files")
+            ) {
+              setIsDraggingFiles(true);
+            }
           }}
           onDragOver={(event) => {
             event.preventDefault();
-            if (!isSubmitting) setIsDraggingFiles(true);
+            if (
+              !isSubmitting &&
+              Array.from(event.dataTransfer.types).includes("Files")
+            ) {
+              event.dataTransfer.dropEffect = "copy";
+              setIsDraggingFiles(true);
+            }
           }}
           onDragLeave={(event) => {
             if (
@@ -369,52 +367,24 @@ const SendMenfess = ({
             }
           }}
           onDrop={handleDrop}
-          className={`rounded-xl border border-dashed px-4 py-4 transition-[border-color,background-color] duration-150 ease-out motion-reduce:transition-none ${
+          className={`relative overflow-hidden rounded-2xl border transition-[border-color,background-color] duration-150 ease-out motion-reduce:transition-none ${
             isDraggingFiles
               ? "border-indigo-200 bg-indigo-200/10"
-              : "border-white/20 bg-white/[0.02]"
+              : "border-white/20 bg-black/10 focus-within:border-indigo-200/60"
           }`}
         >
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-3">
-              <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-lg bg-white/5 text-indigo-200">
-                <ImagePlus size={18} aria-hidden="true" />
-              </span>
-              <div className="min-w-0">
-                <p className="text-sm text-slate-200">
-                  Drag images here
-                </p>
-                <p className="text-xs text-slate-500">
-                  JPG, PNG, WebP, or GIF
-                </p>
-              </div>
-            </div>
-            <button
-              type="button"
-              disabled={isSubmitting || attachments.length >= MAX_IMAGES}
-              onClick={() => imageInputRef.current?.click()}
-              className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-lg border border-white/15 px-3 text-sm text-white transition-[background-color,transform] duration-150 ease-out hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transition-none motion-reduce:active:scale-100"
-            >
-              Choose images
-            </button>
-          </div>
-        </div>
-        {attachments.length > 0 && (
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {attachments.map((attachment, index) => (
-              <div
-                key={attachment.id}
-                className="group relative aspect-square overflow-hidden rounded-lg border border-white/15 bg-black/20"
-              >
-                <img
-                  src={attachment.previewUrl}
-                  alt={`Selected image ${index + 1} preview`}
-                  className="size-full object-cover"
-                />
-                <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-black/80 to-transparent px-2 pb-2 pt-6">
-                  <span className="truncate text-[11px] text-white/85">
-                    {attachment.file.name}
-                  </span>
+          {attachments.length > 0 && (
+            <div className="flex gap-2 overflow-x-auto px-3 pt-3 pb-1">
+              {attachments.map((attachment, index) => (
+                <div
+                  key={attachment.id}
+                  className="group relative size-[4.5rem] shrink-0 overflow-hidden rounded-xl border border-white/15 bg-black/20"
+                >
+                  <img
+                    src={attachment.previewUrl}
+                    alt={`Selected image ${index + 1} preview`}
+                    className="size-full object-cover"
+                  />
                   <button
                     type="button"
                     disabled={isSubmitting}
@@ -425,61 +395,116 @@ const SendMenfess = ({
                       );
                     }}
                     aria-label={`Remove ${attachment.file.name}`}
-                    className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-black/60 text-white transition-[background-color,transform] duration-150 ease-out hover:bg-black/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.97] disabled:opacity-50 motion-reduce:transition-none motion-reduce:active:scale-100"
+                    className="absolute top-1 right-1 inline-flex size-7 items-center justify-center rounded-full bg-black/70 text-white transition-[background-color,transform] duration-150 hover:bg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.97] disabled:opacity-50 motion-reduce:transition-none motion-reduce:active:scale-100"
                   >
-                    <X size={14} aria-hidden="true" />
+                    <X size={13} aria-hidden="true" />
                   </button>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-      <div className="flex items-center justify-end gap-1">
-        <Tooltip
-          delayDuration={100}
-          open={tooltipOpen}
-          onOpenChange={setTooltipOpen}
-        >
-          <TooltipTrigger asChild>
+              ))}
+            </div>
+          )}
+          <Textarea
+            className="min-h-32 resize-none rounded-none border-0 bg-transparent px-4 py-3 text-sm text-slate-100 shadow-none placeholder:text-slate-500 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60"
+            placeholder="Type your message here, or drop images…"
+            onChange={(event) => setMessage(event.target.value)}
+            value={message}
+            disabled={isSubmitting}
+          />
+          {isDraggingFiles && (
+            <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-[#03045e]/75 text-sm font-medium text-white backdrop-blur-[2px]">
+              Drop images to attach
+            </div>
+          )}
+          <div className="flex min-h-14 items-center gap-2 border-t border-white/10 px-3 py-2">
             <button
               type="button"
-              aria-label={
-                mode === "guest"
-                  ? "Guest approval details"
-                  : "UI SSO posting and privacy details"
-              }
-              onClick={(event) => {
-                event.preventDefault();
-                setTooltipOpen(true);
-              }}
-              className={`inline-flex shrink-0 items-center justify-center rounded-full transition-[background-color,color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 ${
-                mode === "guest" ? "text-amber-200 0" : "text-indigo-200 "
-              }`}
+              aria-label={isAttachmentMenuOpen ? "Close image options" : "Add images"}
+              aria-expanded={isAttachmentMenuOpen}
+              aria-controls="menfess-image-options"
+              disabled={isSubmitting}
+              onClick={() => setIsAttachmentMenuOpen((open) => !open)}
+              className="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-slate-200 transition-[background-color,color,transform] duration-150 ease-out hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transition-none motion-reduce:active:scale-100"
             >
-              {mode === "guest" ? (
-                <Clock3 size={18} aria-hidden="true" />
-              ) : (
-                <Zap size={18} aria-hidden="true" />
-              )}
+              <Plus size={21} aria-hidden="true" />
             </button>
-          </TooltipTrigger>
-          <TooltipContent side="top" sideOffset={8}>
-            {mode === "guest"
-              ? "Guest menfess requires no login but appears after admin approval"
-              : "Posts immediately. Your privacy stays protected, and your data is secured with encryption."}
-          </TooltipContent>
-        </Tooltip>
-        <Button
-          onClick={handleSend}
-          disabled={isSubmitting}
-          className="min-h-11 ml-4 w-fit px-4 self-end border bg-slate-400 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 sm:px-6"
-          variant={"secondary"}
-          data-umami-event="submit-menfess"
-        >
-          <Send size={15} aria-hidden="true" />
-          {mode === "guest" ? "Submit for review" : "Send"}
-        </Button>
+            <span className="hidden text-xs text-slate-500 sm:inline">
+              {attachments.length > 0
+                ? `${attachments.length}/${MAX_IMAGES} images attached`
+                : "Add an image or drag it into the message"}
+            </span>
+            <div className="ml-auto flex items-center gap-2">
+              <Tooltip
+                delayDuration={100}
+                open={tooltipOpen}
+                onOpenChange={setTooltipOpen}
+              >
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    aria-label={
+                      mode === "guest"
+                        ? "Guest approval details"
+                        : "UI SSO posting and privacy details"
+                    }
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setTooltipOpen(true);
+                    }}
+                    className={`inline-flex size-10 shrink-0 items-center justify-center rounded-full transition-[background-color,color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 ${
+                      mode === "guest" ? "text-amber-200" : "text-indigo-200"
+                    }`}
+                  >
+                    {mode === "guest" ? (
+                      <Clock3 size={18} aria-hidden="true" />
+                    ) : (
+                      <Zap size={18} aria-hidden="true" />
+                    )}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" sideOffset={8}>
+                  {mode === "guest"
+                    ? "Guest menfess requires no login but appears after admin approval"
+                    : "Posts immediately. Your privacy stays protected, and your data is secured with encryption."}
+                </TooltipContent>
+              </Tooltip>
+              <Button
+                onClick={handleSend}
+                disabled={isSubmitting}
+                className="min-h-10 w-fit border bg-slate-400 px-3 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 sm:px-4"
+                variant="secondary"
+                data-umami-event="submit-menfess"
+              >
+                <Send size={15} aria-hidden="true" />
+                {mode === "guest" ? "Submit for review" : "Send"}
+              </Button>
+            </div>
+          </div>
+        </div>
+        {isAttachmentMenuOpen && (
+          <div
+            id="menfess-image-options"
+            className="rounded-xl border border-white/10 bg-white/[0.04] p-2"
+          >
+            <button
+              type="button"
+              disabled={isSubmitting || attachments.length >= MAX_IMAGES}
+              onClick={() => imageInputRef.current?.click()}
+              className="flex min-h-16 w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-[background-color,transform] duration-150 ease-out hover:bg-white/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transition-none motion-reduce:active:scale-100"
+            >
+              <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-lg bg-white/5 text-indigo-200">
+                <ImagePlus size={19} aria-hidden="true" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm text-slate-100">
+                  Tambahkan foto &amp; file
+                </span>
+                <span className="mt-0.5 block text-xs text-slate-400">
+                  Unggah dari komputer · maks. 4 gambar, 1 MB per gambar
+                </span>
+              </span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
