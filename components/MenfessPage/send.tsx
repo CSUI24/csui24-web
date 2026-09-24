@@ -120,6 +120,7 @@ const SendMenfess = ({
   const handleDrop = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     setIsDraggingFiles(false);
+    if (isSubmitting) return;
     if (event.dataTransfer.files.length > 0) {
       addImages(event.dataTransfer.files);
     }
@@ -349,11 +350,11 @@ const SendMenfess = ({
         <div
           onDragEnter={(event) => {
             event.preventDefault();
-            setIsDraggingFiles(true);
+            if (!isSubmitting) setIsDraggingFiles(true);
           }}
           onDragOver={(event) => {
             event.preventDefault();
-            setIsDraggingFiles(true);
+            if (!isSubmitting) setIsDraggingFiles(true);
           }}
           onDragLeave={(event) => {
             if (

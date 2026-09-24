@@ -122,7 +122,9 @@ function getTweetId(payload: unknown) {
 }
 
 async function publishTweet(
-  input: Pick<MenfessCreateInput, "from" | "to" | "message">,
+  input: Pick<MenfessCreateInput, "from" | "to" | "message"> & {
+    imageUrls?: string[];
+  },
   menfessId: string,
 ) {
   let createdTweetId: string | null = null;
@@ -139,6 +141,7 @@ async function publishTweet(
         },
         body: JSON.stringify({
           tweet_text: formatMenfessText(input.from, input.to, input.message),
+          ...(input.imageUrls?.length ? { image_urls: input.imageUrls } : {}),
         }),
       },
     );
@@ -329,7 +332,7 @@ export async function createMenfess(
     return { blocked: false, pendingReview: true };
   }
 
-  const published = await publishTweet(input, menfess.id);
+  const published = await publishTweet({ ...input, imageUrls }, menfess.id);
   await notifyMenfessOnDiscord({
     id: menfess.id,
     from: input.from,
@@ -351,6 +354,7 @@ export async function approveGuestMenfess(id: string) {
       to: true,
       from: true,
       message: true,
+      imageKeys: true,
       approvalStatus: true,
     },
   });
@@ -372,12 +376,18 @@ export async function approveGuestMenfess(id: string) {
     throw new ApiError(409, "This menfess has already been reviewed");
   }
 
-  const published = await publishTweet(menfess, menfess.id);
+  const published = await publishTweet(
+    {
+      ...menfess,
+      imageUrls: menfess.imageKeys.map(getMenfessImageUrl),
+    },
+    menfess.id,
+  );
   return { published };
 }
 
 export async function declineGuestMenfess(id: string) {
-  const menfess = await prisma.menfess.findUnique({
+  const pendingMenfess = await prisma.menfess.findUnique({
     where: { id },
     select: { imageKeys: true },
   });
@@ -388,10 +398,12 @@ export async function declineGuestMenfess(id: string) {
   });
 
   if (update.count === 1) {
-    await prisma.menfess.update({ where: { id }, data: { imageKeys: [] } });
-    await deleteMenfessImages(menfess?.imageKeys ?? []).catch((error) =>
-      console.error("Failed to delete declined menfess images:", error),
-    );
+    try {
+      await deleteMenfessImages(pendingMenfess?.imageKeys ?? []);
+      await prisma.menfess.update({ where: { id }, data: { imageKeys: [] } });
+    } catch (error) {
+      console.error("Failed to delete declined menfess images:", error);
+    }
     return;
   }
 

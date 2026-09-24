@@ -52,8 +52,10 @@ function getR2Client() {
   return cachedClient;
 }
 
-export function isMenfessImageMimeType(value: string): value is MenfessImageMimeType {
-  return Object.hasOwn(imageExtensions, value);
+export function isMenfessImageMimeType(
+  value: string,
+): value is MenfessImageMimeType {
+  return Object.prototype.hasOwnProperty.call(imageExtensions, value);
 }
 
 export async function createMenfessImageUpload(input: {

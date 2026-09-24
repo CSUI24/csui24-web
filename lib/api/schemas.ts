@@ -9,6 +9,7 @@ export const menfessInputSchema = z.object({
   message: optionalText,
   fingerprint: optionalText,
   mode: z.enum(["guest", "sso"]).optional(),
+  imageKeys: z.array(requiredText).max(4).optional(),
 });
 
 export const menfessCreateSchema = z.object({

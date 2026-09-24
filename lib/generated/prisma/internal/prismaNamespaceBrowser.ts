@@ -80,6 +80,7 @@ export const MenfessScalarFieldEnum = {
   to: 'to',
   from: 'from',
   message: 'message',
+  imageKeys: 'imageKeys',
   tweetId: 'tweetId',
   fingerprint: 'fingerprint',
   ipAddressHash: 'ipAddressHash',
@@ -171,4 +172,3 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-

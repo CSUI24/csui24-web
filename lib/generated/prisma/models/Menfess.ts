@@ -69,6 +69,7 @@ export type MenfessCountAggregateOutputType = {
   to: number
   from: number
   message: number
+  imageKeys: number
   tweetId: number
   fingerprint: number
   ipAddressHash: number
@@ -131,6 +132,7 @@ export type MenfessCountAggregateInputType = {
   to?: true
   from?: true
   message?: true
+  imageKeys?: true
   tweetId?: true
   fingerprint?: true
   ipAddressHash?: true
@@ -224,6 +226,7 @@ export type MenfessGroupByOutputType = {
   to: string
   from: string
   message: string
+  imageKeys: string[]
   tweetId: string | null
   fingerprint: string | null
   ipAddressHash: string | null
@@ -265,6 +268,7 @@ export type MenfessWhereInput = {
   to?: Prisma.StringFilter<"Menfess"> | string
   from?: Prisma.StringFilter<"Menfess"> | string
   message?: Prisma.StringFilter<"Menfess"> | string
+  imageKeys?: Prisma.StringNullableListFilter<"Menfess">
   tweetId?: Prisma.StringNullableFilter<"Menfess"> | string | null
   fingerprint?: Prisma.StringNullableFilter<"Menfess"> | string | null
   ipAddressHash?: Prisma.StringNullableFilter<"Menfess"> | string | null
@@ -287,6 +291,7 @@ export type MenfessOrderByWithRelationInput = {
   to?: Prisma.SortOrder
   from?: Prisma.SortOrder
   message?: Prisma.SortOrder
+  imageKeys?: Prisma.SortOrder
   tweetId?: Prisma.SortOrderInput | Prisma.SortOrder
   fingerprint?: Prisma.SortOrderInput | Prisma.SortOrder
   ipAddressHash?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -313,6 +318,7 @@ export type MenfessWhereUniqueInput = Prisma.AtLeast<{
   to?: Prisma.StringFilter<"Menfess"> | string
   from?: Prisma.StringFilter<"Menfess"> | string
   message?: Prisma.StringFilter<"Menfess"> | string
+  imageKeys?: Prisma.StringNullableListFilter<"Menfess">
   fingerprint?: Prisma.StringNullableFilter<"Menfess"> | string | null
   ipAddressHash?: Prisma.StringNullableFilter<"Menfess"> | string | null
   isBlocked?: Prisma.BoolFilter<"Menfess"> | boolean
@@ -334,6 +340,7 @@ export type MenfessOrderByWithAggregationInput = {
   to?: Prisma.SortOrder
   from?: Prisma.SortOrder
   message?: Prisma.SortOrder
+  imageKeys?: Prisma.SortOrder
   tweetId?: Prisma.SortOrderInput | Prisma.SortOrder
   fingerprint?: Prisma.SortOrderInput | Prisma.SortOrder
   ipAddressHash?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -360,6 +367,7 @@ export type MenfessScalarWhereWithAggregatesInput = {
   to?: Prisma.StringWithAggregatesFilter<"Menfess"> | string
   from?: Prisma.StringWithAggregatesFilter<"Menfess"> | string
   message?: Prisma.StringWithAggregatesFilter<"Menfess"> | string
+  imageKeys?: Prisma.StringNullableListFilter<"Menfess">
   tweetId?: Prisma.StringNullableWithAggregatesFilter<"Menfess"> | string | null
   fingerprint?: Prisma.StringNullableWithAggregatesFilter<"Menfess"> | string | null
   ipAddressHash?: Prisma.StringNullableWithAggregatesFilter<"Menfess"> | string | null
@@ -380,6 +388,7 @@ export type MenfessCreateInput = {
   to: string
   from: string
   message: string
+  imageKeys?: Prisma.MenfessCreateimageKeysInput | string[]
   tweetId?: string | null
   fingerprint?: string | null
   ipAddressHash?: string | null
@@ -402,6 +411,7 @@ export type MenfessUncheckedCreateInput = {
   to: string
   from: string
   message: string
+  imageKeys?: Prisma.MenfessCreateimageKeysInput | string[]
   tweetId?: string | null
   fingerprint?: string | null
   ipAddressHash?: string | null
@@ -424,6 +434,7 @@ export type MenfessUpdateInput = {
   to?: Prisma.StringFieldUpdateOperationsInput | string
   from?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKeys?: Prisma.MenfessUpdateimageKeysInput | string[]
   tweetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipAddressHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -446,6 +457,7 @@ export type MenfessUncheckedUpdateInput = {
   to?: Prisma.StringFieldUpdateOperationsInput | string
   from?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKeys?: Prisma.MenfessUpdateimageKeysInput | string[]
   tweetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipAddressHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -468,6 +480,7 @@ export type MenfessCreateManyInput = {
   to: string
   from: string
   message: string
+  imageKeys?: Prisma.MenfessCreateimageKeysInput | string[]
   tweetId?: string | null
   fingerprint?: string | null
   ipAddressHash?: string | null
@@ -488,6 +501,7 @@ export type MenfessUpdateManyMutationInput = {
   to?: Prisma.StringFieldUpdateOperationsInput | string
   from?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKeys?: Prisma.MenfessUpdateimageKeysInput | string[]
   tweetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipAddressHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -508,6 +522,7 @@ export type MenfessUncheckedUpdateManyInput = {
   to?: Prisma.StringFieldUpdateOperationsInput | string
   from?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKeys?: Prisma.MenfessUpdateimageKeysInput | string[]
   tweetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipAddressHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -523,11 +538,20 @@ export type MenfessUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type MenfessCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   to?: Prisma.SortOrder
   from?: Prisma.SortOrder
   message?: Prisma.SortOrder
+  imageKeys?: Prisma.SortOrder
   tweetId?: Prisma.SortOrder
   fingerprint?: Prisma.SortOrder
   ipAddressHash?: Prisma.SortOrder
@@ -588,8 +612,17 @@ export type MenfessScalarRelationFilter = {
   isNot?: Prisma.MenfessWhereInput
 }
 
+export type MenfessCreateimageKeysInput = {
+  set: string[]
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type MenfessUpdateimageKeysInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
@@ -641,6 +674,7 @@ export type MenfessCreateWithoutReactionsInput = {
   to: string
   from: string
   message: string
+  imageKeys?: Prisma.MenfessCreateimageKeysInput | string[]
   tweetId?: string | null
   fingerprint?: string | null
   ipAddressHash?: string | null
@@ -662,6 +696,7 @@ export type MenfessUncheckedCreateWithoutReactionsInput = {
   to: string
   from: string
   message: string
+  imageKeys?: Prisma.MenfessCreateimageKeysInput | string[]
   tweetId?: string | null
   fingerprint?: string | null
   ipAddressHash?: string | null
@@ -699,6 +734,7 @@ export type MenfessUpdateWithoutReactionsInput = {
   to?: Prisma.StringFieldUpdateOperationsInput | string
   from?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKeys?: Prisma.MenfessUpdateimageKeysInput | string[]
   tweetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipAddressHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -720,6 +756,7 @@ export type MenfessUncheckedUpdateWithoutReactionsInput = {
   to?: Prisma.StringFieldUpdateOperationsInput | string
   from?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKeys?: Prisma.MenfessUpdateimageKeysInput | string[]
   tweetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipAddressHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -741,6 +778,7 @@ export type MenfessCreateWithoutCommentsInput = {
   to: string
   from: string
   message: string
+  imageKeys?: Prisma.MenfessCreateimageKeysInput | string[]
   tweetId?: string | null
   fingerprint?: string | null
   ipAddressHash?: string | null
@@ -762,6 +800,7 @@ export type MenfessUncheckedCreateWithoutCommentsInput = {
   to: string
   from: string
   message: string
+  imageKeys?: Prisma.MenfessCreateimageKeysInput | string[]
   tweetId?: string | null
   fingerprint?: string | null
   ipAddressHash?: string | null
@@ -799,6 +838,7 @@ export type MenfessUpdateWithoutCommentsInput = {
   to?: Prisma.StringFieldUpdateOperationsInput | string
   from?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKeys?: Prisma.MenfessUpdateimageKeysInput | string[]
   tweetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipAddressHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -820,6 +860,7 @@ export type MenfessUncheckedUpdateWithoutCommentsInput = {
   to?: Prisma.StringFieldUpdateOperationsInput | string
   from?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKeys?: Prisma.MenfessUpdateimageKeysInput | string[]
   tweetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipAddressHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -881,6 +922,7 @@ export type MenfessSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   to?: boolean
   from?: boolean
   message?: boolean
+  imageKeys?: boolean
   tweetId?: boolean
   fingerprint?: boolean
   ipAddressHash?: boolean
@@ -904,6 +946,7 @@ export type MenfessSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   to?: boolean
   from?: boolean
   message?: boolean
+  imageKeys?: boolean
   tweetId?: boolean
   fingerprint?: boolean
   ipAddressHash?: boolean
@@ -924,6 +967,7 @@ export type MenfessSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   to?: boolean
   from?: boolean
   message?: boolean
+  imageKeys?: boolean
   tweetId?: boolean
   fingerprint?: boolean
   ipAddressHash?: boolean
@@ -944,6 +988,7 @@ export type MenfessSelectScalar = {
   to?: boolean
   from?: boolean
   message?: boolean
+  imageKeys?: boolean
   tweetId?: boolean
   fingerprint?: boolean
   ipAddressHash?: boolean
@@ -959,7 +1004,7 @@ export type MenfessSelectScalar = {
   createdAt?: boolean
 }
 
-export type MenfessOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "to" | "from" | "message" | "tweetId" | "fingerprint" | "ipAddressHash" | "isBlocked" | "isPosted" | "resourceUserId" | "resourceUsername" | "resourceName" | "resourceEmail" | "resourceNpm" | "resourceOrganizationalCode" | "approvalStatus" | "createdAt", ExtArgs["result"]["menfess"]>
+export type MenfessOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "to" | "from" | "message" | "imageKeys" | "tweetId" | "fingerprint" | "ipAddressHash" | "isBlocked" | "isPosted" | "resourceUserId" | "resourceUsername" | "resourceName" | "resourceEmail" | "resourceNpm" | "resourceOrganizationalCode" | "approvalStatus" | "createdAt", ExtArgs["result"]["menfess"]>
 export type MenfessInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   reactions?: boolean | Prisma.Menfess$reactionsArgs<ExtArgs>
   comments?: boolean | Prisma.Menfess$commentsArgs<ExtArgs>
@@ -979,6 +1024,7 @@ export type $MenfessPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     to: string
     from: string
     message: string
+    imageKeys: string[]
     tweetId: string | null
     fingerprint: string | null
     ipAddressHash: string | null
@@ -1421,6 +1467,7 @@ export interface MenfessFieldRefs {
   readonly to: Prisma.FieldRef<"Menfess", 'String'>
   readonly from: Prisma.FieldRef<"Menfess", 'String'>
   readonly message: Prisma.FieldRef<"Menfess", 'String'>
+  readonly imageKeys: Prisma.FieldRef<"Menfess", 'String[]'>
   readonly tweetId: Prisma.FieldRef<"Menfess", 'String'>
   readonly fingerprint: Prisma.FieldRef<"Menfess", 'String'>
   readonly ipAddressHash: Prisma.FieldRef<"Menfess", 'String'>
