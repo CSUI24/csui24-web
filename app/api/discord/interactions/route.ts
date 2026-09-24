@@ -18,7 +18,12 @@ type DiscordInteraction = {
   application_id?: string;
   token?: string;
   channel_id?: string;
-  member?: { roles?: string[] };
+  member?: {
+    roles?: string[];
+    nick?: string;
+    user?: { username?: string; global_name?: string };
+  };
+  user?: { username?: string; global_name?: string };
   data?: { custom_id?: string };
   message?: {
     id?: string;
@@ -31,6 +36,18 @@ function ephemeralMessage(content: string) {
     type: 4,
     data: { content, flags: 64 },
   });
+}
+
+function getModeratorName(interaction: DiscordInteraction) {
+  const member = interaction.member;
+  const user = member?.user ?? interaction.user;
+
+  return (
+    member?.nick?.trim() ||
+    user?.global_name?.trim() ||
+    user?.username?.trim() ||
+    "Unknown moderator"
+  );
 }
 
 export async function POST(request: Request) {
@@ -94,6 +111,7 @@ export async function POST(request: Request) {
   const action = actionMatch[1] as DiscordMenfessAction;
   const menfessId = actionMatch[2];
   const originalEmbed = interaction.message?.embeds?.[0];
+  const moderatorName = getModeratorName(interaction);
 
   after(async () => {
     let responseMessage: string;
@@ -105,6 +123,7 @@ export async function POST(request: Request) {
         channelId,
         messageId,
         originalEmbed,
+        moderatorName,
       });
     } catch (error) {
       responseMessage = isApiError(error)

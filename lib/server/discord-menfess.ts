@@ -17,6 +17,7 @@ export async function handleDiscordMenfessAction(input: {
   channelId: string;
   messageId: string;
   originalEmbed?: Record<string, unknown>;
+  moderatorName?: string;
 }) {
   let outcome: DiscordModerationOutcome;
   let responseMessage: string;
@@ -58,6 +59,7 @@ export async function handleDiscordMenfessAction(input: {
       menfessId: input.menfessId,
       outcome,
       originalEmbed: input.originalEmbed,
+      deletedBy: input.action === "delete" ? input.moderatorName : undefined,
     });
   } catch (error) {
     console.error("Failed to update Discord moderation message:", error);

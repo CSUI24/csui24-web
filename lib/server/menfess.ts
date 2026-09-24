@@ -175,6 +175,7 @@ async function notifyMenfessOnDiscord(input: {
   message: string;
   mode: "guest" | "sso";
   published: boolean;
+  ssoName?: string | null;
 }) {
   try {
     await sendMenfessToDiscord(input);
@@ -301,6 +302,7 @@ export async function createMenfess(
     message: input.message,
     mode: "sso",
     published,
+    ssoName: ssoUser?.name,
   });
   return { blocked: false, pendingReview: false };
 }

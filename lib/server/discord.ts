@@ -11,6 +11,7 @@ export type MenfessDiscordNotice = {
   message: string;
   mode: "guest" | "sso";
   published: boolean;
+  ssoName?: string | null;
 };
 
 type DiscordConfig = {
@@ -117,6 +118,15 @@ function getModerationEmbed(input: MenfessDiscordNotice) {
     fields: [
       { name: "From", value: escapeDiscordMarkdown(formatName(input.from)) },
       { name: "To", value: escapeDiscordMarkdown(formatName(input.to)) },
+      ...(input.mode === "sso" && input.ssoName
+        ? [
+            {
+              name: "UI SSO",
+              value: escapeDiscordMarkdown(input.ssoName),
+              inline: true,
+            },
+          ]
+        : []),
       { name: "Message", value: escapeDiscordMarkdown(input.message) },
     ],
     footer: { text: `Menfess ID: ${input.id}` },
@@ -244,6 +254,7 @@ export async function updateDiscordModerationMessage(input: {
   menfessId: string;
   outcome: DiscordModerationOutcome;
   originalEmbed?: Record<string, unknown>;
+  deletedBy?: string;
 }) {
   let embed: Record<string, unknown>;
 
@@ -252,6 +263,12 @@ export async function updateDiscordModerationMessage(input: {
       title: "Menfess deleted",
       description: "The menfess and any linked public post were deleted.",
       color: 0xed4245,
+      fields: [
+        {
+          name: "Deleted by",
+          value: escapeDiscordMarkdown(input.deletedBy || "Unknown moderator"),
+        },
+      ],
       footer: { text: `Menfess ID: ${input.menfessId}` },
       timestamp: new Date().toISOString(),
     };
