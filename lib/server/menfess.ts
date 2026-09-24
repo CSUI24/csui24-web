@@ -9,6 +9,12 @@ import {
   hashGuestRequestIp,
   hashSsoIdentity,
 } from "@/lib/server/menfess-ban-identifiers";
+import {
+  deleteMenfessImages,
+  deleteStagedMenfessImages,
+  getMenfessImageUrl,
+  promoteStagedMenfessImages,
+} from "@/lib/server/r2";
 
 export const BANNED_MESSAGE = "MAMPUS LU GUA BAN AJGG BUAHAHHAHAHHA";
 export const MENFESS_COOLDOWN_MS = 10 * 60 * 1000;
@@ -173,6 +179,7 @@ async function notifyMenfessOnDiscord(input: {
   mode: "guest" | "sso";
   published: boolean;
   ssoName?: string | null;
+  imageUrls: string[];
 }) {
   try {
     await sendMenfessToDiscord(input);
@@ -189,6 +196,7 @@ export async function listPublicMenfess() {
       to: true,
       from: true,
       message: true,
+      imageKeys: true,
       createdAt: true,
       reactions: {
         select: { type: true, count: true },
@@ -199,7 +207,12 @@ export async function listPublicMenfess() {
     },
     orderBy: { createdAt: "desc" },
     take: parsePositiveInt(process.env.LIMIT_MENFESS),
-  });
+  }).then((menfess) =>
+    menfess.map(({ imageKeys, ...item }) => ({
+      ...item,
+      images: imageKeys.map(getMenfessImageUrl),
+    })),
+  );
 }
 
 export async function createMenfess(
@@ -259,23 +272,47 @@ export async function createMenfess(
     }
   }
 
-  const menfess = await prisma.menfess.create({
-    data: {
-      to: input.to,
-      from: input.from,
-      message: input.message,
-      fingerprint: input.fingerprint,
-      ipAddressHash,
-      isBlocked: identityIsBanned,
-      approvalStatus: input.mode === "guest" ? "PENDING" : "APPROVED",
-      resourceUsername: ssoUser?.username,
-      resourceName: ssoUser?.name,
-      resourceNpm: ssoUser?.npm,
-      resourceOrganizationalCode: ssoUser?.organizationalCode,
-    },
-  });
+  const imageKeys = identityIsBanned
+    ? []
+    : await promoteStagedMenfessImages(input.imageKeys);
+  let imageUrls: string[];
+  try {
+    imageUrls = imageKeys.map(getMenfessImageUrl);
+  } catch (error) {
+    await Promise.allSettled([deleteMenfessImages(imageKeys)]);
+    throw error;
+  }
+
+  let menfess;
+  try {
+    menfess = await prisma.menfess.create({
+      data: {
+        to: input.to,
+        from: input.from,
+        message: input.message,
+        imageKeys,
+        fingerprint: input.fingerprint,
+        ipAddressHash,
+        isBlocked: identityIsBanned,
+        approvalStatus: input.mode === "guest" ? "PENDING" : "APPROVED",
+        resourceUsername: ssoUser?.username,
+        resourceName: ssoUser?.name,
+        resourceNpm: ssoUser?.npm,
+        resourceOrganizationalCode: ssoUser?.organizationalCode,
+      },
+    });
+  } catch (error) {
+    await Promise.allSettled([
+      deleteMenfessImages(imageKeys),
+      deleteStagedMenfessImages(input.imageKeys),
+    ]);
+    throw error;
+  }
 
   if (identityIsBanned) {
+    await deleteStagedMenfessImages(input.imageKeys).catch((error) =>
+      console.error("Failed to clean up blocked menfess image uploads:", error),
+    );
     return { blocked: true };
   }
 
@@ -287,6 +324,7 @@ export async function createMenfess(
       message: input.message,
       mode: "guest",
       published: false,
+      imageUrls,
     });
     return { blocked: false, pendingReview: true };
   }
@@ -300,6 +338,7 @@ export async function createMenfess(
     mode: "sso",
     published,
     ssoName: ssoUser?.name,
+    imageUrls,
   });
   return { blocked: false, pendingReview: false };
 }
@@ -338,12 +377,21 @@ export async function approveGuestMenfess(id: string) {
 }
 
 export async function declineGuestMenfess(id: string) {
+  const menfess = await prisma.menfess.findUnique({
+    where: { id },
+    select: { imageKeys: true },
+  });
+
   const update = await prisma.menfess.updateMany({
     where: { id, approvalStatus: "PENDING" },
     data: { approvalStatus: "REJECTED" },
   });
 
   if (update.count === 1) {
+    await prisma.menfess.update({ where: { id }, data: { imageKeys: [] } });
+    await deleteMenfessImages(menfess?.imageKeys ?? []).catch((error) =>
+      console.error("Failed to delete declined menfess images:", error),
+    );
     return;
   }
 
@@ -389,6 +437,7 @@ export async function deleteMenfess(id: string) {
     select: {
       id: true,
       tweetId: true,
+      imageKeys: true,
     },
   });
 
@@ -405,4 +454,8 @@ export async function deleteMenfess(id: string) {
     prisma.reaction.deleteMany({ where: { menfessId: id } }),
     prisma.menfess.delete({ where: { id } }),
   ]);
+
+  await deleteMenfessImages(menfess.imageKeys).catch((error) =>
+    console.error("Failed to delete menfess images:", error),
+  );
 }

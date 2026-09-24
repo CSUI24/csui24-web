@@ -18,6 +18,7 @@ model Menfess {
   to                         String
   from                       String
   message                    String
+  imageKeys                  String[]              @default([])
   tweetId                    String?               @unique
   fingerprint                String?
   ipAddressHash              String?

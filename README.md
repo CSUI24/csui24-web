@@ -49,6 +49,33 @@ Configure these server-only environment variables:
 
 Add the bot to the server with permission to view the moderation channel, send messages, and embed links. In the Discord Developer Portal, set the production Interactions Endpoint URL to `https://cosmic.csui.dev/api/discord/interactions`. Local development needs a public HTTPS tunnel configured as that endpoint. The bot and endpoint variables must be configured before Discord notifications and actions become available. For guest IP bans behind Cloudflare, set `CLOUDFLARE_PROXY_SECRET` in Vercel and add a Cloudflare request header transform rule for `cosmic.csui.dev` that overwrites `x-cosmic-proxy-secret` with the same random value. The server only trusts `CF-Connecting-IP` when this marker matches; direct Vercel requests use Vercel's forwarded client IP.
 
+## Menfess image uploads
+
+Menfess accepts up to four JPEG, PNG, WebP, or GIF images, with a 1 MB limit per file. The browser uploads directly to R2 using a five-minute pre-signed `PUT` URL. R2 credentials stay on the server; the client receives only a URL scoped to one temporary object, one content type, and the declared file size. The server checks the stored object size and content type again before attaching it to a menfess. R2 pre-signed uploads use `PUT` because R2 does not support pre-signed form `POST` uploads.
+
+Set these server-only environment variables:
+
+- `R2_ACCOUNT_ID`: Cloudflare account ID.
+- `R2_BUCKET_NAME`: bucket used for menfess images.
+- `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY`: R2 S3 API token credentials with object read/write access to this bucket.
+- `R2_PUBLIC_URL`: public bucket custom domain, without a trailing slash (for example, `https://images.example.com`). Discord and the menfess feed need to fetch images from this URL without authentication.
+
+Enable public reads through an R2 custom domain (or use `r2.dev` for development). Add this CORS policy under the bucket's **Settings → CORS Policy**, replacing the production origin with the actual site origin:
+
+```json
+[
+  {
+    "AllowedOrigins": ["https://cosmic.csui.dev", "http://localhost:3000"],
+    "AllowedMethods": ["PUT"],
+    "AllowedHeaders": ["Content-Type"],
+    "ExposeHeaders": ["ETag"],
+    "MaxAgeSeconds": 3600
+  }
+]
+```
+
+Create an R2 lifecycle rule that expires objects with the `menfess/staging/` prefix after one day. These are unfinished uploads; submitted images are moved to `menfess/images/` and are retained until the menfess is declined or deleted.
+
 Apply new database schema migrations with `pnpm prisma migrate deploy` before deploying code that depends on them. Keep `SSO_SESSION_SECRET` stable: it is also used as the secret key for SSO identity and guest IP ban hashes.
 
 ## Learn More

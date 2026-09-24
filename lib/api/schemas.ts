@@ -17,6 +17,19 @@ export const menfessCreateSchema = z.object({
   message: requiredText,
   fingerprint: requiredText,
   mode: z.enum(["guest", "sso"]),
+  imageKeys: z.array(requiredText).max(4).default([]),
+});
+
+export const menfessImageUploadSchema = z.object({
+  files: z
+    .array(
+      z.object({
+        contentType: z.enum(["image/jpeg", "image/png", "image/webp", "image/gif"]),
+        size: z.number().int().min(1).max(1_048_576),
+      }),
+    )
+    .min(1)
+    .max(4),
 });
 
 export const menfessIdSchema = z.object({

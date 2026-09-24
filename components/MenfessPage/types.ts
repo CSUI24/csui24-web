@@ -8,6 +8,7 @@ export interface MenfessType {
   to: string;
   from: string;
   message: string;
+  images: string[];
   createdAt: string;
   reactions: Reaction[];
   _count: {

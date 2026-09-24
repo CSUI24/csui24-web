@@ -27,7 +27,7 @@ const MenfessCard = ({
   onCommentClick?: (menfess: MenfessType) => void;
   tokenAdmin: string;
 }) => {
-  const { to, from, message, createdAt, _count } = menfess;
+  const { to, from, message, images, createdAt, _count } = menfess;
   const { comments } = _count;
   const toIsFam = to.startsWith("fams/");
 
@@ -108,7 +108,7 @@ const MenfessCard = ({
   };
 
   return (
-    <div className="w-full h-96 rounded-xl bg-[#03045e] flex flex-col bg-opacity-30 border border-[#717174] overflow-hidden">
+    <div className="w-full min-h-96 rounded-xl bg-[#03045e] flex flex-col bg-opacity-30 border border-[#717174] overflow-hidden">
       <div className="relative h-fit p-6 max-sm:p-3 flex flex-col gap-2">
         {tokenAdmin && (
           <div className="absolute top-6 right-6 flex items-center gap-2">
@@ -196,8 +196,31 @@ const MenfessCard = ({
         </div>
         <div className="h-[0.5px] w-full bg-[#D9D9D9]"></div>
       </div>
-      <div className="w-full h-full text-white font-sans flex items-center justify-center px-6 overflow-y-auto max-h-full">
-        <p className="text-center break-words w-full h-full">{message}</p>
+      <div className="w-full min-h-24 text-white font-sans flex flex-col items-center justify-center gap-4 px-6 py-4">
+        <p className="text-center break-words w-full whitespace-pre-wrap">{message}</p>
+        {images.length > 0 && (
+          <div
+            className={`grid w-full gap-2 ${images.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}
+          >
+            {images.map((image, index) => (
+              <a
+                key={image}
+                href={image}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Open attached image ${index + 1} in a new tab`}
+                className={`block overflow-hidden rounded-lg border border-white/15 bg-black/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${images.length === 1 ? "mx-auto max-h-56 w-full max-w-xl" : "h-28 sm:h-36"}`}
+              >
+                <Img
+                  src={image}
+                  alt={`Menfess image ${index + 1}`}
+                  loading="lazy"
+                  className={`size-full ${images.length === 1 ? "object-contain" : "object-cover"}`}
+                />
+              </a>
+            ))}
+          </div>
+        )}
       </div>
       <div className="w-full flex flex-col items-center gap-2 p-6 max-sm:p-3">
         <div className="w-full flex justify-between">

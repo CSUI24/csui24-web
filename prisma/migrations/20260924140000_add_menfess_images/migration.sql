@@ -1,0 +1,2 @@
+ALTER TABLE "Menfess"
+ADD COLUMN "imageKeys" TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[];

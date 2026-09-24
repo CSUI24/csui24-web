@@ -110,7 +110,9 @@ export async function POST(request: Request) {
 
   const action = actionMatch[1] as DiscordMenfessAction;
   const menfessId = actionMatch[2];
-  const originalEmbed = interaction.message?.embeds?.[0];
+  const originalEmbeds = interaction.message?.embeds as
+    | Record<string, unknown>[]
+    | undefined;
   const moderatorName = getModeratorName(interaction);
 
   after(async () => {
@@ -122,7 +124,7 @@ export async function POST(request: Request) {
         menfessId,
         channelId,
         messageId,
-        originalEmbed,
+        originalEmbeds,
         moderatorName,
       });
     } catch (error) {

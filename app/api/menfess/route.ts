@@ -59,6 +59,7 @@ export async function POST(request: Request) {
       message: payload.message,
       fingerprint: payload.fingerprint,
       mode: payload.mode,
+      imageKeys: payload.imageKeys,
     });
 
     if (result.blocked) {

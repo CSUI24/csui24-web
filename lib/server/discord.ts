@@ -12,6 +12,7 @@ export type MenfessDiscordNotice = {
   mode: "guest" | "sso";
   published: boolean;
   ssoName?: string | null;
+  imageUrls: string[];
 };
 
 type DiscordConfig = {
@@ -127,6 +128,9 @@ function getModerationEmbed(input: MenfessDiscordNotice) {
             },
           ]
         : []),
+      ...(input.imageUrls.length > 0
+        ? [{ name: "Images", value: String(input.imageUrls.length), inline: true }]
+        : []),
       { name: "Message", value: escapeDiscordMarkdown(input.message) },
     ],
     footer: { text: `Menfess ID: ${input.id}` },
@@ -194,7 +198,10 @@ export async function sendMenfessToDiscord(input: MenfessDiscordNotice) {
   await discordBotRequest(`/channels/${config.channelId}/messages`, {
     method: "POST",
     body: JSON.stringify({
-      embeds: [getModerationEmbed(input)],
+      embeds: [
+        getModerationEmbed(input),
+        ...input.imageUrls.slice(0, 4).map((url) => ({ image: { url } })),
+      ],
       components: getModerationComponents(input),
       allowed_mentions: { parse: [] },
     }),
@@ -253,10 +260,11 @@ export async function updateDiscordModerationMessage(input: {
   messageId: string;
   menfessId: string;
   outcome: DiscordModerationOutcome;
-  originalEmbed?: Record<string, unknown>;
+  originalEmbeds?: Record<string, unknown>[];
   approvedBy?: string;
   deletedBy?: string;
 }) {
+  const originalEmbed = input.originalEmbeds?.[0];
   let embed: Record<string, unknown>;
 
   if (input.outcome === "deleted") {
@@ -275,7 +283,7 @@ export async function updateDiscordModerationMessage(input: {
     };
   } else if (input.outcome === "banned-sso") {
     embed = {
-      ...input.originalEmbed,
+      ...originalEmbed,
       title: "UI SSO menfess · Identity banned",
       color: 0xed4245,
     };
@@ -284,13 +292,13 @@ export async function updateDiscordModerationMessage(input: {
     input.outcome === "banned-guest-reviewed"
   ) {
     embed = {
-      ...input.originalEmbed,
+      ...originalEmbed,
       title: "Guest menfess · Sender banned",
       color: 0xed4245,
     };
   } else {
-    const originalFields = Array.isArray(input.originalEmbed?.fields)
-      ? input.originalEmbed.fields
+    const originalFields = Array.isArray(originalEmbed?.fields)
+      ? originalEmbed.fields
       : [];
     const approvedByField =
       (input.outcome === "approved" ||
@@ -306,7 +314,7 @@ export async function updateDiscordModerationMessage(input: {
         : [];
 
     embed = {
-      ...input.originalEmbed,
+      ...originalEmbed,
       title:
         input.outcome === "declined"
           ? "Guest menfess · Declined"
@@ -323,12 +331,19 @@ export async function updateDiscordModerationMessage(input: {
     };
   }
 
+  const originalImageEmbeds =
+    input.outcome === "deleted" || input.outcome === "declined"
+      ? []
+      : (input.originalEmbeds?.slice(1) ?? []).filter(
+          (item) => item.image && typeof item.image === "object",
+        );
+
   await discordBotRequest(
     `/channels/${input.channelId}/messages/${input.messageId}`,
     {
       method: "PATCH",
       body: JSON.stringify({
-        embeds: [embed],
+        embeds: [embed, ...originalImageEmbeds],
         components: getUpdatedModerationComponents(
           input.outcome,
           input.menfessId,

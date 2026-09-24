@@ -53,6 +53,7 @@ const Menfess = ({
     to: "",
     from: "",
     message: "",
+    images: [],
     createdAt: "",
     reactions: [],
     _count: {

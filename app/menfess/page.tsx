@@ -4,6 +4,7 @@ import { MenfessType } from "@/components/MenfessPage/types";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { readSsoSessionToken, SSO_SESSION_COOKIE } from "@/lib/sso-session";
+import { getMenfessImageUrl } from "@/lib/server/r2";
 
 export const dynamic = "force-dynamic";
 
@@ -61,6 +62,7 @@ const MenfessPage = async () => {
           to: true,
           from: true,
           message: true,
+          imageKeys: true,
           createdAt: true,
           reactions: {
             select: { type: true, count: true },
@@ -81,8 +83,14 @@ const MenfessPage = async () => {
     : [];
 
   const menfess: MenfessType[] = data.map((item) => ({
-    ...item,
+    id: item.id,
+    to: item.to,
+    from: item.from,
+    message: item.message,
+    images: item.imageKeys.map(getMenfessImageUrl),
     createdAt: item.createdAt.toISOString(),
+    reactions: item.reactions,
+    _count: item._count,
   }));
 
   return <Menfess menfess={menfess} ssoUser={ssoUser} />;
