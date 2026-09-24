@@ -7,7 +7,7 @@ import { formatMenfessText } from "@/lib/menfess-text";
 import { sendMenfessToDiscord } from "@/lib/server/discord";
 
 export const BANNED_MESSAGE = "MAMPUS LU GUA BAN AJGG BUAHAHHAHAHHA";
-export const MENFESS_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+export const MENFESS_COOLDOWN_MS = 10 * 60 * 1000;
 
 export class MenfessCooldownError extends Error {
   constructor(public readonly remainingMs: number) {
