@@ -28,6 +28,7 @@ type DiscordInteraction = {
   message?: {
     id?: string;
     embeds?: Array<Record<string, unknown>>;
+    attachments?: Array<{ id?: string; filename?: string }>;
   };
 };
 
@@ -105,14 +106,21 @@ export async function POST(request: Request) {
   const applicationId = interaction.application_id;
   const interactionToken = interaction.token;
   if (!applicationId || !interactionToken) {
-    return ephemeralMessage("Discord interaction is missing its response token.");
+    return ephemeralMessage(
+      "Discord interaction is missing its response token.",
+    );
   }
 
   const action = actionMatch[1] as DiscordMenfessAction;
   const menfessId = actionMatch[2];
   const originalEmbeds = interaction.message?.embeds as
-    | Record<string, unknown>[]
-    | undefined;
+    Record<string, unknown>[] | undefined;
+  const originalAttachments = interaction.message?.attachments?.flatMap(
+    (attachment) =>
+      attachment.id && attachment.filename
+        ? [{ id: attachment.id, filename: attachment.filename }]
+        : [],
+  );
   const moderatorName = getModeratorName(interaction);
 
   after(async () => {
@@ -125,6 +133,7 @@ export async function POST(request: Request) {
         channelId,
         messageId,
         originalEmbeds,
+        originalAttachments,
         moderatorName,
       });
     } catch (error) {

@@ -17,6 +17,7 @@ export async function handleDiscordMenfessAction(input: {
   channelId: string;
   messageId: string;
   originalEmbeds?: Record<string, unknown>[];
+  originalAttachments?: Array<{ id: string; filename: string }>;
   moderatorName?: string;
 }) {
   let outcome: DiscordModerationOutcome;
@@ -59,6 +60,7 @@ export async function handleDiscordMenfessAction(input: {
       menfessId: input.menfessId,
       outcome,
       originalEmbeds: input.originalEmbeds,
+      originalAttachments: input.originalAttachments,
       approvedBy: input.action === "approve" ? input.moderatorName : undefined,
       deletedBy: input.action === "delete" ? input.moderatorName : undefined,
     });

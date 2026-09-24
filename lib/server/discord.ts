@@ -1,5 +1,6 @@
 import { createPublicKey, verify } from "node:crypto";
 import { briefFamsData } from "@/modules/fams-data";
+import { MAX_MENFESS_IMAGE_BYTES, MAX_MENFESS_IMAGES } from "@/lib/server/r2";
 
 const DISCORD_API = "https://discord.com/api/v10";
 const ED25519_SPKI_PREFIX = Buffer.from("302a300506032b6570032100", "hex");
@@ -21,6 +22,129 @@ type DiscordConfig = {
   channelId: string;
   moderatorRoleIds: string[];
 };
+
+type DownloadedMenfessImage = {
+  bytes: ArrayBuffer;
+  contentType: string;
+  extension: string;
+};
+
+type DiscordImageAttachment = DownloadedMenfessImage & {
+  filename: string;
+};
+
+const imageExtensionsByContentType: Record<string, string> = {
+  "image/gif": "gif",
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+};
+
+async function readImageBody(response: Response): Promise<ArrayBuffer> {
+  const reader = response.body?.getReader();
+  if (!reader) {
+    throw new Error("Image response did not include a body");
+  }
+
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      size += value.byteLength;
+      if (size > MAX_MENFESS_IMAGE_BYTES) {
+        throw new Error("Image exceeds the 1 MB upload limit");
+      }
+
+      chunks.push(value);
+    }
+  } catch (error) {
+    await reader.cancel().catch(() => undefined);
+    throw error;
+  } finally {
+    reader.releaseLock();
+  }
+
+  if (size === 0) {
+    throw new Error("Image response was empty");
+  }
+
+  const bytes = new ArrayBuffer(size);
+  const byteView = new Uint8Array(bytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    byteView.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+
+  return bytes;
+}
+
+async function downloadMenfessImage(
+  url: string,
+): Promise<DownloadedMenfessImage> {
+  const configuredPublicUrl = process.env.R2_PUBLIC_URL?.trim().replace(
+    /\/+$/,
+    "",
+  );
+  if (!configuredPublicUrl) {
+    throw new Error("R2 public image URL is not configured");
+  }
+
+  const publicUrl = new URL(configuredPublicUrl);
+  const imageUrl = new URL(url);
+  const publicPath = publicUrl.pathname.replace(/\/+$/, "");
+  const allowedImagePathPrefix = publicPath ? `${publicPath}/` : "/";
+
+  if (
+    publicUrl.protocol !== "https:" ||
+    imageUrl.protocol !== "https:" ||
+    imageUrl.origin !== publicUrl.origin ||
+    !imageUrl.pathname.startsWith(allowedImagePathPrefix) ||
+    imageUrl.search ||
+    imageUrl.hash
+  ) {
+    throw new Error("Image URL is outside the configured R2 public domain");
+  }
+
+  const response = await fetch(imageUrl, {
+    signal: AbortSignal.timeout(15_000),
+    redirect: "error",
+  });
+  if (!response.ok) {
+    throw new Error(`R2 image request failed (${response.status})`);
+  }
+
+  const declaredLength = response.headers.get("content-length");
+  if (
+    declaredLength &&
+    Number.isFinite(Number(declaredLength)) &&
+    Number(declaredLength) > MAX_MENFESS_IMAGE_BYTES
+  ) {
+    throw new Error("Image exceeds the 1 MB upload limit");
+  }
+
+  const contentType = response.headers
+    .get("content-type")
+    ?.split(";", 1)[0]
+    .trim()
+    .toLowerCase();
+  const extension = contentType
+    ? imageExtensionsByContentType[contentType]
+    : undefined;
+  if (!contentType || !extension) {
+    throw new Error("R2 object is not a supported image type");
+  }
+
+  return {
+    bytes: await readImageBody(response),
+    contentType,
+    extension,
+  };
+}
 
 export function getDiscordConfig(): DiscordConfig | null {
   const applicationPublicKey = process.env.DISCORD_APPLICATION_PUBLIC_KEY;
@@ -105,7 +229,7 @@ function escapeDiscordMarkdown(value: string) {
   return value.replace(/[\\*_~`|>]/g, "\\$&").replace(/\u0000/g, "");
 }
 
-function getModerationEmbed(input: MenfessDiscordNotice) {
+function getModerationEmbed(input: MenfessDiscordNotice, imageUrl?: string) {
   const isGuest = input.mode === "guest";
   const title = isGuest
     ? "Guest menfess · Pending review"
@@ -129,10 +253,17 @@ function getModerationEmbed(input: MenfessDiscordNotice) {
           ]
         : []),
       ...(input.imageUrls.length > 0
-        ? [{ name: "Images", value: String(input.imageUrls.length), inline: true }]
+        ? [
+            {
+              name: "Images",
+              value: String(input.imageUrls.length),
+              inline: true,
+            },
+          ]
         : []),
       { name: "Message", value: escapeDiscordMarkdown(input.message) },
     ],
+    ...(imageUrl ? { image: { url: imageUrl } } : {}),
     footer: { text: `Menfess ID: ${input.id}` },
     timestamp: new Date().toISOString(),
   };
@@ -168,13 +299,17 @@ async function discordBotRequest(path: string, init: RequestInit) {
     throw new Error("Discord menfess moderation is not configured");
   }
 
+  const headers = new Headers(init.headers);
+  headers.set("Authorization", `Bot ${config.botToken}`);
+  if (typeof FormData !== "undefined" && init.body instanceof FormData) {
+    headers.delete("Content-Type");
+  } else {
+    headers.set("Content-Type", "application/json");
+  }
+
   const response = await fetch(`${DISCORD_API}${path}`, {
     ...init,
-    headers: {
-      Authorization: `Bot ${config.botToken}`,
-      "Content-Type": "application/json",
-      ...init.headers,
-    },
+    headers,
   });
 
   if (!response.ok) {
@@ -195,16 +330,69 @@ export async function sendMenfessToDiscord(input: MenfessDiscordNotice) {
     return;
   }
 
+  const imageUrls = input.imageUrls.slice(0, MAX_MENFESS_IMAGES);
+  const images = await Promise.all(
+    imageUrls.map(async (url, index) => {
+      try {
+        return { url, attachment: await downloadMenfessImage(url) };
+      } catch (error) {
+        console.error("Could not fetch menfess image for Discord:", {
+          menfessId: input.id,
+          imageIndex: index + 1,
+          error: error instanceof Error ? error.message : String(error),
+        });
+        return { url, attachment: null };
+      }
+    }),
+  );
+
+  const files: DiscordImageAttachment[] = [];
+  const embedImageUrls = images.map(({ url, attachment }) => {
+    if (!attachment) return url;
+
+    const filename = `menfess-image-${files.length + 1}.${attachment.extension}`;
+    files.push({ ...attachment, filename });
+    return `attachment://${filename}`;
+  });
+
+  const payload = {
+    embeds: [
+      getModerationEmbed(input, embedImageUrls[0]),
+      ...embedImageUrls.slice(1).map((url) => ({ image: { url } })),
+    ],
+    components: getModerationComponents(input),
+    allowed_mentions: { parse: [] },
+    ...(files.length > 0
+      ? {
+          attachments: files.map((file, index) => ({
+            id: String(index),
+            filename: file.filename,
+          })),
+        }
+      : {}),
+  };
+
+  if (files.length === 0) {
+    await discordBotRequest(`/channels/${config.channelId}/messages`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    return;
+  }
+
+  const formData = new FormData();
+  formData.set("payload_json", JSON.stringify(payload));
+  files.forEach((file, index) => {
+    formData.append(
+      `files[${index}]`,
+      new Blob([file.bytes], { type: file.contentType }),
+      file.filename,
+    );
+  });
+
   await discordBotRequest(`/channels/${config.channelId}/messages`, {
     method: "POST",
-    body: JSON.stringify({
-      embeds: [
-        getModerationEmbed(input),
-        ...input.imageUrls.slice(0, 4).map((url) => ({ image: { url } })),
-      ],
-      components: getModerationComponents(input),
-      allowed_mentions: { parse: [] },
-    }),
+    body: formData,
   });
 }
 
@@ -261,6 +449,7 @@ export async function updateDiscordModerationMessage(input: {
   menfessId: string;
   outcome: DiscordModerationOutcome;
   originalEmbeds?: Record<string, unknown>[];
+  originalAttachments?: Array<{ id: string; filename: string }>;
   approvedBy?: string;
   deletedBy?: string;
 }) {
@@ -348,6 +537,14 @@ export async function updateDiscordModerationMessage(input: {
           input.outcome,
           input.menfessId,
         ),
+        ...(input.originalAttachments
+          ? {
+              attachments:
+                input.outcome === "deleted" || input.outcome === "declined"
+                  ? []
+                  : input.originalAttachments,
+            }
+          : {}),
       }),
     },
   );
