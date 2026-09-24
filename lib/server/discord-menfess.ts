@@ -59,6 +59,7 @@ export async function handleDiscordMenfessAction(input: {
       menfessId: input.menfessId,
       outcome,
       originalEmbed: input.originalEmbed,
+      approvedBy: input.action === "approve" ? input.moderatorName : undefined,
       deletedBy: input.action === "delete" ? input.moderatorName : undefined,
     });
   } catch (error) {

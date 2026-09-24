@@ -254,6 +254,7 @@ export async function updateDiscordModerationMessage(input: {
   menfessId: string;
   outcome: DiscordModerationOutcome;
   originalEmbed?: Record<string, unknown>;
+  approvedBy?: string;
   deletedBy?: string;
 }) {
   let embed: Record<string, unknown>;
@@ -288,6 +289,22 @@ export async function updateDiscordModerationMessage(input: {
       color: 0xed4245,
     };
   } else {
+    const originalFields = Array.isArray(input.originalEmbed?.fields)
+      ? input.originalEmbed.fields
+      : [];
+    const approvedByField =
+      (input.outcome === "approved" ||
+        input.outcome === "approved-unpublished") &&
+      input.approvedBy
+        ? [
+            {
+              name: "Approved by",
+              value: escapeDiscordMarkdown(input.approvedBy),
+              inline: true,
+            },
+          ]
+        : [];
+
     embed = {
       ...input.originalEmbed,
       title:
@@ -302,6 +319,7 @@ export async function updateDiscordModerationMessage(input: {
           : input.outcome === "approved-unpublished"
             ? 0xf0ad4e
             : 0x57f287,
+      fields: [...originalFields, ...approvedByField],
     };
   }
 
