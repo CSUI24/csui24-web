@@ -14,6 +14,15 @@ import {
 import { Info } from "lucide-react";
 import type { SsoSessionUser } from "@/lib/sso-types";
 
+function subscribeToLocationSearch(onStoreChange: () => void) {
+  window.addEventListener("popstate", onStoreChange);
+  return () => window.removeEventListener("popstate", onStoreChange);
+}
+
+function getSsoErrorCodeFromLocation() {
+  return new URLSearchParams(window.location.search).get("sso_error");
+}
+
 const Menfess = ({
   menfess,
   ssoUser,
@@ -26,7 +35,17 @@ const Menfess = ({
   const [openTooltip, setOpenTooltip] = useState(false);
   const [accountTooltipOpen, setAccountTooltipOpen] = useState(false);
   const accountTooltipWasOpen = useRef(false);
-  const [ssoError, setSsoError] = useState<string | null>(null);
+  const ssoErrorCode = useSyncExternalStore(
+    subscribeToLocationSearch,
+    getSsoErrorCodeFromLocation,
+    () => null,
+  );
+  const ssoError =
+    ssoErrorCode === "config"
+      ? "UI SSO is not configured yet. Please try again later."
+      : ssoErrorCode === "login"
+        ? "UI SSO login could not be completed. Please try again."
+        : null;
   const [currentPage, setCurrentPage] = useState(1);
   const [showCommentSection, setShowCommentSection] = useState(false);
   const [selectedMenfess, setSelectedMenfess] = useState<MenfessType>({
@@ -75,13 +94,6 @@ const Menfess = ({
     }
   };
   useEffect(() => {
-    const error = new URLSearchParams(window.location.search).get("sso_error");
-    if (error === "config") {
-      setSsoError("UI SSO is not configured yet. Please try again later.");
-    } else if (error === "login") {
-      setSsoError("UI SSO login could not be completed. Please try again.");
-    }
-
     const fetchData = async () => {
       try {
         const res = await fetch("/api/getName", {
