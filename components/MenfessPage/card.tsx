@@ -1,11 +1,9 @@
 import {
-  Plane,
-  MailCheck,
+  ArrowRight,
   CalendarDays,
   MessageCircleMore,
   Trash2,
   Ban,
-  Expand,
 } from "lucide-react";
 import { useState } from "react";
 import formatRelativeTime from "@/lib/formatRelativeTime";
@@ -40,16 +38,13 @@ const MenfessCard = ({
     url: string;
     index: number;
   } | null>(null);
+  const [isImageStackExpanded, setIsImageStackExpanded] = useState(false);
   const { comments } = _count;
   const toIsFam = to.startsWith("fams/");
-  const imageSpaceClass =
-    images.length === 0
-      ? ""
-      : tokenAdmin
-        ? "pr-32 max-sm:pr-28"
-        : images.length === 1
-          ? "pr-16 max-sm:pr-12"
-          : "pr-28 max-sm:pr-20";
+  const recipientFam = toIsFam
+    ? briefFamsData.find((fam) => fam.id === to.replace("fams/", ""))
+    : undefined;
+  const recipientLabel = recipientFam?.["displayed-name"] ?? to;
 
   const handleDelete = async () => {
     const loadingToast = toast.loading("Deleting menfess...");
@@ -128,18 +123,18 @@ const MenfessCard = ({
   };
 
   return (
-    <div className="w-full min-h-96 rounded-xl bg-[#03045e] flex flex-col bg-opacity-30 border border-[#717174] overflow-hidden">
-      <div className="relative h-fit p-6 max-sm:p-3 flex flex-col gap-2">
+    <div className="flex h-full min-h-96 w-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#03045e]/35">
+      <div className="relative px-5 pb-4 pt-5 max-sm:px-4 max-sm:pt-4">
         {tokenAdmin && (
-          <div className="absolute top-6 right-6 flex items-center gap-2">
+          <div className="absolute right-4 top-4 flex items-center gap-1">
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
                   onClick={handleBan}
                   aria-label="Ban sender fingerprint"
-                  className="inline-flex size-11 items-center justify-center rounded-lg text-slate-300 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  className="inline-flex size-9 items-center justify-center rounded-lg text-slate-300 transition-[background-color,color,transform] duration-150 ease-out hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.97]"
                 >
-                  <Ban size={22} aria-hidden="true" />
+                  <Ban size={18} aria-hidden="true" />
                 </button>
               </TooltipTrigger>
               <TooltipContent>Ban sender fingerprint</TooltipContent>
@@ -149,9 +144,9 @@ const MenfessCard = ({
                 <button
                   onClick={handleDelete}
                   aria-label="Delete menfess"
-                  className="inline-flex size-11 items-center justify-center rounded-lg text-slate-300 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  className="inline-flex size-9 items-center justify-center rounded-lg text-slate-300 transition-[background-color,color,transform] duration-150 ease-out hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.97]"
                 >
-                  <Trash2 size={22} aria-hidden="true" />
+                  <Trash2 size={18} aria-hidden="true" />
                 </button>
               </TooltipTrigger>
               <TooltipContent>Delete menfess</TooltipContent>
@@ -159,113 +154,145 @@ const MenfessCard = ({
           </div>
         )}
         <div
-          className={`w-full flex flex-col max-sm:gap-2 gap-4 text-white ${imageSpaceClass}`}
+          className={`grid min-w-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 text-white ${tokenAdmin ? "pr-20" : ""}`}
         >
-          <div className="w-full flex gap-3 items-center">
-            <div className="flex justify-center items-center p-2 rounded-full border border-[#717174] ">
-              <Plane size={14} />
-            </div>
-            <div className="w-full flex flex-col">
-              <p className="text-xs">From</p>
-              <p className="text-lg font-bold truncate whitespace-nowrap overflow-hidden max-w-full">
-                {from}
-              </p>
-            </div>
+          <div className="flex min-w-0 items-baseline gap-2">
+            <span className="shrink-0 text-[10px] font-medium tracking-[0.08em] text-white/50">
+              From
+            </span>
+            <p
+              className="min-w-0 truncate text-base font-semibold leading-snug"
+              title={from}
+            >
+              {from}
+            </p>
           </div>
-          <div className="w-full flex gap-3 items-center">
-            {toIsFam ? (
-              <Img
-                src={
-                  "/" +
-                    briefFamsData.find(
-                      (fam) => fam.id === to.replace("fams/", "")
-                    )?.["image-filename"] || ""
-                }
-                alt="profile"
-                width={30}
-                height={30}
-                className="rounded-full"
-              />
-            ) : (
-              <div className="flex justify-center items-center p-2 rounded-full border border-[#717174] ">
-                <MailCheck size={14} />
-              </div>
-            )}
-            <div className="w-full flex flex-col">
-              <p className="text-xs">To</p>
+          <ArrowRight size={14} aria-hidden="true" className="text-white/35" />
+          <div className="flex min-w-0 items-baseline gap-2">
+            <span className="shrink-0 text-[10px] font-medium tracking-[0.08em] text-white/50">
+              To
+            </span>
+            <div className="flex min-w-0 items-center gap-1.5">
+              {recipientFam?.["image-filename"] && (
+                <Img
+                  src={`/${recipientFam["image-filename"]}`}
+                  alt=""
+                  width={24}
+                  height={24}
+                  className="size-5 shrink-0 rounded-full object-cover"
+                />
+              )}
               {toIsFam ? (
                 <Link
-                  href={"/" + to}
-                  className="hover:opacity-80 duration-300 transition-all cursor-pointer"
+                  href={`/${to}`}
+                  title={recipientLabel}
+                  className="min-w-0 truncate text-base font-semibold leading-snug transition-opacity duration-150 ease-out hover:opacity-80"
                   data-umami-event="menfess-redirect-profile"
-                  data-umami-event-redirect-to={"/" + to}
+                  data-umami-event-redirect-to={`/${to}`}
                 >
-                  <p className="text-lg font-bold truncate whitespace-nowrap overflow-hidden max-w-full">
-                    {
-                      briefFamsData.find(
-                        (fam) => fam.id === to.replace("fams/", "")
-                      )?.["displayed-name"]
-                    }
-                  </p>
+                  {recipientLabel}
                 </Link>
               ) : (
-                <p className="text-lg font-bold truncate whitespace-nowrap overflow-hidden max-w-full">
+                <p
+                  className="min-w-0 truncate text-base font-semibold leading-snug"
+                  title={to}
+                >
                   {to}
                 </p>
               )}
             </div>
           </div>
         </div>
+        <div className="mt-3 h-px w-full bg-white/10" />
+      </div>
+      <div className="flex min-h-28 flex-1 flex-col gap-3 px-5 py-4 text-white max-sm:px-4">
         {images.length > 0 && (
           <div
-            className={`absolute right-6 bottom-8 grid gap-1 max-sm:right-3 max-sm:bottom-5 ${
-              images.length === 1 ? "grid-cols-1" : "grid-cols-2"
-            }`}
+            role="group"
+            aria-label={`${images.length} foto menfess`}
+            className="relative h-9 transition-[width] duration-200 ease-out motion-reduce:transition-none"
+            style={{
+              width:
+                images.length === 1
+                  ? 36
+                  : isImageStackExpanded
+                    ? images.length * 36 + (images.length - 1) * 6
+                    : 68,
+            }}
+            onPointerEnter={(event) => {
+              if (event.pointerType === "mouse" && images.length > 1) {
+                setIsImageStackExpanded(true);
+              }
+            }}
+            onPointerLeave={(event) => {
+              if (
+                event.pointerType === "mouse" &&
+                !event.currentTarget.matches(":focus-within")
+              ) {
+                setIsImageStackExpanded(false);
+              }
+            }}
           >
             {images.map((image, index) => (
               <button
                 key={image}
                 type="button"
-                onClick={() => setSelectedImage({ url: image, index })}
+                tabIndex={isImageStackExpanded || index === 0 ? 0 : -1}
+                onClick={() => {
+                  if (images.length > 1 && !isImageStackExpanded) {
+                    setIsImageStackExpanded(true);
+                    return;
+                  }
+
+                  setSelectedImage({ url: image, index });
+                }}
                 aria-label={`View image ${index + 1} of ${images.length}`}
-                className="group relative size-9 shrink-0 overflow-hidden rounded-lg border border-white/15 bg-black/20 transition-[border-color,transform] duration-150 ease-out hover:border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 max-sm:size-7"
+                className="absolute left-0 top-0 size-9 shrink-0 cursor-pointer overflow-hidden rounded-md border border-white/20 bg-black/20 transition-[transform,border-color] duration-200 ease-out hover:border-white/60 focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+                style={{
+                  transform: `translateX(${isImageStackExpanded ? index * 42 : index === 0 ? 0 : 18 + (index - 1) * 5}px)`,
+                  zIndex: images.length - index,
+                }}
               >
                 <Img
                   src={image}
-                  alt={`Menfess image ${index + 1}`}
+                  alt=""
                   loading="lazy"
                   className="size-full object-cover"
                 />
-                <span className="absolute inset-0 flex items-end justify-end bg-gradient-to-t from-black/55 to-transparent p-1 text-white opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none">
-                  <Expand size={12} aria-hidden="true" />
-                </span>
+                {index === 0 && images.length > 1 && !isImageStackExpanded && (
+                  <span className="pointer-events-none absolute right-1 top-1 flex size-[18px] items-center justify-center rounded-full border border-[#03045e] bg-white text-[10px] font-semibold text-[#03045e]">
+                    +{images.length - 1}
+                  </span>
+                )}
               </button>
             ))}
           </div>
         )}
-        <div className="h-[0.5px] w-full bg-[#D9D9D9]"></div>
+        <p
+          className={`w-full break-words whitespace-pre-wrap text-left text-[15px] leading-7 text-white/90 ${images.length === 0 ? "my-auto" : ""}`}
+        >
+          {message}
+        </p>
       </div>
-      <div className="w-full min-h-24 text-white font-sans flex flex-col justify-center gap-3 px-6 py-4">
-        <p className="text-center break-words w-full whitespace-pre-wrap">{message}</p>
-      </div>
-      <div className="w-full flex flex-col items-center gap-2 p-6 max-sm:p-3">
-        <div className="w-full flex justify-between">
+      <div className="mt-auto w-full border-t border-white/10 px-5 py-4 max-sm:px-4 max-sm:py-3">
+        <div className="flex w-full items-center justify-between gap-4">
           <ReactionBar
             menfessId={menfess.id}
             initialReactions={menfess.reactions}
           />
           <button
-            // href={`/menfess/${menfess.id}`}
+            type="button"
             onClick={() => onCommentClick?.(menfess)}
-            className="flex items-center gap-1"
+            aria-label={`View ${comments} comments`}
+            className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-lg px-2 text-white/80 transition-[background-color,color,transform] duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-[0.97]"
           >
-            <MessageCircleMore size={25} />
-            <p className="text-sm font-medium">{comments}</p>
+            <MessageCircleMore size={20} aria-hidden="true" />
+            <span className="text-sm font-medium">{comments}</span>
           </button>
         </div>
 
-        <div className="flex gap-2 items-center self-end">
-          <CalendarDays size={14} />
+        <div className="mt-3 flex items-center justify-end gap-1.5 text-white/55">
+          <CalendarDays size={13} aria-hidden="true" />
           <p className="text-xs">{formatRelativeTime(new Date(createdAt))}</p>
         </div>
       </div>
