@@ -224,7 +224,7 @@ const SendMenfess = ({
           </TooltipTrigger>
           <TooltipContent side="top" sideOffset={8}>
             {mode === "guest"
-              ? "Guest menfess requires no login and appears after admin approval."
+              ? "Guest menfess requires no login but appears after admin approval"
               : "Posts immediately. Your privacy stays protected, and your data is secured with encryption."}
           </TooltipContent>
         </Tooltip>
