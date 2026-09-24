@@ -5,7 +5,9 @@ import {
   MessageCircleMore,
   Trash2,
   Ban,
+  Expand,
 } from "lucide-react";
+import { useState } from "react";
 import formatRelativeTime from "@/lib/formatRelativeTime";
 import Link from "next/link";
 import { briefFamsData } from "@/modules/fams-data";
@@ -18,6 +20,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 const MenfessCard = ({
   menfess,
   onCommentClick,
@@ -28,8 +36,20 @@ const MenfessCard = ({
   tokenAdmin: string;
 }) => {
   const { to, from, message, images, createdAt, _count } = menfess;
+  const [selectedImage, setSelectedImage] = useState<{
+    url: string;
+    index: number;
+  } | null>(null);
   const { comments } = _count;
   const toIsFam = to.startsWith("fams/");
+  const imageSpaceClass =
+    images.length === 0
+      ? ""
+      : tokenAdmin
+        ? "pr-32 max-sm:pr-28"
+        : images.length === 1
+          ? "pr-16 max-sm:pr-12"
+          : "pr-28 max-sm:pr-20";
 
   const handleDelete = async () => {
     const loadingToast = toast.loading("Deleting menfess...");
@@ -138,7 +158,9 @@ const MenfessCard = ({
             </Tooltip>
           </div>
         )}
-        <div className="w-full flex flex-col max-sm:gap-2 gap-4 text-white">
+        <div
+          className={`w-full flex flex-col max-sm:gap-2 gap-4 text-white ${imageSpaceClass}`}
+        >
           <div className="w-full flex gap-3 items-center">
             <div className="flex justify-center items-center p-2 rounded-full border border-[#717174] ">
               <Plane size={14} />
@@ -194,33 +216,37 @@ const MenfessCard = ({
             </div>
           </div>
         </div>
-        <div className="h-[0.5px] w-full bg-[#D9D9D9]"></div>
-      </div>
-      <div className="w-full min-h-24 text-white font-sans flex flex-col items-center justify-center gap-4 px-6 py-4">
-        <p className="text-center break-words w-full whitespace-pre-wrap">{message}</p>
         {images.length > 0 && (
           <div
-            className={`grid w-full gap-2 ${images.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}
+            className={`absolute right-6 bottom-8 grid gap-1 max-sm:right-3 max-sm:bottom-5 ${
+              images.length === 1 ? "grid-cols-1" : "grid-cols-2"
+            }`}
           >
             {images.map((image, index) => (
-              <a
+              <button
                 key={image}
-                href={image}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`Open attached image ${index + 1} in a new tab`}
-                className={`block overflow-hidden rounded-lg border border-white/15 bg-black/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${images.length === 1 ? "mx-auto max-h-56 w-full max-w-xl" : "h-28 sm:h-36"}`}
+                type="button"
+                onClick={() => setSelectedImage({ url: image, index })}
+                aria-label={`View image ${index + 1} of ${images.length}`}
+                className="group relative size-9 shrink-0 overflow-hidden rounded-lg border border-white/15 bg-black/20 transition-[border-color,transform] duration-150 ease-out hover:border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 max-sm:size-7"
               >
                 <Img
                   src={image}
                   alt={`Menfess image ${index + 1}`}
                   loading="lazy"
-                  className={`size-full ${images.length === 1 ? "object-contain" : "object-cover"}`}
+                  className="size-full object-cover"
                 />
-              </a>
+                <span className="absolute inset-0 flex items-end justify-end bg-gradient-to-t from-black/55 to-transparent p-1 text-white opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none">
+                  <Expand size={12} aria-hidden="true" />
+                </span>
+              </button>
             ))}
           </div>
         )}
+        <div className="h-[0.5px] w-full bg-[#D9D9D9]"></div>
+      </div>
+      <div className="w-full min-h-24 text-white font-sans flex flex-col justify-center gap-3 px-6 py-4">
+        <p className="text-center break-words w-full whitespace-pre-wrap">{message}</p>
       </div>
       <div className="w-full flex flex-col items-center gap-2 p-6 max-sm:p-3">
         <div className="w-full flex justify-between">
@@ -243,6 +269,31 @@ const MenfessCard = ({
           <p className="text-xs">{formatRelativeTime(new Date(createdAt))}</p>
         </div>
       </div>
+      <Dialog
+        open={selectedImage !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelectedImage(null);
+        }}
+      >
+        <DialogContent className="max-w-5xl border-white/15 bg-[#03045e] p-4 text-white sm:p-6">
+          <DialogHeader className="pr-8 text-left">
+            <DialogTitle className="text-base font-medium text-white">
+              {selectedImage
+                ? `Menfess image ${selectedImage.index + 1} of ${images.length}`
+                : "Menfess image"}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedImage && (
+            <div className="flex h-[70dvh] w-full items-center justify-center overflow-hidden rounded-lg bg-black/25">
+              <Img
+                src={selectedImage.url}
+                alt={`Menfess image ${selectedImage.index + 1}`}
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
