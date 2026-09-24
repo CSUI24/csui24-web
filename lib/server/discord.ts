@@ -51,11 +51,11 @@ export function verifyDiscordRequestSignature(
   timestamp: string | null,
   body: string,
 ) {
-  const publicKeyHex = process.env.DISCORD_APPLICATION_PUBLIC_KEY;
+  const publicKeyHex = process.env.DISCORD_APPLICATION_PUBLIC_KEY?.trim();
 
   if (
     !publicKeyHex ||
-    !/^[\da-f]{128}$/i.test(publicKeyHex) ||
+    !/^[\da-f]{64}$/i.test(publicKeyHex) ||
     !signature ||
     !/^[\da-f]{128}$/i.test(signature) ||
     !timestamp ||
