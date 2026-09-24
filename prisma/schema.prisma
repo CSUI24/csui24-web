@@ -29,10 +29,6 @@ model Menfess {
   resourceEmail              String?
   resourceNpm                String?
   resourceOrganizationalCode String?
-  ssoUsername                String?
-  ssoName                    String?
-  ssoNpm                     String?
-  ssoOrganizationalCode      String?
   approvalStatus             MenfessApprovalStatus @default(APPROVED)
   createdAt                  DateTime              @default(now())
   reactions                  Reaction[]

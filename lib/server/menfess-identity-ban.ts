@@ -8,7 +8,7 @@ export async function banMenfessIdentity(menfessId: string) {
   const menfess = await prisma.menfess.findUnique({
     where: { id: menfessId },
     select: {
-      ssoUsername: true,
+      resourceUsername: true,
       fingerprint: true,
       ipAddressHash: true,
       approvalStatus: true,
@@ -19,8 +19,8 @@ export async function banMenfessIdentity(menfessId: string) {
     throw new ApiError(404, "Menfess not found");
   }
 
-  if (menfess.ssoUsername) {
-    const identityHash = hashSsoIdentity(menfess.ssoUsername);
+  if (menfess.resourceUsername) {
+    const identityHash = hashSsoIdentity(menfess.resourceUsername);
     await prisma.bannedSsoIdentity.upsert({
       where: { identityHash },
       update: { reason: BAN_REASON },

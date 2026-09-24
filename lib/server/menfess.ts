@@ -271,10 +271,10 @@ export async function createMenfess(
       ipAddressHash,
       isBlocked: identityIsBanned,
       approvalStatus: input.mode === "guest" ? "PENDING" : "APPROVED",
-      ssoUsername: ssoUser?.username,
-      ssoName: ssoUser?.name,
-      ssoNpm: ssoUser?.npm,
-      ssoOrganizationalCode: ssoUser?.organizationalCode,
+      resourceUsername: ssoUser?.username,
+      resourceName: ssoUser?.name,
+      resourceNpm: ssoUser?.npm,
+      resourceOrganizationalCode: ssoUser?.organizationalCode,
     },
   });
 
