@@ -72,8 +72,11 @@ const SendMenfess = ({
   const [isDraggingFiles, setIsDraggingFiles] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const attachmentsRef = useRef<ImageAttachment[]>([]);
-  attachmentsRef.current = attachments;
   const characterCount = getMenfessTextLength(from, to, message);
+
+  useEffect(() => {
+    attachmentsRef.current = attachments;
+  }, [attachments]);
 
   useEffect(
     () => () => {
