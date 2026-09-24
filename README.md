@@ -37,7 +37,7 @@ Keep database queries and business rules out of route handlers so they remain ea
 
 ## Discord menfess moderation
 
-Menfess submissions are sent to a Discord moderation channel when Discord is configured. Guest submissions have Approve, Decline, and Delete buttons. After Approve or Decline, Delete remains available. Approving publishes the menfess; declining keeps it hidden. UI SSO submissions publish immediately and only have a Delete button. Delete removes the database entry and any linked public post.
+Menfess submissions are sent to a Discord moderation channel when Discord is configured. Guest submissions have Approve, Decline, Delete, and Ban buttons. UI SSO submissions publish immediately and have Delete and Ban buttons. Ban blocks future SSO submissions from the same UI identity, or future guest submissions from the same fingerprint and IP address. IP addresses are stored as keyed hashes, not in plain text. Ban does not remove the current post; use Delete for that. Delete removes the database entry and any linked public post.
 
 Configure these server-only environment variables:
 
@@ -45,8 +45,11 @@ Configure these server-only environment variables:
 - `DISCORD_BOT_TOKEN`: the bot token. Keep this secret.
 - `DISCORD_MODERATION_CHANNEL_ID`: the channel where moderation messages should appear.
 - `DISCORD_MODERATOR_ROLE_IDS`: optional, comma-separated role IDs allowed to use the buttons. Leave it blank to allow any member who can access the moderation channel.
+- `CLOUDFLARE_PROXY_SECRET`: a random shared value used to trust Cloudflare's visitor-IP header when the production domain is proxied through Cloudflare.
 
-Add the bot to the server with permission to view the moderation channel, send messages, and embed links. In the Discord Developer Portal, set the production Interactions Endpoint URL to `https://cosmic.csui.dev/api/discord/interactions`. Local development needs a public HTTPS tunnel configured as that endpoint. The bot and endpoint variables must be configured before Discord notifications and actions become available.
+Add the bot to the server with permission to view the moderation channel, send messages, and embed links. In the Discord Developer Portal, set the production Interactions Endpoint URL to `https://cosmic.csui.dev/api/discord/interactions`. Local development needs a public HTTPS tunnel configured as that endpoint. The bot and endpoint variables must be configured before Discord notifications and actions become available. For guest IP bans behind Cloudflare, set `CLOUDFLARE_PROXY_SECRET` in Vercel and add a Cloudflare request header transform rule for `cosmic.csui.dev` that overwrites `x-cosmic-proxy-secret` with the same random value. The server only trusts `CF-Connecting-IP` when this marker matches; direct Vercel requests use Vercel's forwarded client IP.
+
+Apply new database schema migrations with `pnpm prisma migrate deploy` before deploying code that depends on them. Keep `SSO_SESSION_SECRET` stable: it is also used as the secret key for SSO identity and guest IP ban hashes.
 
 ## Learn More
 

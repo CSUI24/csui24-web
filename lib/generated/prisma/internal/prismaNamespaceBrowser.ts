@@ -53,6 +53,8 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Menfess: 'Menfess',
   BannedFingerprint: 'BannedFingerprint',
+  BannedSsoIdentity: 'BannedSsoIdentity',
+  BannedIpAddress: 'BannedIpAddress',
   Reaction: 'Reaction',
   Comment: 'Comment'
 } as const
@@ -80,6 +82,7 @@ export const MenfessScalarFieldEnum = {
   message: 'message',
   tweetId: 'tweetId',
   fingerprint: 'fingerprint',
+  ipAddressHash: 'ipAddressHash',
   isBlocked: 'isBlocked',
   isPosted: 'isPosted',
   resourceUserId: 'resourceUserId',
@@ -107,6 +110,26 @@ export const BannedFingerprintScalarFieldEnum = {
 } as const
 
 export type BannedFingerprintScalarFieldEnum = (typeof BannedFingerprintScalarFieldEnum)[keyof typeof BannedFingerprintScalarFieldEnum]
+
+
+export const BannedSsoIdentityScalarFieldEnum = {
+  id: 'id',
+  identityHash: 'identityHash',
+  reason: 'reason',
+  createdAt: 'createdAt'
+} as const
+
+export type BannedSsoIdentityScalarFieldEnum = (typeof BannedSsoIdentityScalarFieldEnum)[keyof typeof BannedSsoIdentityScalarFieldEnum]
+
+
+export const BannedIpAddressScalarFieldEnum = {
+  id: 'id',
+  ipHash: 'ipHash',
+  reason: 'reason',
+  createdAt: 'createdAt'
+} as const
+
+export type BannedIpAddressScalarFieldEnum = (typeof BannedIpAddressScalarFieldEnum)[keyof typeof BannedIpAddressScalarFieldEnum]
 
 
 export const ReactionScalarFieldEnum = {

@@ -125,25 +125,26 @@ function getModerationEmbed(input: MenfessDiscordNotice) {
 }
 
 function getModerationComponents(input: MenfessDiscordNotice) {
-  const buttons =
-    input.mode === "guest"
-      ? [
-          { action: "approve", label: "Approve", style: 3 },
-          { action: "decline", label: "Decline", style: 4 },
-          { action: "delete", label: "Delete", style: 4 },
-        ]
-      : [{ action: "delete", label: "Delete", style: 4 }];
+  const button = (action: string, label: string, style: number) => ({
+    type: 2,
+    style,
+    label,
+    custom_id: `menfess:${action}:${input.id}`,
+  });
+  const row = (components: ReturnType<typeof button>[]) => ({
+    type: 1,
+    components,
+  });
+  const deleteButton = button("delete", "Delete", 4);
+  const banButton = button("ban", "Ban", 4);
+
+  if (input.mode === "sso") {
+    return [row([deleteButton, banButton])];
+  }
 
   return [
-    {
-      type: 1,
-      components: buttons.map((button) => ({
-        type: 2,
-        style: button.style,
-        label: button.label,
-        custom_id: `menfess:${button.action}:${input.id}`,
-      })),
-    },
+    row([button("approve", "Approve", 3), button("decline", "Decline", 4)]),
+    row([deleteButton, banButton]),
   ];
 }
 
@@ -194,7 +195,48 @@ export type DiscordModerationOutcome =
   | "approved"
   | "approved-unpublished"
   | "declined"
-  | "deleted";
+  | "deleted"
+  | "banned-guest-pending"
+  | "banned-guest-reviewed"
+  | "banned-sso";
+
+function getUpdatedModerationComponents(
+  outcome: DiscordModerationOutcome,
+  menfessId: string,
+) {
+  const button = (action: string, label: string, style: number) => ({
+    type: 2,
+    style,
+    label,
+    custom_id: `menfess:${action}:${menfessId}`,
+  });
+  const row = (components: ReturnType<typeof button>[]) => ({
+    type: 1,
+    components,
+  });
+  const deleteButton = button("delete", "Delete", 4);
+
+  if (outcome === "deleted") {
+    return [];
+  }
+
+  if (
+    outcome === "approved" ||
+    outcome === "approved-unpublished" ||
+    outcome === "declined"
+  ) {
+    return [row([deleteButton, button("ban", "Ban", 4)])];
+  }
+
+  if (outcome === "banned-guest-pending") {
+    return [
+      row([button("approve", "Approve", 3), button("decline", "Decline", 4)]),
+      row([deleteButton]),
+    ];
+  }
+
+  return [row([deleteButton])];
+}
 
 export async function updateDiscordModerationMessage(input: {
   channelId: string;
@@ -203,30 +245,48 @@ export async function updateDiscordModerationMessage(input: {
   outcome: DiscordModerationOutcome;
   originalEmbed?: Record<string, unknown>;
 }) {
-  const embed =
-    input.outcome === "deleted"
-      ? {
-          title: "Menfess deleted",
-          description: "The menfess and any linked public post were deleted.",
-          color: 0xed4245,
-          footer: { text: `Menfess ID: ${input.menfessId}` },
-          timestamp: new Date().toISOString(),
-        }
-      : {
-          ...input.originalEmbed,
-          title:
-            input.outcome === "declined"
-              ? "Guest menfess · Declined"
-              : input.outcome === "approved-unpublished"
-                ? "Guest menfess · Approved, not published"
-                : "Guest menfess · Approved",
-          color:
-            input.outcome === "declined"
-              ? 0x747f8d
-              : input.outcome === "approved-unpublished"
-                ? 0xf0ad4e
-                : 0x57f287,
-        };
+  let embed: Record<string, unknown>;
+
+  if (input.outcome === "deleted") {
+    embed = {
+      title: "Menfess deleted",
+      description: "The menfess and any linked public post were deleted.",
+      color: 0xed4245,
+      footer: { text: `Menfess ID: ${input.menfessId}` },
+      timestamp: new Date().toISOString(),
+    };
+  } else if (input.outcome === "banned-sso") {
+    embed = {
+      ...input.originalEmbed,
+      title: "UI SSO menfess · Identity banned",
+      color: 0xed4245,
+    };
+  } else if (
+    input.outcome === "banned-guest-pending" ||
+    input.outcome === "banned-guest-reviewed"
+  ) {
+    embed = {
+      ...input.originalEmbed,
+      title: "Guest menfess · Sender banned",
+      color: 0xed4245,
+    };
+  } else {
+    embed = {
+      ...input.originalEmbed,
+      title:
+        input.outcome === "declined"
+          ? "Guest menfess · Declined"
+          : input.outcome === "approved-unpublished"
+            ? "Guest menfess · Approved, not published"
+            : "Guest menfess · Approved",
+      color:
+        input.outcome === "declined"
+          ? 0x747f8d
+          : input.outcome === "approved-unpublished"
+            ? 0xf0ad4e
+            : 0x57f287,
+    };
+  }
 
   await discordBotRequest(
     `/channels/${input.channelId}/messages/${input.messageId}`,
@@ -234,22 +294,10 @@ export async function updateDiscordModerationMessage(input: {
       method: "PATCH",
       body: JSON.stringify({
         embeds: [embed],
-        components:
-          input.outcome === "deleted"
-            ? []
-            : [
-                {
-                  type: 1,
-                  components: [
-                    {
-                      type: 2,
-                      style: 4,
-                      label: "Delete",
-                      custom_id: `menfess:delete:${input.menfessId}`,
-                    },
-                  ],
-                },
-              ],
+        components: getUpdatedModerationComponents(
+          input.outcome,
+          input.menfessId,
+        ),
       }),
     },
   );

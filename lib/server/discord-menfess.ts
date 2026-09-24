@@ -7,8 +7,9 @@ import {
   updateDiscordModerationMessage,
   type DiscordModerationOutcome,
 } from "@/lib/server/discord";
+import { banMenfessIdentity } from "@/lib/server/menfess-identity-ban";
 
-export type DiscordMenfessAction = "approve" | "decline" | "delete";
+export type DiscordMenfessAction = "approve" | "decline" | "delete" | "ban";
 
 export async function handleDiscordMenfessAction(input: {
   action: DiscordMenfessAction;
@@ -30,10 +31,24 @@ export async function handleDiscordMenfessAction(input: {
     await declineGuestMenfess(input.menfessId);
     outcome = "declined";
     responseMessage = "Guest menfess declined.";
-  } else {
+  } else if (input.action === "delete") {
     await deleteMenfess(input.menfessId);
     outcome = "deleted";
     responseMessage = "Menfess and any linked public post deleted.";
+  } else {
+    const result = await banMenfessIdentity(input.menfessId);
+    outcome =
+      result.mode === "sso"
+        ? "banned-sso"
+        : result.approvalStatus === "PENDING"
+          ? "banned-guest-pending"
+          : "banned-guest-reviewed";
+    responseMessage =
+      result.mode === "sso"
+        ? "UI SSO identity banned from future SSO menfess. This post was not deleted."
+        : result.ipBanned
+          ? "Guest fingerprint and IP banned from future guest menfess. This post was not deleted."
+          : "Guest fingerprint banned. No IP was available for this post, so it was not added to the IP ban list. This post was not deleted.";
   }
 
   try {

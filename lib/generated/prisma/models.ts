@@ -10,6 +10,8 @@
  */
 export type * from './models/Menfess'
 export type * from './models/BannedFingerprint'
+export type * from './models/BannedSsoIdentity'
+export type * from './models/BannedIpAddress'
 export type * from './models/Reaction'
 export type * from './models/Comment'
 export type * from './commonInputTypes'

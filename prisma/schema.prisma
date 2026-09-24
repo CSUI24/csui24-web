@@ -5,8 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider      = "prisma-client"
-  output        = "../lib/generated/prisma"
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
 }
 
 datasource db {
@@ -14,14 +14,15 @@ datasource db {
 }
 
 model Menfess {
-  id                         String     @id @default(uuid())
+  id                         String                @id @default(uuid())
   to                         String
   from                       String
   message                    String
-  tweetId                    String?    @unique
+  tweetId                    String?               @unique
   fingerprint                String?
-  isBlocked                  Boolean    @default(false)
-  isPosted                   Boolean    @default(false)
+  ipAddressHash              String?
+  isBlocked                  Boolean               @default(false)
+  isPosted                   Boolean               @default(false)
   resourceUserId             String?
   resourceUsername           String?
   resourceName               String?
@@ -33,11 +34,12 @@ model Menfess {
   ssoNpm                     String?
   ssoOrganizationalCode      String?
   approvalStatus             MenfessApprovalStatus @default(APPROVED)
-  createdAt                  DateTime   @default(now())
+  createdAt                  DateTime              @default(now())
   reactions                  Reaction[]
   comments                   Comment[]
 
   @@index([fingerprint])
+  @@index([ipAddressHash])
   @@index([resourceUserId])
   @@index([approvalStatus, createdAt])
 }
@@ -53,6 +55,20 @@ model BannedFingerprint {
   fingerprint String   @unique
   reason      String?
   createdAt   DateTime @default(now())
+}
+
+model BannedSsoIdentity {
+  id           String   @id @default(cuid())
+  identityHash String   @unique
+  reason       String?
+  createdAt    DateTime @default(now())
+}
+
+model BannedIpAddress {
+  id        String   @id @default(cuid())
+  ipHash    String   @unique
+  reason    String?
+  createdAt DateTime @default(now())
 }
 
 model Reaction {

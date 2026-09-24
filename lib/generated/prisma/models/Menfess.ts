@@ -31,6 +31,7 @@ export type MenfessMinAggregateOutputType = {
   message: string | null
   tweetId: string | null
   fingerprint: string | null
+  ipAddressHash: string | null
   isBlocked: boolean | null
   isPosted: boolean | null
   resourceUserId: string | null
@@ -54,6 +55,7 @@ export type MenfessMaxAggregateOutputType = {
   message: string | null
   tweetId: string | null
   fingerprint: string | null
+  ipAddressHash: string | null
   isBlocked: boolean | null
   isPosted: boolean | null
   resourceUserId: string | null
@@ -77,6 +79,7 @@ export type MenfessCountAggregateOutputType = {
   message: number
   tweetId: number
   fingerprint: number
+  ipAddressHash: number
   isBlocked: number
   isPosted: number
   resourceUserId: number
@@ -102,6 +105,7 @@ export type MenfessMinAggregateInputType = {
   message?: true
   tweetId?: true
   fingerprint?: true
+  ipAddressHash?: true
   isBlocked?: true
   isPosted?: true
   resourceUserId?: true
@@ -125,6 +129,7 @@ export type MenfessMaxAggregateInputType = {
   message?: true
   tweetId?: true
   fingerprint?: true
+  ipAddressHash?: true
   isBlocked?: true
   isPosted?: true
   resourceUserId?: true
@@ -148,6 +153,7 @@ export type MenfessCountAggregateInputType = {
   message?: true
   tweetId?: true
   fingerprint?: true
+  ipAddressHash?: true
   isBlocked?: true
   isPosted?: true
   resourceUserId?: true
@@ -244,6 +250,7 @@ export type MenfessGroupByOutputType = {
   message: string
   tweetId: string | null
   fingerprint: string | null
+  ipAddressHash: string | null
   isBlocked: boolean
   isPosted: boolean
   resourceUserId: string | null
@@ -288,6 +295,7 @@ export type MenfessWhereInput = {
   message?: Prisma.StringFilter<"Menfess"> | string
   tweetId?: Prisma.StringNullableFilter<"Menfess"> | string | null
   fingerprint?: Prisma.StringNullableFilter<"Menfess"> | string | null
+  ipAddressHash?: Prisma.StringNullableFilter<"Menfess"> | string | null
   isBlocked?: Prisma.BoolFilter<"Menfess"> | boolean
   isPosted?: Prisma.BoolFilter<"Menfess"> | boolean
   resourceUserId?: Prisma.StringNullableFilter<"Menfess"> | string | null
@@ -313,6 +321,7 @@ export type MenfessOrderByWithRelationInput = {
   message?: Prisma.SortOrder
   tweetId?: Prisma.SortOrderInput | Prisma.SortOrder
   fingerprint?: Prisma.SortOrderInput | Prisma.SortOrder
+  ipAddressHash?: Prisma.SortOrderInput | Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
   isPosted?: Prisma.SortOrder
   resourceUserId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -341,6 +350,7 @@ export type MenfessWhereUniqueInput = Prisma.AtLeast<{
   from?: Prisma.StringFilter<"Menfess"> | string
   message?: Prisma.StringFilter<"Menfess"> | string
   fingerprint?: Prisma.StringNullableFilter<"Menfess"> | string | null
+  ipAddressHash?: Prisma.StringNullableFilter<"Menfess"> | string | null
   isBlocked?: Prisma.BoolFilter<"Menfess"> | boolean
   isPosted?: Prisma.BoolFilter<"Menfess"> | boolean
   resourceUserId?: Prisma.StringNullableFilter<"Menfess"> | string | null
@@ -366,6 +376,7 @@ export type MenfessOrderByWithAggregationInput = {
   message?: Prisma.SortOrder
   tweetId?: Prisma.SortOrderInput | Prisma.SortOrder
   fingerprint?: Prisma.SortOrderInput | Prisma.SortOrder
+  ipAddressHash?: Prisma.SortOrderInput | Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
   isPosted?: Prisma.SortOrder
   resourceUserId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -395,6 +406,7 @@ export type MenfessScalarWhereWithAggregatesInput = {
   message?: Prisma.StringWithAggregatesFilter<"Menfess"> | string
   tweetId?: Prisma.StringNullableWithAggregatesFilter<"Menfess"> | string | null
   fingerprint?: Prisma.StringNullableWithAggregatesFilter<"Menfess"> | string | null
+  ipAddressHash?: Prisma.StringNullableWithAggregatesFilter<"Menfess"> | string | null
   isBlocked?: Prisma.BoolWithAggregatesFilter<"Menfess"> | boolean
   isPosted?: Prisma.BoolWithAggregatesFilter<"Menfess"> | boolean
   resourceUserId?: Prisma.StringNullableWithAggregatesFilter<"Menfess"> | string | null
@@ -418,6 +430,7 @@ export type MenfessCreateInput = {
   message: string
   tweetId?: string | null
   fingerprint?: string | null
+  ipAddressHash?: string | null
   isBlocked?: boolean
   isPosted?: boolean
   resourceUserId?: string | null
@@ -443,6 +456,7 @@ export type MenfessUncheckedCreateInput = {
   message: string
   tweetId?: string | null
   fingerprint?: string | null
+  ipAddressHash?: string | null
   isBlocked?: boolean
   isPosted?: boolean
   resourceUserId?: string | null
@@ -468,6 +482,7 @@ export type MenfessUpdateInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   tweetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipAddressHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resourceUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -493,6 +508,7 @@ export type MenfessUncheckedUpdateInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   tweetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipAddressHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resourceUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -518,6 +534,7 @@ export type MenfessCreateManyInput = {
   message: string
   tweetId?: string | null
   fingerprint?: string | null
+  ipAddressHash?: string | null
   isBlocked?: boolean
   isPosted?: boolean
   resourceUserId?: string | null
@@ -541,6 +558,7 @@ export type MenfessUpdateManyMutationInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   tweetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipAddressHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resourceUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -564,6 +582,7 @@ export type MenfessUncheckedUpdateManyInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   tweetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipAddressHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resourceUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -587,6 +606,7 @@ export type MenfessCountOrderByAggregateInput = {
   message?: Prisma.SortOrder
   tweetId?: Prisma.SortOrder
   fingerprint?: Prisma.SortOrder
+  ipAddressHash?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
   isPosted?: Prisma.SortOrder
   resourceUserId?: Prisma.SortOrder
@@ -610,6 +630,7 @@ export type MenfessMaxOrderByAggregateInput = {
   message?: Prisma.SortOrder
   tweetId?: Prisma.SortOrder
   fingerprint?: Prisma.SortOrder
+  ipAddressHash?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
   isPosted?: Prisma.SortOrder
   resourceUserId?: Prisma.SortOrder
@@ -633,6 +654,7 @@ export type MenfessMinOrderByAggregateInput = {
   message?: Prisma.SortOrder
   tweetId?: Prisma.SortOrder
   fingerprint?: Prisma.SortOrder
+  ipAddressHash?: Prisma.SortOrder
   isBlocked?: Prisma.SortOrder
   isPosted?: Prisma.SortOrder
   resourceUserId?: Prisma.SortOrder
@@ -709,6 +731,7 @@ export type MenfessCreateWithoutReactionsInput = {
   message: string
   tweetId?: string | null
   fingerprint?: string | null
+  ipAddressHash?: string | null
   isBlocked?: boolean
   isPosted?: boolean
   resourceUserId?: string | null
@@ -733,6 +756,7 @@ export type MenfessUncheckedCreateWithoutReactionsInput = {
   message: string
   tweetId?: string | null
   fingerprint?: string | null
+  ipAddressHash?: string | null
   isBlocked?: boolean
   isPosted?: boolean
   resourceUserId?: string | null
@@ -773,6 +797,7 @@ export type MenfessUpdateWithoutReactionsInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   tweetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipAddressHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resourceUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -797,6 +822,7 @@ export type MenfessUncheckedUpdateWithoutReactionsInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   tweetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipAddressHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resourceUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -821,6 +847,7 @@ export type MenfessCreateWithoutCommentsInput = {
   message: string
   tweetId?: string | null
   fingerprint?: string | null
+  ipAddressHash?: string | null
   isBlocked?: boolean
   isPosted?: boolean
   resourceUserId?: string | null
@@ -845,6 +872,7 @@ export type MenfessUncheckedCreateWithoutCommentsInput = {
   message: string
   tweetId?: string | null
   fingerprint?: string | null
+  ipAddressHash?: string | null
   isBlocked?: boolean
   isPosted?: boolean
   resourceUserId?: string | null
@@ -885,6 +913,7 @@ export type MenfessUpdateWithoutCommentsInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   tweetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipAddressHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resourceUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -909,6 +938,7 @@ export type MenfessUncheckedUpdateWithoutCommentsInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   tweetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fingerprint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipAddressHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resourceUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -973,6 +1003,7 @@ export type MenfessSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   message?: boolean
   tweetId?: boolean
   fingerprint?: boolean
+  ipAddressHash?: boolean
   isBlocked?: boolean
   isPosted?: boolean
   resourceUserId?: boolean
@@ -999,6 +1030,7 @@ export type MenfessSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   message?: boolean
   tweetId?: boolean
   fingerprint?: boolean
+  ipAddressHash?: boolean
   isBlocked?: boolean
   isPosted?: boolean
   resourceUserId?: boolean
@@ -1022,6 +1054,7 @@ export type MenfessSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   message?: boolean
   tweetId?: boolean
   fingerprint?: boolean
+  ipAddressHash?: boolean
   isBlocked?: boolean
   isPosted?: boolean
   resourceUserId?: boolean
@@ -1045,6 +1078,7 @@ export type MenfessSelectScalar = {
   message?: boolean
   tweetId?: boolean
   fingerprint?: boolean
+  ipAddressHash?: boolean
   isBlocked?: boolean
   isPosted?: boolean
   resourceUserId?: boolean
@@ -1061,7 +1095,7 @@ export type MenfessSelectScalar = {
   createdAt?: boolean
 }
 
-export type MenfessOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "to" | "from" | "message" | "tweetId" | "fingerprint" | "isBlocked" | "isPosted" | "resourceUserId" | "resourceUsername" | "resourceName" | "resourceEmail" | "resourceNpm" | "resourceOrganizationalCode" | "ssoUsername" | "ssoName" | "ssoNpm" | "ssoOrganizationalCode" | "approvalStatus" | "createdAt", ExtArgs["result"]["menfess"]>
+export type MenfessOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "to" | "from" | "message" | "tweetId" | "fingerprint" | "ipAddressHash" | "isBlocked" | "isPosted" | "resourceUserId" | "resourceUsername" | "resourceName" | "resourceEmail" | "resourceNpm" | "resourceOrganizationalCode" | "ssoUsername" | "ssoName" | "ssoNpm" | "ssoOrganizationalCode" | "approvalStatus" | "createdAt", ExtArgs["result"]["menfess"]>
 export type MenfessInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   reactions?: boolean | Prisma.Menfess$reactionsArgs<ExtArgs>
   comments?: boolean | Prisma.Menfess$commentsArgs<ExtArgs>
@@ -1083,6 +1117,7 @@ export type $MenfessPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     message: string
     tweetId: string | null
     fingerprint: string | null
+    ipAddressHash: string | null
     isBlocked: boolean
     isPosted: boolean
     resourceUserId: string | null
@@ -1528,6 +1563,7 @@ export interface MenfessFieldRefs {
   readonly message: Prisma.FieldRef<"Menfess", 'String'>
   readonly tweetId: Prisma.FieldRef<"Menfess", 'String'>
   readonly fingerprint: Prisma.FieldRef<"Menfess", 'String'>
+  readonly ipAddressHash: Prisma.FieldRef<"Menfess", 'String'>
   readonly isBlocked: Prisma.FieldRef<"Menfess", 'Boolean'>
   readonly isPosted: Prisma.FieldRef<"Menfess", 'Boolean'>
   readonly resourceUserId: Prisma.FieldRef<"Menfess", 'String'>

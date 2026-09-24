@@ -5,6 +5,10 @@ import { prisma } from "@/lib/prisma";
 import { getSsoSessionUser } from "@/lib/sso-session";
 import { formatMenfessText } from "@/lib/menfess-text";
 import { sendMenfessToDiscord } from "@/lib/server/discord";
+import {
+  hashGuestRequestIp,
+  hashSsoIdentity,
+} from "@/lib/server/menfess-ban-identifiers";
 
 export const BANNED_MESSAGE = "MAMPUS LU GUA BAN AJGG BUAHAHHAHAHHA";
 export const MENFESS_COOLDOWN_MS = 10 * 60 * 1000;
@@ -211,9 +215,31 @@ export async function createMenfess(
     throw new ApiError(401, "Login with UI SSO before sending this menfess");
   }
 
-  const bannedFingerprint = await prisma.bannedFingerprint.findUnique({
-    where: { fingerprint: input.fingerprint },
-  });
+  const ipAddressHash =
+    input.mode === "guest" ? hashGuestRequestIp(request) : null;
+  const ssoIdentityHash = ssoUser
+    ? hashSsoIdentity(ssoUser.username)
+    : null;
+  const [bannedFingerprint, bannedIpAddress, bannedSsoIdentity] =
+    await Promise.all([
+      input.mode === "guest"
+        ? prisma.bannedFingerprint.findUnique({
+            where: { fingerprint: input.fingerprint },
+          })
+        : Promise.resolve(null),
+      ipAddressHash
+        ? prisma.bannedIpAddress.findUnique({ where: { ipHash: ipAddressHash } })
+        : Promise.resolve(null),
+      ssoIdentityHash
+        ? prisma.bannedSsoIdentity.findUnique({
+            where: { identityHash: ssoIdentityHash },
+          })
+        : Promise.resolve(null),
+    ]);
+  const identityIsBanned =
+    input.mode === "guest"
+      ? Boolean(bannedFingerprint || bannedIpAddress)
+      : Boolean(bannedSsoIdentity);
 
   const recentMenfess = await prisma.menfess.findFirst({
     where: {
@@ -241,7 +267,8 @@ export async function createMenfess(
       from: input.from,
       message: input.message,
       fingerprint: input.fingerprint,
-      isBlocked: Boolean(bannedFingerprint),
+      ipAddressHash,
+      isBlocked: identityIsBanned,
       approvalStatus: input.mode === "guest" ? "PENDING" : "APPROVED",
       ssoUsername: ssoUser?.username,
       ssoName: ssoUser?.name,
@@ -250,7 +277,7 @@ export async function createMenfess(
     },
   });
 
-  if (bannedFingerprint) {
+  if (identityIsBanned) {
     return { blocked: true };
   }
 

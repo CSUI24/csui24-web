@@ -8,7 +8,7 @@ import type { SsoSessionUser } from "@/lib/sso-types";
 
 export const SSO_SESSION_COOKIE = "csui24_sso_session";
 export const SSO_STATE_COOKIE = "csui24_sso_state";
-export const SSO_SESSION_MAX_AGE = 60 * 60 * 24;
+export const SSO_SESSION_MAX_AGE = 60 * 60 * 24 * 400;
 
 interface SsoSessionPayload {
   user: SsoSessionUser;

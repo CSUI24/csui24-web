@@ -67,7 +67,7 @@ export async function POST(request: Request) {
 
   const customId = interaction.data?.custom_id;
   const actionMatch = customId?.match(
-    /^menfess:(approve|decline|delete):([a-zA-Z0-9_-]{1,64})$/,
+    /^menfess:(approve|decline|delete|ban):([a-zA-Z0-9_-]{1,64})$/,
   );
   if (!actionMatch) {
     return ephemeralMessage("Unknown menfess moderation action.");
