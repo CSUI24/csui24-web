@@ -122,9 +122,6 @@ async function publishTweet(
   let createdTweetId: string | null = null;
 
   try {
-    if (process.env.PRODUCTION === "false") {
-      throw new Error("Skipping tweet in non-production environment");
-    }
 
     const response = await fetch(
       `${process.env.TWITTER_SERVICE_URL}/api/v1/tweets`,
