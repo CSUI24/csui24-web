@@ -521,13 +521,12 @@ export async function updateDiscordModerationMessage(input: {
   }
 
   const originalImageEmbeds =
-    input.outcome === "deleted" || input.outcome === "declined"
+    input.outcome === "deleted"
       ? []
       : (input.originalEmbeds?.slice(1) ?? []).filter(
           (item) => item.image && typeof item.image === "object",
         );
-  const shouldRemoveAttachments =
-    input.outcome === "deleted" || input.outcome === "declined";
+  const shouldRemoveAttachments = input.outcome === "deleted";
   const attachmentsToRetain = input.originalAttachments;
 
   await discordBotRequest(
@@ -541,8 +540,8 @@ export async function updateDiscordModerationMessage(input: {
           input.menfessId,
         ),
         // An empty attachment list from the interaction can mean the images
-        // are referenced directly by embeds. Sending [] here would delete
-        // those files while approving the message. Omit it to retain them.
+        // are referenced directly by embeds. Sending [] would delete those
+        // files during moderation edits, so omit it to retain them.
         ...(shouldRemoveAttachments
           ? { attachments: [] }
           : attachmentsToRetain?.length
