@@ -3,8 +3,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Info, Send } from "lucide-react";
+import { Clock3, Send, X, Zap } from "lucide-react";
 import { toast } from "sonner";
+import { getMenfessTextLength } from "@/lib/menfess-text";
 import {
   Tooltip,
   TooltipContent,
@@ -46,10 +47,18 @@ const SendMenfess = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const [from, setFrom] = useState("");
+  const characterCount = getMenfessTextLength(from, to, message);
 
   const handleSend = async () => {
     if (to.length === 0 || from.length === 0 || message.length === 0) {
       toast.error("Please fill all fields");
+      return;
+    }
+
+    if (characterCount > 280) {
+      toast.error(
+        "Menfess must not exceed 280 characters, including From/To labels.",
+      );
       return;
     }
 
@@ -121,57 +130,17 @@ const SendMenfess = ({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="flex items-center gap-1">
-            <h2 className="font-sfPro font-medium leading-tight text-slate-100 text-base sm:text-lg md:text-xl lg:text-2xl">
-              {mode === "guest" ? "Send as guest" : "Send with UI SSO"}
-            </h2>
-            <Tooltip
-              delayDuration={100}
-              open={tooltipOpen}
-              onOpenChange={setTooltipOpen}
-            >
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  aria-label={
-                    mode === "guest"
-                      ? "About guest menfess"
-                      : "About UI SSO menfess"
-                  }
-                  onClick={(event) => {
-                    event.preventDefault();
-                    setTooltipOpen(true);
-                  }}
-                  className="inline-flex size-11 shrink-0 items-center justify-center rounded-full text-slate-400 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-95"
-                >
-                  <Info size={17} aria-hidden="true" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent
-                side="bottom"
-                sideOffset={8}
-                className="w-56 max-w-[calc(100vw-3rem)] rounded-xl border-[#717174] bg-[#101432] px-3 py-2 text-left font-sfPro text-xs font-normal leading-5 text-slate-100 shadow-xl motion-reduce:animate-none sm:w-64"
-              >
-                {mode === "guest"
-                  ? "Guest menfess appear after admin approval."
-                  : "Your UI identity stays private and protected."}
-              </TooltipContent>
-            </Tooltip>
-          </div>
-          <p className="mt-1 flex items-center gap-2 font-sfPro text-xs text-slate-300 sm:text-sm">
-            <span
-              aria-hidden="true"
-              className={`size-1.5 shrink-0 rounded-full ${mode === "guest" ? "bg-amber-200" : "bg-indigo-200"}`}
-            />
-            {mode === "guest" ? "Needs admin approval" : "Posts immediately"}
-          </p>
+          <h2 className="font-sfPro font-medium leading-tight text-slate-100 text-base sm:text-lg md:text-xl lg:text-2xl">
+            {mode === "guest" ? "Send as guest" : "Send Menfess"}
+          </h2>
         </div>
         <button
           type="button"
           onClick={onClose}
-          className="inline-flex min-h-11 shrink-0 items-center rounded-lg px-2 font-sfPro text-sm text-slate-400 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          aria-label="Close menfess form"
+          className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl text-slate-400 transition-[background-color,color,transform] duration-150 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
         >
-          Cancel
+          <X size={18} aria-hidden="true" />
         </button>
       </div>
       <div className="flex max-sm:flex-col gap-4">
@@ -212,9 +181,9 @@ const SendMenfess = ({
         <div className="flex justify-between items-center">
           <p className="text-xs text-slate-400">Message</p>
           <p
-            className={`text-xs ${from.length + to.length + message.length > 280 ? "text-red-400" : "text-slate-500"}`}
+            className={`text-xs ${characterCount > 280 ? "text-red-400" : "text-slate-500"}`}
           >
-            {from.length + to.length + message.length}/280
+            {characterCount}/280
           </p>
         </div>
         <Textarea
@@ -224,16 +193,52 @@ const SendMenfess = ({
           value={message}
         />
       </div>
-      <Button
-        onClick={handleSend}
-        disabled={isSubmitting}
-        className="w-fit px-6 self-end border bg-slate-400"
-        variant={"secondary"}
-        data-umami-event="submit-menfess"
-      >
-        <Send size={15} />
-        {mode === "guest" ? "Submit for review" : "Send"}
-      </Button>
+      <div className="flex items-center justify-end gap-1">
+        <Tooltip
+          delayDuration={100}
+          open={tooltipOpen}
+          onOpenChange={setTooltipOpen}
+        >
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              aria-label={
+                mode === "guest"
+                  ? "Guest approval details"
+                  : "UI SSO posting and privacy details"
+              }
+              onClick={(event) => {
+                event.preventDefault();
+                setTooltipOpen(true);
+              }}
+              className={`inline-flex shrink-0 items-center justify-center rounded-full transition-[background-color,color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 ${
+                mode === "guest" ? "text-amber-200 0" : "text-indigo-200 "
+              }`}
+            >
+              {mode === "guest" ? (
+                <Clock3 size={18} aria-hidden="true" />
+              ) : (
+                <Zap size={18} aria-hidden="true" />
+              )}
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="top" sideOffset={8}>
+            {mode === "guest"
+              ? "Guest menfess requires no login and appears after admin approval."
+              : "Posts immediately. Your privacy stays protected, and your data is secured with encryption."}
+          </TooltipContent>
+        </Tooltip>
+        <Button
+          onClick={handleSend}
+          disabled={isSubmitting}
+          className="min-h-11 ml-4 w-fit px-4 self-end border bg-slate-400 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 sm:px-6"
+          variant={"secondary"}
+          data-umami-event="submit-menfess"
+        >
+          <Send size={15} aria-hidden="true" />
+          {mode === "guest" ? "Submit for review" : "Send"}
+        </Button>
+      </div>
     </div>
   );
 };

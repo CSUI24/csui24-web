@@ -197,12 +197,9 @@ const Menfess = ({
                   Send as guest
                 </button>
               </TooltipTrigger>
-              <TooltipContent
-                side="bottom"
-                sideOffset={8}
-                className="w-56 max-w-[calc(100vw-3rem)] rounded-xl border-[#717174] bg-[#101432] px-3 py-2 text-left font-sfPro text-xs font-normal leading-5 text-slate-100 shadow-xl motion-reduce:animate-none sm:w-64"
-              >
-                Guest menfess need admin approval.
+              <TooltipContent side="bottom" sideOffset={8}>
+                Guest menfess requires no login and appears after admin
+                approval.
               </TooltipContent>
             </Tooltip>
           </div>
@@ -252,11 +249,7 @@ const Menfess = ({
                       />
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent
-                    side="bottom"
-                    sideOffset={8}
-                    className="w-56 max-w-[calc(100vw-3rem)] rounded-xl border-[#717174] bg-[#101432] px-3 py-2 text-left font-sfPro text-xs font-normal leading-5 text-slate-100 shadow-xl motion-reduce:animate-none sm:w-64"
-                  >
+                  <TooltipContent side="bottom" sideOffset={8}>
                     Your SSO details stay private and protected.
                   </TooltipContent>
                 </Tooltip>

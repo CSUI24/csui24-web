@@ -1,9 +1,10 @@
-import { briefFamsData } from "@/modules/fams-data";
 import { ApiError } from "@/lib/api/errors";
 import type { MenfessCreateInput } from "@/lib/api/schemas";
 import { parsePositiveInt } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 import { getSsoSessionUser } from "@/lib/sso-session";
+import { formatMenfessText } from "@/lib/menfess-text";
+import { sendMenfessToDiscord } from "@/lib/server/discord";
 
 export const BANNED_MESSAGE = "MAMPUS LU GUA BAN AJGG BUAHAHHAHAHHA";
 export const MENFESS_COOLDOWN_MS = 24 * 60 * 60 * 1000;
@@ -42,12 +43,15 @@ function containsLink(value: string) {
 }
 
 function assertSendable(input: MenfessCreateInput) {
-  const totalLength =
-    input.to.length + input.from.length + input.message.length;
+  const totalLength = formatMenfessText(
+    input.from,
+    input.to,
+    input.message,
+  ).length;
   if (totalLength > 280) {
     throw new ApiError(
       400,
-      "Total characters (from + to + message) must not exceed 280",
+      "Menfess must not exceed 280 characters, including From/To labels.",
     );
   }
 
@@ -107,20 +111,17 @@ function getTweetId(payload: unknown) {
     : null;
 }
 
-async function publishTweet(input: MenfessCreateInput, menfessId: string) {
+async function publishTweet(
+  input: Pick<MenfessCreateInput, "from" | "to" | "message">,
+  menfessId: string,
+) {
+  let createdTweetId: string | null = null;
+
   try {
     if (process.env.PRODUCTION === "false") {
       throw new Error("Skipping tweet in non-production environment");
     }
 
-    const fromUser =
-      briefFamsData.find((fam) => fam.id === input.from.replace("fams/", ""))?.[
-        "full-name"
-      ] || "";
-    const toUser =
-      briefFamsData.find((fam) => fam.id === input.to.replace("fams/", ""))?.[
-        "full-name"
-      ] || "";
     const response = await fetch(
       `${process.env.TWITTER_SERVICE_URL}/api/v1/tweets`,
       {
@@ -130,7 +131,7 @@ async function publishTweet(input: MenfessCreateInput, menfessId: string) {
           Authorization: `Bearer ${process.env.ADMIN_API_KEY}`,
         },
         body: JSON.stringify({
-          tweet_text: `From : ${fromUser ? `${fromUser} CSUI24` : input.from}\nTo : ${toUser ? `${toUser} CSUI24` : input.to}\n\n${input.message}`,
+          tweet_text: formatMenfessText(input.from, input.to, input.message),
         }),
       },
     );
@@ -139,6 +140,7 @@ async function publishTweet(input: MenfessCreateInput, menfessId: string) {
     if (!tweetId) {
       throw new Error("Tweet service did not return a tweet_id");
     }
+    createdTweetId = tweetId;
 
     await prisma.menfess.update({
       where: { id: menfessId },
@@ -147,8 +149,33 @@ async function publishTweet(input: MenfessCreateInput, menfessId: string) {
         tweetId,
       },
     });
+    return true;
   } catch (error) {
+    if (createdTweetId) {
+      try {
+        await deleteTweetIfExists(createdTweetId);
+      } catch (cleanupError) {
+        console.error("Failed to clean up an unlinked tweet:", cleanupError);
+      }
+    }
+
     console.error("Failed to send tweet:", error);
+    return false;
+  }
+}
+
+async function notifyMenfessOnDiscord(input: {
+  id: string;
+  from: string;
+  to: string;
+  message: string;
+  mode: "guest" | "sso";
+  published: boolean;
+}) {
+  try {
+    await sendMenfessToDiscord(input);
+  } catch (error) {
+    console.error("Failed to send menfess to Discord:", error);
   }
 }
 
@@ -228,11 +255,82 @@ export async function createMenfess(
   }
 
   if (input.mode === "guest") {
+    await notifyMenfessOnDiscord({
+      id: menfess.id,
+      from: input.from,
+      to: input.to,
+      message: input.message,
+      mode: "guest",
+      published: false,
+    });
     return { blocked: false, pendingReview: true };
   }
 
-  await publishTweet(input, menfess.id);
+  const published = await publishTweet(input, menfess.id);
+  await notifyMenfessOnDiscord({
+    id: menfess.id,
+    from: input.from,
+    to: input.to,
+    message: input.message,
+    mode: "sso",
+    published,
+  });
   return { blocked: false, pendingReview: false };
+}
+
+export async function approveGuestMenfess(id: string) {
+  const menfess = await prisma.menfess.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      to: true,
+      from: true,
+      message: true,
+      approvalStatus: true,
+    },
+  });
+
+  if (!menfess) {
+    throw new ApiError(404, "Menfess not found");
+  }
+
+  if (menfess.approvalStatus !== "PENDING") {
+    throw new ApiError(409, "Only pending guest menfess can be approved");
+  }
+
+  const update = await prisma.menfess.updateMany({
+    where: { id, approvalStatus: "PENDING" },
+    data: { approvalStatus: "APPROVED" },
+  });
+
+  if (update.count !== 1) {
+    throw new ApiError(409, "This menfess has already been reviewed");
+  }
+
+  const published = await publishTweet(menfess, menfess.id);
+  return { published };
+}
+
+export async function declineGuestMenfess(id: string) {
+  const update = await prisma.menfess.updateMany({
+    where: { id, approvalStatus: "PENDING" },
+    data: { approvalStatus: "REJECTED" },
+  });
+
+  if (update.count === 1) {
+    return;
+  }
+
+  const menfess = await prisma.menfess.findUnique({
+    where: { id },
+    select: { id: true },
+  });
+
+  if (!menfess) {
+    throw new ApiError(404, "Menfess not found");
+  }
+
+  throw new ApiError(409, "Only pending guest menfess can be declined");
 }
 
 async function deleteTweetIfExists(tweetId: string) {

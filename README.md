@@ -35,6 +35,19 @@ The project uses the App Router for pages and colocated Route Handlers under `ap
 
 Keep database queries and business rules out of route handlers so they remain easy to test and maintain.
 
+## Discord menfess moderation
+
+Menfess submissions are sent to a Discord moderation channel when Discord is configured. Guest submissions have Approve, Decline, and Delete buttons. After Approve or Decline, Delete remains available. Approving publishes the menfess; declining keeps it hidden. UI SSO submissions publish immediately and only have a Delete button. Delete removes the database entry and any linked public post.
+
+Configure these server-only environment variables:
+
+- `DISCORD_APPLICATION_PUBLIC_KEY`: the public key from the Discord Developer Portal.
+- `DISCORD_BOT_TOKEN`: the bot token. Keep this secret.
+- `DISCORD_MODERATION_CHANNEL_ID`: the channel where moderation messages should appear.
+- `DISCORD_MODERATOR_ROLE_IDS`: optional, comma-separated role IDs allowed to use the buttons. Leave it blank to allow any member who can access the moderation channel.
+
+Add the bot to the server with permission to view the moderation channel, send messages, and embed links. In the Discord Developer Portal, set the production Interactions Endpoint URL to `https://cosmic.csui.dev/api/discord/interactions`. Local development needs a public HTTPS tunnel configured as that endpoint. The bot and endpoint variables must be configured before Discord notifications and actions become available.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

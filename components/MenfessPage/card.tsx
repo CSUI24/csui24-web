@@ -13,6 +13,11 @@ import { Img } from "react-image";
 import { MenfessType } from "./types";
 import { ReactionBar } from "./reactionBar";
 import { toast } from "sonner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 const MenfessCard = ({
   menfess,
   onCommentClick,
@@ -107,12 +112,30 @@ const MenfessCard = ({
       <div className="relative h-fit p-6 max-sm:p-3 flex flex-col gap-2">
         {tokenAdmin && (
           <div className="absolute top-6 right-6 flex items-center gap-2">
-            <button onClick={handleBan} title="Ban sender fingerprint">
-              <Ban size={22} />
-            </button>
-            <button onClick={handleDelete} title="Delete menfess">
-              <Trash2 size={25} />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={handleBan}
+                  aria-label="Ban sender fingerprint"
+                  className="inline-flex size-11 items-center justify-center rounded-lg text-slate-300 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                >
+                  <Ban size={22} aria-hidden="true" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Ban sender fingerprint</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={handleDelete}
+                  aria-label="Delete menfess"
+                  className="inline-flex size-11 items-center justify-center rounded-lg text-slate-300 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                >
+                  <Trash2 size={22} aria-hidden="true" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Delete menfess</TooltipContent>
+            </Tooltip>
           </div>
         )}
         <div className="w-full flex flex-col max-sm:gap-2 gap-4 text-white">
